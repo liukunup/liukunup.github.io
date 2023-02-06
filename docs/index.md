@@ -1,37 +1,20 @@
-## Welcome to GitHub Pages
+# 我的代码温柔如风
 
-You can use the [editor on GitHub](https://github.com/liukunup/liukunup.github.io/edit/main/docs/index.md) to maintain and preview the content for your website in Markdown files.
+## 访问我的共享资源
 
-Whenever you commit to this repository, GitHub Pages will run [Jekyll](https://jekyllrb.com/) to rebuild the pages in your site, from the content in your Markdown files.
+访问 [GitHub](https://github.com/liukunup/) 阅读代码
 
-### Markdown
+访问 [Docker Hub](https://hub.docker.com/u/liukunup) 选择镜像
 
-Markdown is a lightweight and easy-to-use syntax for styling your writing. It includes conventions for
+访问 [Artifact Hub](https://artifacthub.io/packages/search?user=liukunup) 选择应用
 
-```markdown
-Syntax highlighted code block
+感谢您对我的支持，欢迎 Star🌟 / Fork🍴 / Add to favorites🗂，拜托啦～🫰
 
-# Header 1
-## Header 2
-### Header 3
+## 我的项目
 
-- Bulleted
-- List
+- [JMeter](https://github.com/liukunup/JMeter) 性能测试解决方案
+- [phddns](https://github.com/liukunup/phddns) 花生壳内网穿透(容器镜像版本)
 
-1. Numbered
-2. List
+## 其他
 
-**Bold** and _Italic_ and `Code` text
-
-[Link](url) and ![Image](src)
-```
-
-For more details see [GitHub Flavored Markdown](https://guides.github.com/features/mastering-markdown/).
-
-### Jekyll Themes
-
-Your Pages site will use the layout and styles from the Jekyll theme you have selected in your [repository settings](https://github.com/liukunup/liukunup.github.io/settings/pages). The name of this theme is saved in the Jekyll `_config.yml` configuration file.
-
-### Support or Contact
-
-Having trouble with Pages? Check out our [documentation](https://docs.github.com/categories/github-pages-basics/) or [contact support](https://support.github.com/contact) and we’ll help you sort it out.
+- [书签分享](bookmark.md)
