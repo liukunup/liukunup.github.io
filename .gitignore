@@ -1,0 +1,11 @@
+# Project
+node_modules
+docs/.vuepress
+
+# Temp
+.cache/
+.temp/
+
+# IDE
+.idea/
+.vscode/
