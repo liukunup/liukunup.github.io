@@ -1,10 +1,7 @@
 # Project
 node_modules
-docs/.vuepress
-
-# Temp
-.cache/
-.temp/
+docs/.vuepress/.cache
+docs/.vuepress/.temp
 
 # IDE
 .idea/
