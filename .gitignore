@@ -1,8 +1,8 @@
-# Project
-node_modules
+**/node_modules
+
 docs/.vuepress/.cache
 docs/.vuepress/.temp
+docs/.vuepress/dist
 
-# IDE
-.idea/
-.vscode/
+.DS_Store
+*.log
