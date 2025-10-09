@@ -79,6 +79,11 @@ export default defineThemeConfig({
        //   title: '',
        //   content: '',
        // },
+
+      collections: [
+        { type: 'post', dir: 'blog', title: '博客' },
+        { type: 'doc', dir: 'python', title: 'Python笔记', sidebar: 'auto' }
+      ],
     },
     '/en/': {
       /**
@@ -106,6 +111,11 @@ export default defineThemeConfig({
        //   title: '',
        //   content: '',
        // },
+
+      collections: [
+        { type: 'post', dir: 'blog', title: 'Blog' },
+        { type: 'doc', dir: 'python', title: 'Python Note', sidebar: 'auto' }
+      ],
     },
   },
 })
