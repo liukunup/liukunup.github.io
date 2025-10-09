@@ -13,7 +13,7 @@ export const zhNavbar = defineNavbarConfig([
   { text: '归档', link: '/blog/archives/' },
   {
     text: '笔记',
-    items: [{ text: '示例', link: '/notes/demo/README.md' }]
+    items: [{ text: 'Python', link: '/notes/python/搭建开发环境.md' }]
   },
 ])
 
@@ -24,7 +24,7 @@ export const enNavbar = defineNavbarConfig([
   { text: 'Archives', link: '/en/blog/archives/' },
   {
     text: 'Notes',
-    items: [{ text: 'Demo', link: '/en/notes/demo/README.md' }]
+    items: [{ text: 'Python', link: '/en/notes/python/setup-development-environment.md' }]
   },
 ])
 
