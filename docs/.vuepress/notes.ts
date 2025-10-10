@@ -23,50 +23,26 @@ import { defineNoteConfig, defineNotesConfig } from 'vuepress-theme-plume'
 
 /* =================== locale: zh-CN ======================= */
 
-const zhPythonNote = defineNoteConfig({
-  dir: 'python',
-  // `dir` 所指向的目录中的所有 markdown 文件，其 permalink 需要以 `link` 配置作为前缀
-  // 如果 前缀不一致，则无法生成侧边栏。
-  // 所以请确保  markdown 文件的 permalink 都以 `link` 开头
-  link: '/python',
-  // 手动配置侧边栏结构
-  // sidebar: ['', 'foo', 'bar'],
-  // 根据文件结构自动生成侧边栏
-  sidebar: 'auto',
-})
+const zhPythonNote = defineNoteConfig({ dir: 'python', link: '/python', sidebar: 'auto' })
+const zhGoNote = defineNoteConfig({ dir: 'go', link: '/go', sidebar: 'auto' })
+const zhJavaNote = defineNoteConfig({ dir: 'java', link: '/java', sidebar: 'auto' })
+const zhCppNote = defineNoteConfig({ dir: 'cpp', link: '/cpp', sidebar: 'auto' })
 
-/**
- * 导出所有的 note
- * 每一个 note 都应该填入到 `notes.notes` 数组中
- * （zhDemoNote 为参考示例，如果不需要它，请删除）
- */
 export const zhNotes = defineNotesConfig({
   dir: 'notes',
   link: '/',
-  notes: [zhPythonNote],
+  notes: [zhPythonNote, zhGoNote, zhJavaNote, zhCppNote],
 })
 
 /* =================== locale: en-US ======================= */
 
-const enPythonNote = defineNoteConfig({
-  dir: 'python',
-  // `dir` 所指向的目录中的所有 markdown 文件，其 permalink 需要以 `link` 配置作为前缀
-  // 如果 前缀不一致，则无法生成侧边栏。
-  // 所以请确保  markdown 文件的 permalink 都以 `link` 开头
-  link: '/python',
-  // 手动配置侧边栏结构
-  // sidebar: ['', 'foo', 'bar'],
-  // 根据文件结构自动生成侧边栏
-  sidebar: 'auto',
-})
+const enPythonNote = defineNoteConfig({ dir: 'python', link: '/python', sidebar: 'auto' })
+const enGoNote = defineNoteConfig({ dir: 'go', link: '/go', sidebar: 'auto' })
+const enJavaNote = defineNoteConfig({ dir: 'java', link: '/java', sidebar: 'auto' })
+const enCppNote = defineNoteConfig({ dir: 'cpp', link: '/cpp', sidebar: 'auto' })
 
-/**
- * 导出所有的 note
- * 每一个 note 都应该填入到 `notes.notes` 数组中
- * （enDemoNote 为参考示例，如果不需要它，请删除）
- */
 export const enNotes = defineNotesConfig({
   dir: 'en/notes',
   link: '/en/',
-  notes: [enPythonNote],
+  notes: [enPythonNote, enGoNote, enJavaNote, enCppNote],
 })

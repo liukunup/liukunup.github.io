@@ -14,8 +14,42 @@ export const zhNavbar = defineNavbarConfig([
   {
     text: '笔记',
     items: [
-      { text: 'Python', link: '/notes/python/搭建开发环境.md' },
-      { text: 'Go', link: '/notes/go/搭建开发环境.md' },
+      {
+        text: 'Python',
+        link: '/notes/python/'
+      },
+      {
+        text: 'Go',
+        link: '/notes/go/'
+      },
+      {
+        text: 'Java',
+        link: '/notes/java/'
+      },
+      {
+        text: 'C/C++',
+        link: '/notes/cpp/'
+      },
+      // {
+      //   text: 'Linux',
+      //   link: '/notes/linux/'
+      // },
+      // {
+      //   text: 'Docker',
+      //   link: '/notes/docker/'
+      // },
+      // {
+      //   text: 'Kubernetes',
+      //   link: '/notes/kubernetes/'
+      // },
+      // {
+      //   text: '测试领域',
+      //   link: '/notes/testing/'
+      // },
+      // {
+      //   text: '算法领域',
+      //   link: '/notes/algorithm/'
+      // },
     ]
   },
   {
@@ -23,13 +57,11 @@ export const zhNavbar = defineNavbarConfig([
     items: [
       {
         text: '架构设计',
-        link: '/homelab/architecture/',
-        activeMatch: '^/homelab/architecture/',
+        link: '/homelab/architecture/'
       },
       {
         text: '部署指南',
-        link: '/homelab/deploy/',
-        activeMatch: '^/homelab/deploy/',
+        link: '/homelab/deploy/'
       },
     ]
   },
@@ -43,15 +75,55 @@ export const enNavbar = defineNavbarConfig([
   {
     text: 'Notes',
     items: [
-      { text: 'Python', link: '/en/notes/python/setup-development-environment.md' },
-      { text: 'Go', link: '/en/notes/go/setup-development-environment.md' },
+      {
+        text: 'Python',
+        link: '/en/notes/python/'
+      },
+      {
+        text: 'Go',
+        link: '/en/notes/go/'
+      },
+      {
+        text: 'Java',
+        link: '/en/notes/java/'
+      },
+      {
+        text: 'C/C++',
+        link: '/en/notes/cpp/'
+      },
+      // {
+      //   text: 'Linux',
+      //   link: '/en/notes/linux/'
+      // },
+      // {
+      //   text: 'Docker',
+      //   link: '/en/notes/docker/'
+      // },
+      // {
+      //   text: 'Kubernetes',
+      //   link: '/en/notes/kubernetes/'
+      // },
+      // {
+      //   text: 'Testing',
+      //   link: '/en/notes/testing/'
+      // },
+      // {
+      //   text: 'Algorithm',
+      //   link: '/en/notes/algorithm/'
+      // },
     ]
   },
   {
     text: 'HomeLab',
     items: [
-      { text: 'Architecture', link: '/en/homelab/architecture/' },
-      { text: 'Deployment', link: '/en/homelab/deploy/' },
+      {
+        text: 'Architecture',
+        link: '/en/homelab/architecture/'
+      },
+      {
+        text: 'Deployment',
+        link: '/en/homelab/deploy/'
+      },
     ]
   },
 ])

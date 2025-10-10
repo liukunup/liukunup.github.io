@@ -83,16 +83,6 @@ export default defineThemeConfig({
       collections: [
         { type: 'post', dir: 'blog', title: '博客' },
         { type: 'doc', dir: 'homelab', title: '家庭实验室', sidebar: 'auto' },
-        // { type: 'doc', dir: 'python', title: 'Python笔记', sidebar: 'auto' },
-        // { type: 'doc', dir: 'go', title: 'Go笔记', sidebar: 'auto' },
-        // { type: 'doc', dir: 'java', title: 'Java笔记', sidebar: 'auto' },
-        // { type: 'doc', dir: 'cpp', title: 'C/C++笔记', sidebar: 'auto' },
-        // { type: 'doc', dir: 'javascript', title: 'JavaScript笔记', sidebar: 'auto' },
-        // { type: 'doc', dir: 'typescript', title: 'TypeScript笔记', sidebar: 'auto' },
-        // { type: 'doc', dir: 'docker', title: 'Docker笔记', sidebar: 'auto' },
-        // { type: 'doc', dir: 'kubernetes', title: 'Kubernetes笔记', sidebar: 'auto' },
-        // { type: 'doc', dir: 'testing', title: '测试笔记', sidebar: 'auto' },
-        // { type: 'doc', dir: 'algorithm', title: '算法笔记', sidebar: 'auto' }
       ],
     },
     '/en/': {
@@ -125,16 +115,6 @@ export default defineThemeConfig({
       collections: [
         { type: 'post', dir: 'blog', title: 'Blog' },
         { type: 'doc', dir: 'homelab', title: 'HomeLab', sidebar: 'auto' },
-        // { type: 'doc', dir: 'python', title: 'Python Note', sidebar: 'auto' },
-        // { type: 'doc', dir: 'go', title: 'Go Note', sidebar: 'auto' },
-        // { type: 'doc', dir: 'java', title: 'Java Note', sidebar: 'auto' },
-        // { type: 'doc', dir: 'cpp', title: 'C/C++ Note', sidebar: 'auto' },
-        // { type: 'doc', dir: 'javascript', title: 'JavaScript Note', sidebar: 'auto' },
-        // { type: 'doc', dir: 'typescript', title: 'TypeScript Note', sidebar: 'auto' },
-        // { type: 'doc', dir: 'docker', title: 'Docker', sidebar: 'auto' },
-        // { type: 'doc', dir: 'kubernetes', title: 'Kubernetes', sidebar: 'auto' },
-        // { type: 'doc', dir: 'testing', title: 'Testing', sidebar: 'auto' },
-        // { type: 'doc', dir: 'algorithm', title: 'Algorithm', sidebar: 'auto' }
       ],
     },
   },

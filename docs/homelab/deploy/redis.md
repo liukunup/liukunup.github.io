@@ -1,7 +1,7 @@
 ---
-title: MySQL
+title: Redis
 createTime: 2025/10/10 00:00:00
-permalink: /homelab/deploy/mysql/
+permalink: /homelab/deploy/redis/
 ---
 
 ## 部署指南
