@@ -81,7 +81,8 @@ export default defineThemeConfig({
        // },
 
       collections: [
-        { type: 'post', dir: 'blog', title: '博客' }
+        { type: 'post', dir: 'blog', title: '博客' },
+        { type: 'doc', dir: 'homelab', title: '家庭实验室', sidebar: 'auto' },
         // { type: 'doc', dir: 'python', title: 'Python笔记', sidebar: 'auto' },
         // { type: 'doc', dir: 'go', title: 'Go笔记', sidebar: 'auto' },
         // { type: 'doc', dir: 'java', title: 'Java笔记', sidebar: 'auto' },
@@ -122,7 +123,8 @@ export default defineThemeConfig({
        // },
 
       collections: [
-        { type: 'post', dir: 'blog', title: 'Blog' }
+        { type: 'post', dir: 'blog', title: 'Blog' },
+        { type: 'doc', dir: 'homelab', title: 'HomeLab', sidebar: 'auto' },
         // { type: 'doc', dir: 'python', title: 'Python Note', sidebar: 'auto' },
         // { type: 'doc', dir: 'go', title: 'Go Note', sidebar: 'auto' },
         // { type: 'doc', dir: 'java', title: 'Java Note', sidebar: 'auto' },

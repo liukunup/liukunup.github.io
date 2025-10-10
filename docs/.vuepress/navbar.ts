@@ -7,7 +7,7 @@
 import { defineNavbarConfig } from 'vuepress-theme-plume'
 
 export const zhNavbar = defineNavbarConfig([
-  { text: '首页', link: '/' },
+  { text: '首页', link: '/', icon: 'material-symbols:home-outline' },
   { text: '博客', link: '/blog/' },
   { text: '标签', link: '/blog/tags/' },
   { text: '归档', link: '/blog/archives/' },
@@ -18,10 +18,25 @@ export const zhNavbar = defineNavbarConfig([
       { text: 'Go', link: '/notes/go/搭建开发环境.md' },
     ]
   },
+  {
+    text: '家庭实验室',
+    items: [
+      {
+        text: '架构设计',
+        link: '/homelab/architecture/',
+        activeMatch: '^/homelab/architecture/',
+      },
+      {
+        text: '部署指南',
+        link: '/homelab/deploy/',
+        activeMatch: '^/homelab/deploy/',
+      },
+    ]
+  },
 ])
 
 export const enNavbar = defineNavbarConfig([
-  { text: 'Home', link: '/en/' },
+  { text: 'Home', link: '/en/', icon: 'material-symbols:home-outline' },
   { text: 'Blog', link: '/en/blog/' },
   { text: 'Tags', link: '/en/blog/tags/' },
   { text: 'Archives', link: '/en/blog/archives/' },
@@ -32,5 +47,11 @@ export const enNavbar = defineNavbarConfig([
       { text: 'Go', link: '/en/notes/go/setup-development-environment.md' },
     ]
   },
+  {
+    text: 'HomeLab',
+    items: [
+      { text: 'Architecture', link: '/en/homelab/architecture/' },
+      { text: 'Deployment', link: '/en/homelab/deploy/' },
+    ]
+  },
 ])
-
