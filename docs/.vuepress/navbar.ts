@@ -13,7 +13,10 @@ export const zhNavbar = defineNavbarConfig([
   { text: '归档', link: '/blog/archives/' },
   {
     text: '笔记',
-    items: [{ text: 'Python', link: '/notes/python/搭建开发环境.md' }]
+    items: [
+      { text: 'Python', link: '/notes/python/搭建开发环境.md' },
+      { text: 'Go', link: '/notes/go/搭建开发环境.md' },
+    ]
   },
 ])
 
@@ -24,7 +27,10 @@ export const enNavbar = defineNavbarConfig([
   { text: 'Archives', link: '/en/blog/archives/' },
   {
     text: 'Notes',
-    items: [{ text: 'Python', link: '/en/notes/python/setup-development-environment.md' }]
+    items: [
+      { text: 'Python', link: '/en/notes/python/setup-development-environment.md' },
+      { text: 'Go', link: '/en/notes/go/setup-development-environment.md' },
+    ]
   },
 ])
 
