@@ -16,18 +16,8 @@ import { plumeTheme } from 'vuepress-theme-plume'
 export default defineUserConfig({
   base: '/',
   lang: 'zh-CN',
-  locales: {
-    '/': {
-      title: '我的代码温柔如风',
-      lang: 'zh-CN',
-      description: 'xxx',
-    },
-    '/en/': {
-      title: 'Code dances with the wind',
-      lang: 'en-US',
-      description: 'xxx',
-    },
-  },
+  title: '我的代码温柔如风',
+  description: '我的博客',
 
   head: [
     // 配置站点图标
@@ -51,23 +41,6 @@ export default defineUserConfig({
     // lastUpdated: true,
     // contributors: true,
     // changelog: false,
-
-    /**
-     * 博客
-     * @see https://theme-plume.vuejs.press/config/basic/#blog
-     */
-    // blog: false, // 禁用博客
-    // blog: {
-    //   postList: true, // 是否启用文章列表页
-    //   tags: true, // 是否启用标签页
-    //   archives: true, // 是否启用归档页
-    //   categories: true, // 是否启用分类页
-    //   postCover: 'right', // 文章封面位置
-    //   pagination: 15, // 每页显示文章数量
-    // },
-
-    /* 博客文章页面链接前缀 */
-    article: '/article/',
 
     /**
      * 编译缓存，加快编译速度
@@ -114,9 +87,9 @@ export default defineUserConfig({
     // readingTime: true,
 
     /**
-      * markdown
-      * @see https://theme-plume.vuejs.press/config/markdown/
-      */
+     * markdown
+     * @see https://theme-plume.vuejs.press/config/markdown/
+     */
     // markdown: {
     //   abbr: true,         // 启用 abbr 语法  *[label]: content
     //   annotation: true,   // 启用 annotation 语法  [+label]: content

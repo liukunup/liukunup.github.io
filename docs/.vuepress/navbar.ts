@@ -6,8 +6,8 @@
 
 import { defineNavbarConfig } from 'vuepress-theme-plume'
 
-export const zhNavbar = defineNavbarConfig([
-  { text: '首页', link: '/', icon: 'material-symbols:home-outline' },
+export default defineNavbarConfig([
+  { text: '首页', link: '/' },
   { text: '博客', link: '/blog/' },
   { text: '标签', link: '/blog/tags/' },
   { text: '归档', link: '/blog/archives/' },
@@ -62,67 +62,6 @@ export const zhNavbar = defineNavbarConfig([
       {
         text: '部署指南',
         link: '/homelab/deploy/'
-      },
-    ]
-  },
-])
-
-export const enNavbar = defineNavbarConfig([
-  { text: 'Home', link: '/en/', icon: 'material-symbols:home-outline' },
-  { text: 'Blog', link: '/en/blog/' },
-  { text: 'Tags', link: '/en/blog/tags/' },
-  { text: 'Archives', link: '/en/blog/archives/' },
-  {
-    text: 'Notes',
-    items: [
-      {
-        text: 'Python',
-        link: '/en/notes/python/'
-      },
-      {
-        text: 'Go',
-        link: '/en/notes/go/'
-      },
-      {
-        text: 'Java',
-        link: '/en/notes/java/'
-      },
-      {
-        text: 'C/C++',
-        link: '/en/notes/cpp/'
-      },
-      // {
-      //   text: 'Linux',
-      //   link: '/en/notes/linux/'
-      // },
-      // {
-      //   text: 'Docker',
-      //   link: '/en/notes/docker/'
-      // },
-      // {
-      //   text: 'Kubernetes',
-      //   link: '/en/notes/kubernetes/'
-      // },
-      // {
-      //   text: 'Testing',
-      //   link: '/en/notes/testing/'
-      // },
-      // {
-      //   text: 'Algorithm',
-      //   link: '/en/notes/algorithm/'
-      // },
-    ]
-  },
-  {
-    text: 'HomeLab',
-    items: [
-      {
-        text: 'Architecture',
-        link: '/en/homelab/architecture/'
-      },
-      {
-        text: 'Deployment',
-        link: '/en/homelab/deploy/'
       },
     ]
   },

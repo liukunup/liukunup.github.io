@@ -11,8 +11,8 @@
  */
 
 import { defineThemeConfig } from 'vuepress-theme-plume'
-import { enNavbar, zhNavbar } from './navbar'
-import { enNotes, zhNotes } from './notes'
+import navbar from './navbar'
+import collections from './collections'
 
 /**
  * @see https://theme-plume.vuejs.press/config/basic/
@@ -45,6 +45,32 @@ export default defineThemeConfig({
   //   copyright: '',
   // },
 
+  /**
+   * @see https://theme-plume.vuejs.press/config/basic/#profile
+   */
+  profile: {
+    avatar: 'https://theme-plume.vuejs.press/plume.png',
+    name: '我的代码温柔如风',
+    description: '我的博客',
+    // circle: true,
+    // location: '',
+    // organization: '',
+  },
+
+  navbar,
+  collections,
+
+  /**
+   * 公告板
+   * @see https://theme-plume.vuejs.press/guide/features/bulletin/
+   */
+  // bulletin: {
+  //   layout: 'top-right',
+  //   contentType: 'markdown',
+  //   title: '公告板标题',
+  //   content: '公告板内容',
+  // },
+
   /* 过渡动画 @see https://theme-plume.vuejs.press/config/basic/#transition */
   // transition: {
   //   page: true,        // 启用 页面间跳转过渡动画
@@ -52,70 +78,4 @@ export default defineThemeConfig({
   //   appearance: 'fade',  // 启用 深色模式切换过渡动画, 或配置过渡动画类型
   // },
 
-  locales: {
-    '/': {
-      /**
-       * @see https://theme-plume.vuejs.press/config/basic/#profile
-       */
-      profile: {
-        avatar: 'https://theme-plume.vuejs.press/plume.png',
-        name: '我的代码温柔如风',
-        description: '',
-        // circle: true,
-        // location: '',
-        // organization: '',
-      },
-
-      navbar: zhNavbar,
-      notes: zhNotes,
-
-      /**
-       * 公告板
-       * @see https://theme-plume.vuejs.press/guide/features/bulletin/
-       */
-       // bulletin: {
-       //   layout: 'top-right',
-       //   contentType: 'markdown',
-       //   title: '',
-       //   content: '',
-       // },
-
-      collections: [
-        { type: 'post', dir: 'blog', title: '博客' },
-        { type: 'doc', dir: 'homelab', title: '家庭实验室', sidebar: 'auto' },
-      ],
-    },
-    '/en/': {
-      /**
-       * @see https://theme-plume.vuejs.press/config/basic/#profile
-       */
-      profile: {
-        avatar: 'https://theme-plume.vuejs.press/plume.png',
-        name: 'Code dances with the wind',
-        description: '',
-        // circle: true,
-        // location: '',
-        // organization: '',
-      },
-
-      navbar: enNavbar,
-      notes: enNotes,
-
-      /**
-       * 公告板
-       * @see https://theme-plume.vuejs.press/guide/features/bulletin/
-       */
-       // bulletin: {
-       //   layout: 'top-right',
-       //   contentType: 'markdown',
-       //   title: '',
-       //   content: '',
-       // },
-
-      collections: [
-        { type: 'post', dir: 'blog', title: 'Blog' },
-        { type: 'doc', dir: 'homelab', title: 'HomeLab', sidebar: 'auto' },
-      ],
-    },
-  },
 })

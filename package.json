@@ -1,8 +1,8 @@
 {
-  "name": "my-vuepress-site",
+  "name": "我的代码温柔如风",
   "type": "module",
   "version": "1.0.0",
-  "description": "xxx",
+  "description": "我的博客",
   "packageManager": "pnpm@10.18.1",
   "pnpm": {
     "onlyBuiltDependencies": [
@@ -23,10 +23,10 @@
   },
   "devDependencies": {
     "@vuepress/bundler-vite": "2.0.0-rc.24",
-    "http-server": "^14.1.1",
-    "typescript": "^5.9.3",
-    "vue": "^3.5.22",
     "vuepress": "2.0.0-rc.24",
-    "vuepress-theme-plume": "1.0.0-rc.168"
+    "vuepress-theme-plume": "1.0.0-rc.169",
+    "http-server": "^14.1.1",
+    "vue": "^3.5.22",
+    "typescript": "^5.9.3"
   }
 }
