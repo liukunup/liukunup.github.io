@@ -1,14 +1,55 @@
 ---
 title: MinerU
+tags:
+  - OCR
 createTime: 2025/10/10 00:00:00
 permalink: /homelab/deploy/mineru/
 ---
 
-官方部署文档参见 [使用docker部署Mineru](https://opendatalab.github.io/MinerU/zh/quick_start/docker_deployment/)
+查看[MinerU官方文档](https://opendatalab.github.io/MinerU/zh/)
 
-MinerU提供了便捷的docker部署方式，这有助于快速搭建环境并解决一些棘手的环境兼容问题。
+## 前置条件
+
+| **解析后端** | **pipeline** | **vlm-transformers** | **vlm-vllm** |
+|---|---|---|---|
+| 操作系统 | Linux / Windows / macOS | Linux / Windows | Linux / Windows (via WSL2) |
+| CPU推理支持 | ✅ | ❌ | ❌ |
+| GPU要求 | Turing及以后架构，6G显存以上或Apple Silicon | Turing及以后架构，8G显存以上 | 同vlm-transformers |
+| 内存要求 | 最低16G以上，推荐32G以上 | - | - |
+| 磁盘空间要求 | 20G以上，推荐使用SSD | - | -|
+| Python版本 | 3.10-3.13 | - | - |
 
 ## 部署指南
+
+### **使用pip或uv安装 MinerU**
+
+```shell
+pip install --upgrade pip -i https://mirrors.aliyun.com/pypi/simple
+pip install uv -i https://mirrors.aliyun.com/pypi/simple
+uv pip install -U "mineru[core]" -i https://mirrors.aliyun.com/pypi/simple 
+```
+
+::: tip
+最简单的命令行调用方式
+
+```shell
+mineru -p <input_path> -o <output_path>
+```
+
+您可以通过命令行、API、WebUI等多种方式使用MinerU进行PDF解析，具体使用方法请参考[使用指南](https://opendatalab.github.io/MinerU/zh/usage/)。
+:::
+
+### **通过源码安装 MinerU**
+
+```shell
+git clone https://github.com/opendatalab/MinerU.git
+cd MinerU
+uv pip install -e .[core] -i https://mirrors.aliyun.com/pypi/simple
+```
+
+::: tip
+mineru[core]包含除vllm加速外的所有核心功能，兼容Windows / Linux / macOS系统，适合绝大多数用户。 如果您有使用vllm加速VLM模型推理，或是在边缘设备安装轻量版client端等需求，可以参考文档扩展模块安装指南。
+:::
 
 ### **使用 Dockerfile 构建镜像**
 
@@ -16,11 +57,12 @@ MinerU提供了便捷的docker部署方式，这有助于快速搭建环境并�
 wget https://gcore.jsdelivr.net/gh/opendatalab/MinerU@master/docker/china/Dockerfile
 docker build -t mineru-vllm:latest -f Dockerfile .
 ```
-::: tip
+
+::: warning
 Dockerfile默认使用vllm/vllm-openai:v0.10.1.1作为基础镜像， 该版本的vLLM v1 engine对显卡型号支持有限，如您无法在Turing及更早架构的显卡上使用vLLM加速推理，可通过更改基础镜像为vllm/vllm-openai:v0.10.2来解决该问题。
 :::
 
-### Docker说明
+Docker说明
 
 Mineru的docker使用了vllm/vllm-openai作为基础镜像，因此在docker中默认集成了vllm推理加速框架和必需的依赖环境。因此在满足条件的设备上，您可以直接使用vllm加速VLM模型推理。
 
@@ -46,8 +88,6 @@ docker run --gpus all \
 执行该命令后，您将进入到Docker容器的交互式终端，并映射了一些端口用于可能会使用的服务，您可以直接在容器内运行MinerU相关命令来使用MinerU的功能。 您也可以直接通过替换/bin/bash为服务启动命令来启动MinerU服务，详细说明请参考通过命令启动服务。
 
 ## 使用说明
-
-通过 Docker Compose 直接启动服务
 
 我们提供了compose.yml文件，您可以通过它来快速启动MinerU服务。
 
