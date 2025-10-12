@@ -63,10 +63,12 @@ export default defineNavbarConfig([
     items: [
       {
         text: '架构设计',
+        icon: 'carbon:flow-data',
         link: '/homelab/architecture/'
       },
       {
         text: '部署指南',
+        icon: 'iconoir:box-iso',
         link: '/homelab/deploy/'
       },
     ]
