@@ -21,7 +21,21 @@ systemctl --now enable docker
 
 ::: tip
 
-拉取并运行`hello-world`来验证安装结果
+如果你使用`1Panel`服务器面板，同样会附带安装docker服务
+
+```shell
+# 1.切换到root
+sudo -i
+
+# 2.一键安装
+bash -c "$(curl -sSL https://resource.fit2cloud.com/1panel/package/v2/quick_start.sh)"
+```
+
+:::
+
+::: tip
+
+验证安装结果
 
 ```shell
 docker run hello-world
@@ -108,9 +122,11 @@ docker info
 
 [Installing the NVIDIA Container Toolkit](https://docs.nvidia.com/datacenter/cloud-native/container-toolkit/latest/install-guide.html)
 
-[如何安装 CUDA Toolkit](cuda.md)
+::: warning
+请前置安装[Nvidia CUDA Toolkit](cuda.md)
+:::
 
-1. 配置仓库
+1. 配置生产环境的软件仓库
 
 ```shell
 curl -fsSL https://nvidia.github.io/libnvidia-container/gpgkey | sudo gpg --dearmor -o /usr/share/keyrings/nvidia-container-toolkit-keyring.gpg \
@@ -125,7 +141,7 @@ curl -fsSL https://nvidia.github.io/libnvidia-container/gpgkey | sudo gpg --dear
 sudo sed -i -e '/experimental/ s/^#//g' /etc/apt/sources.list.d/nvidia-container-toolkit.list
 ```
 
-2. 更新包
+2. 更新软件包
 
 ```shell
 sudo apt-get update
@@ -145,7 +161,17 @@ sudo apt-get install -y \
     libnvidia-container1=${NVIDIA_CONTAINER_TOOLKIT_VERSION}
 ```
 
-4. 验证
+4. 配置容器运行时
+
+```shell
+# 1.设置容器运行时
+sudo nvidia-ctk runtime configure --runtime=docker
+
+# 2.重启docker服务
+sudo systemctl restart docker
+```
+
+5. 验证安装结果
 
 ```shell
 sudo docker run --rm --runtime=nvidia --gpus all ubuntu nvidia-smi

@@ -1,5 +1,8 @@
 ---
 title: Nvidia CUDA Toolkit
+tags:
+  - nvidia
+  - CUDA
 createTime: 2025/10/11 23:55:06
 permalink: /homelab/deploy/cuda/
 ---
@@ -11,6 +14,8 @@ permalink: /homelab/deploy/cuda/
 在[Ubuntu 24.04](https://developer.nvidia.com/cuda-downloads?target_os=Linux&target_arch=x86_64&Distribution=Ubuntu&target_version=24.04&target_type=deb_local)上安装
 
 - CUDA Toolkit 13.0 Update 2 Downloads
+
+Install on Ubuntu 24.04 (x86_64)
 
 ::: info
 
