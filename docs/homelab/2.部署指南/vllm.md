@@ -107,3 +107,43 @@ docker run --runtime nvidia --gpus all \
     vllm/vllm-openai:latest \
     --model Qwen/Qwen3-0.6B
 ```
+
+## 参考样例
+
+### DeepSeek
+
+::: tip
+通过[HF-Mirror](https://hf-mirror.com/)提前下载模型文件
+:::
+
+1. 部署`OpenAI`兼容服务
+
+```shell
+docker run -d \
+  --gpus all \
+  --name vllm-deepseek \
+  -p 8000:8000 \
+  -v /path/to/your/models:/root/.cache/huggingface/hub \
+  vllm/vllm-openai:latest \
+  --model deepseek-ai/DeepSeek-V2-Lite-Chat \
+  --served-model-name DeepSeek-V2-Lite-Chat \
+  --tensor-parallel-size 1 \
+  --max-model-len 4096 \
+  --gpu-memory-utilization 0.9 \
+  --trust-remote-code
+```
+
+2. 验证效果
+
+```shell
+curl http://localhost:8000/v1/chat/completions \
+  -H "Content-Type: application/json" \
+  -d '{
+    "model": "DeepSeek-V2-Lite-Chat",
+    "messages": [
+      {"role": "user", "content": "请介绍一下你自己。"}
+    ],
+    "temperature": 0.7,
+    "max_tokens": 100
+  }'
+```
