@@ -44,14 +44,6 @@ const blog = defineCollection({
   //   pagination: 15, // 每页显示文章数量
 })
 
-const homelabDoc = defineCollection({
-  type: 'doc',
-  dir: 'homelab',
-  linkPrefix: '/homelab',
-  title: 'HomeLab',
-  sidebar: 'auto'
-})
-
 const notesDoc = defineCollection({
   type: 'doc',
   dir: 'notes',
@@ -60,11 +52,28 @@ const notesDoc = defineCollection({
   sidebar: 'auto'
 })
 
+const aiDoc = defineCollection({
+  type: 'doc',
+  dir: 'ai',
+  linkPrefix: '/ai',
+  title: 'AI',
+  sidebar: 'auto'
+})
+
+const homelabDoc = defineCollection({
+  type: 'doc',
+  dir: 'homelab',
+  linkPrefix: '/homelab',
+  title: 'HomeLab',
+  sidebar: 'auto'
+})
+
 /**
  * 导出所有的 collections
  */
 export default defineCollections([
   blog,
-  homelabDoc,
   notesDoc,
+  aiDoc,
+  homelabDoc,
 ])

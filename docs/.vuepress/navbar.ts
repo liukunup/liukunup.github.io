@@ -58,8 +58,44 @@ export default defineNavbarConfig([
     ]
   },
   {
+    text: 'AI',
+    icon: 'carbon:ai-label',
+    items: [
+      {
+        text: 'App',
+        icon: 'carbon:apps',
+        link: '/ai/app/'
+      },
+      {
+        text: 'Agent',
+        icon: 'carbon:bot',
+        link: '/ai/agent/'
+      },
+      {
+        text: 'MCP',
+        icon: 'codicon:mcp',
+        link: '/ai/mcp/'
+      },
+      {
+        text: 'Model',
+        icon: 'carbon:model',
+        link: '/ai/model/'
+      },
+      {
+        text: 'Infra',
+        icon: 'carbon:bare-metal-server',
+        link: '/ai/infra/'
+      },
+      {
+        text: 'Eval',
+        icon: 'carbon:test-tool',
+        link: '/ai/eval/'
+      },
+    ]
+  },
+  {
     text: '家庭实验室',
-    icon: 'icomoon-free:lab',
+    icon: 'carbon:chemistry',
     items: [
       {
         text: '架构设计',
