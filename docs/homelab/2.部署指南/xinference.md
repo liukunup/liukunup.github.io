@@ -14,7 +14,7 @@ permalink: /homelab/deploy/xinference/
 docker run -d \
   -p 9997:9997 \
   -e HF_ENDPOINT=https://hf-mirror.com \
-  -e HF_TOKEN=<token> \
+  -e HF_TOKEN="$HF_TOKEN" \
   -v /path/to/xprobe/.xinference:/root/.xinference \
   -v /path/to/xprobe/.cache/huggingface:/root/.cache/huggingface \
   -v /path/to/xprobe/.cache/modelscope:/root/.cache/modelscope \
