@@ -87,3 +87,23 @@ VLLM_TARGET_DEVICE=cpu uv pip install . --no-build-isolation
 export VLLM_VERSION=v0.10.2
 docker pull public.ecr.aws/q9t5s3a7/vllm-cpu-release-repo:${VLLM_VERSION}
 ```
+
+## 使用说明
+
+- [使用 Docker 部署](https://docs.vllm.ai/en/stable/deployment/docker.html)
+- [使用 Kubernetes 部署](https://docs.vllm.ai/en/stable/deployment/k8s.html)
+- [CLI Reference](https://docs.vllm.ai/en/stable/cli/index.html)
+
+### 使用 Docker 部署模型
+
+- 使用官方镜像来部署模型
+
+```shell
+docker run --runtime nvidia --gpus all \
+    -v ~/.cache/huggingface:/root/.cache/huggingface \
+    --env "HUGGING_FACE_HUB_TOKEN=$HF_TOKEN" \
+    -p 8000:8000 \
+    --ipc=host \
+    vllm/vllm-openai:latest \
+    --model Qwen/Qwen3-0.6B
+```
