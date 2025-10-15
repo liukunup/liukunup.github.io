@@ -1,7 +1,7 @@
 ---
 title: Ultralytics YOLO
 createTime: 2025/10/12 21:39:47
-permalink: /homelab/deploy/ultralytics/
+permalink: /ai/app/ultralytics/
 ---
 
 查看[Ultralytics YOLO 文档](https://docs.ultralytics.com/zh/)

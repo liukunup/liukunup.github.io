@@ -1,7 +1,7 @@
 ---
 title: vLLM
 createTime: 2025/10/13 10:33:22
-permalink: /homelab/deploy/vllm/
+permalink: /ai/infra/vllm/
 ---
 
 查看官方文档 [Quickstart](https://docs.vllm.ai/en/stable/getting_started/quickstart.html)

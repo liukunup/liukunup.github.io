@@ -1,7 +1,7 @@
 ---
 title: GPU Stack
 createTime: 2025/10/13 11:53:44
-permalink: /homelab/deploy/gpustack/
+permalink: /ai/infra/gpustack/
 ---
 
 ## 安装部署

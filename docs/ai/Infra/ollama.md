@@ -1,7 +1,7 @@
 ---
 title: Ollama
 createTime: 2025/10/13 03:15:17
-permalink: /homelab/deploy/ollama/
+permalink: /ai/infra/ollama/
 ---
 
 ::tdesign:logo-github-filled:: [Ollama](https://github.com/ollama/ollama)

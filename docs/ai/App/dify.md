@@ -1,7 +1,7 @@
 ---
 title: Dify
 createTime: 2025/10/13 22:05:00
-permalink: /ai/infra/dify/
+permalink: /ai/app/dify/
 ---
 
 ## 快速部署

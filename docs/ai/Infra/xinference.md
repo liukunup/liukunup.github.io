@@ -1,7 +1,7 @@
 ---
 title: Xinference
 createTime: 2025/10/13 11:42:25
-permalink: /homelab/deploy/xinference/
+permalink: /ai/infra/xinference/
 ---
 
 ## 安装部署
