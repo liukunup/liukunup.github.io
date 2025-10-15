@@ -1,5 +1,5 @@
 ---
-title: NVIDIA Container Toolkit
+title: Nvidia Container Toolkit
 tags:
   - nvidia
   - Container Toolkit
