@@ -26,7 +26,10 @@ permalink: /homelab/deploy/mineru/
 ```shell
 pip install --upgrade pip -i https://mirrors.aliyun.com/pypi/simple
 pip install uv -i https://mirrors.aliyun.com/pypi/simple
-uv pip install -U "mineru[core]" -i https://mirrors.aliyun.com/pypi/simple 
+# 安装 mineru[core]
+uv pip install -U "mineru[core]" -i https://mirrors.aliyun.com/pypi/simple
+# 安装 mineru[all]
+uv pip install -U "mineru[all]" -i https://mirrors.aliyun.com/pypi/simple
 ```
 
 ::: tip

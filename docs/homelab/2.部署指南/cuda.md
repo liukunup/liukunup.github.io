@@ -19,6 +19,52 @@ permalink: /homelab/deploy/cuda/
 
 在[Ubuntu 24.04](https://developer.nvidia.com/cuda-downloads?target_os=Linux&target_arch=x86_64&Distribution=Ubuntu&target_version=24.04&target_type=deb_local)上安装
 
+## 验证
+
+- **查看显卡设备**
+
+```shell
+lspci | grep -i vga
+```
+
+输出样例
+
+```plaintext
+00:02.0 VGA compatible controller: Device 1234:1111 (rev 02)
+00:10.0 VGA compatible controller: NVIDIA Corporation TU102 [GeForce RTX 2080 Ti] (rev a1)
+```
+
+- **查看显卡信息**
+
+```shell
+nvidia-smi
+```
+
+输出样例
+
+```plaintext
+Wed Oct 15 11:49:09 2025       
++-----------------------------------------------------------------------------------------+
+| NVIDIA-SMI 575.57.08              Driver Version: 575.57.08      CUDA Version: 12.9     |
+|-----------------------------------------+------------------------+----------------------+
+| GPU  Name                 Persistence-M | Bus-Id          Disp.A | Volatile Uncorr. ECC |
+| Fan  Temp   Perf          Pwr:Usage/Cap |           Memory-Usage | GPU-Util  Compute M. |
+|                                         |                        |               MIG M. |
+|=========================================+========================+======================|
+|   0  NVIDIA GeForce RTX 2080 Ti     On  |   00000000:00:10.0 Off |                  N/A |
+| 27%   29C    P8             21W /  250W |       1MiB /  22528MiB |      0%      Default |
+|                                         |                        |                  N/A |
++-----------------------------------------+------------------------+----------------------+
+                                                                                         
++-----------------------------------------------------------------------------------------+
+| Processes:                                                                              |
+|  GPU   GI   CI              PID   Type   Process name                        GPU Memory |
+|        ID   ID                                                               Usage      |
+|=========================================================================================|
+|  No running processes found                                                             |
++-----------------------------------------------------------------------------------------+
+```
+
 ## **CUDA Toolkit 13.0 Update 2 Downloads**
 
 Install on **Ubuntu 24.04** (x86_64)
