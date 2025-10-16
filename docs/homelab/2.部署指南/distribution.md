@@ -1,5 +1,8 @@
 ---
 title: Distribution
+tags:
+  - Docker
+  - Registry
 createTime: 2025/10/15 17:12:25
 permalink: /homelab/deploy/distribution/
 ---
@@ -19,11 +22,24 @@ services:
     hostname: registry
     restart: unless-stopped
     ports:
-      - "15000:15000"
-      - "15001:15001"
+      - "15000:5000"
+      - "15001:5001"
     volumes:
       - /path/to/registry/config.yml:/etc/docker/registry/config.yml:ro
       - /path/to/registry/data:/var/lib/registry
+    environment:
+      OTEL_TRACES_EXPORTER: none
+
+  registry-ui:
+    image: docker.io/quiq/registry-ui
+    container_name: registry-ui
+    hostname: registry-ui
+    restart: unless-stopped
+    ports:
+      - "18000:8000"
+    environment:
+      REGISTRY_HOSTNAME: registry.example.com:15000
+      REGISTRY_INSECURE: true
 ```
 
 - config.yml
@@ -63,9 +79,9 @@ storage:
       enabled: false
 
 http:
-  addr: 0.0.0.0:15000
+  addr: 0.0.0.0:5000
   debug:
-    addr: 0.0.0.0:15001
+    addr: 0.0.0.0:5001
     prometheus:
       enabled: true
       path: /metrics
