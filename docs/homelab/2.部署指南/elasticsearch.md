@@ -1,5 +1,7 @@
 ---
 title: Elasticsearch
+tags:
+  - ELK
 createTime: 2025/10/16 15:17:11
 permalink: /homelab/deploy/elasticsearch/
 ---
