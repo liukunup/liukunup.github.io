@@ -112,6 +112,23 @@ docker compose up -d
 
 ## 使用说明
 
+在客户端上配置
+
+```json
+{
+  "insecure-registries": [
+    "http://registry.example.com:15000"
+  ]
+}
+```
+
+```shell
+vim /etc/docker/daemon.json
+systemctl restart docker
+```
+
+在客户端上测试
+
 ```shell
 # 拉取镜像用于测试
 docker pull hello-world
