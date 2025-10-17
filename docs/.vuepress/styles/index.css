@@ -1,0 +1,737 @@
+/*颜色*/
+:root {
+  /*卡片背景*/
+  --main-card-background: rgba(255, 255, 255, 0.85);
+  /*卡片边框*/
+  --main-card-border: #e3e8f7;
+  /*卡片阴影*/
+  --main-border-shadow: #2c2d300c;
+  /*卡片 hover */
+  --about-card-hover-bg: rgba(100, 190, 190, 0.8);
+  /*按钮 背景*/
+  --home-action-bnt-bg: rgb(235, 235, 239);
+  /*语言 span 背景*/
+  --about-me-skill-item-bg: #f4f2ed;
+  /* 容器背景 */
+  --main-container-bg: rgba(255, 255, 255, 0.9);
+}
+
+[data-theme="dark"] {
+  --main-card-background: rgba(27, 28, 32, 0.85);
+  --main-card-border: #3d3d3f;
+  --main-border-shadow: #00000050;
+  --about-card-hover-bg: rgba(100, 190, 190, 0.8);
+  --home-action-bnt-bg: rgb(50, 54, 63);
+  --about-me-skill-item-bg: #15191c;
+  --main-container-bg: rgba(0, 0, 0, 0.9);
+}
+
+/*卡片背景*/
+.about-me-card-bg {
+  padding: 1rem;
+  border-radius: 12px;
+  background-color: var(--main-card-background);
+  border: 1px solid var(--main-card-border);
+  box-shadow: 0 8px 12px -4px var(--main-border-shadow);
+  overflow: hidden;
+}
+
+/*卡片文字 小号*/
+.about-me-card-title-normal {
+  color: var(--vp-c-text-2);
+  font-size: 13px;
+  margin-bottom: 10px;
+}
+
+/*卡片文字 大号*/
+.about-me-card-text-big {
+  color: var(--vp-c-text-1);
+  margin: 10px 0;
+  font-size: 36px;
+  font-weight: 700;
+  line-height: 1.1;
+  @media screen and (max-width: 770px) {
+    font-size: 24px;
+    margin: 7px 0;
+  }
+}
+
+/*卡片文字 暗色*/
+.about-me-card-text-soft {
+  color: var(--vp-c-text-2);
+}
+
+/*卡片文字 彩色*/
+.about-me-card-text-color {
+  background: var(
+    --vp-bg-home-hero-name,
+    linear-gradient(
+      315deg,
+      var(--vp-c-purple-1) 10%,
+      var(--vp-c-brand-2) 75%,
+      var(--vp-c-brand-2) 100%
+    )
+  );
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.vp-blog {
+  background-image: linear-gradient(
+      var(--main-container-bg),
+      var(--main-container-bg)
+    ),
+    url(/images/bg-2.jpg);
+}
+
+/*颜色*/
+:root {
+  /*文章背景线条颜色*/
+  --vp-doc-blog-bg: rgba(100, 190, 190, 0.09);
+  /*博客单项hover border 颜色*/
+  --vp-blog-post-item-hover-border: rgba(80, 134, 161, 0.5);
+  /*博客单项hover shadow*/
+  --vp-blog-post-item-hover-shadow: rgba(80, 134, 161, 0.2);
+}
+
+[data-theme="dark"] {
+  --vp-doc-blog-bg: rgba(30, 120, 120, 0.05);
+  --vp-blog-post-item-hover-border: rgba(80, 134, 161, 0.4);
+  --vp-blog-post-item-hover-shadow: rgba(80, 134, 161, 0.15);
+}
+
+/*左上角logo*/
+.vp-navbar-title span {
+  font-family: LogoFont, serif;
+  font-weight: bolder;
+  font-size: 1.4rem;
+}
+
+/*文章背景*/
+.vp-doc-container {
+  background: radial-gradient(
+        farthest-side at -33.33% 50%,
+        #0000 52%,
+        var(--vp-doc-blog-bg) 54% 57%,
+        #0000 59%
+      )
+      0 calc(100px / 2),
+    radial-gradient(
+        farthest-side at 50% 133.33%,
+        #0000 52%,
+        var(--vp-doc-blog-bg) 54% 57%,
+        #0000 59%
+      )
+      calc(100px / 2) 0,
+    radial-gradient(
+      farthest-side at 133.33% 50%,
+      #0000 52%,
+      var(--vp-doc-blog-bg) 54% 57%,
+      #0000 59%
+    ),
+    radial-gradient(
+      farthest-side at 50% -33.33%,
+      #0000 52%,
+      var(--vp-doc-blog-bg) 54% 57%,
+      #0000 59%
+    ),
+    rgba(103, 145, 122, 0);
+  background-size: calc(100px / 4.667) 100px, 100px calc(100px / 4.667);
+}
+/*博客页面 单个卡片效果*/
+.vp-blog-post-item {
+  @media screen and (max-width: 770px) {
+    margin: 0 0 !important;
+    border-radius: 6px;
+  }
+  transition: box-shadow 0.2s ease-out, border-color 0.2s ease-out !important;
+  border: 1px rgba(255, 0, 0, 0) solid;
+  &:hover {
+    box-shadow: 0 0 7px 2px var(--vp-blog-post-item-hover-shadow) !important;
+    border: 1px var(--vp-blog-post-item-hover-border) solid;
+  }
+}
+
+
+/*地址栏*/
+.main {
+    .vp-breadcrumb {
+        display: none;
+    }
+}
+
+
+/*美化标题*/
+.vp-doc {
+    h1 {
+        display: none;
+    }
+
+    h2,
+    h3 {
+        .header-anchor:hover { /*选中颜色*/
+            color: #4dd0e1;
+        }
+    }
+
+    h4 {
+        --prefix-icon: "🍁 ";
+    }
+
+    h5 {
+        --prefix-icon: "🌸 ";
+    }
+
+    h6 {
+        --prefix-icon: "🍂 ";
+    }
+
+
+    h2 {
+        /*去掉线*/
+        border: none;
+
+        padding-top: 0;
+
+        .header-anchor {
+            display: block;
+            border-bottom: 4px solid #4dd0e1;
+            position: relative;
+            font-size: 24px;
+            padding: 12px 32px;
+            color: #4dd0e1;
+            font-weight: 700;
+
+            &::before,
+            &::after {
+                content: "";
+                display: block;
+                position: absolute;
+                bottom: 0;
+                opacity: 1;
+            }
+
+            &::before {
+                opacity: 1;
+                width: 24px;
+                height: 24px;
+                left: 0;
+                top: 0;
+                margin: auto;
+                background-size: 24px 24px;
+                background-image: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAADGklEQVRYR81X32vTYBQ999s6mFjQgQ+DrbHiVFZYU4cDcQ/6pGhTFVYFEXGi82H+Bz448UnEF1Fx9ccEEcXpZE3d5tP2ooKiTacTHaLNpigMHDgnU9tcSbrWrkwWR0sbyEOSe885ObnfvV8IRT6oyPwoLQHBx+OVM5WJvSyEVAhnBOjt7yU/+/rr6r6l8TMO+F/EN0JQhICqQpD/xaRpcpAc9tS+M+9lBCia/oqBamK+zeDuQogQZaKJk3wcQjxSva7tGQGB2Ke1zIk3DNyMyNL+QpCnMQOaPsDAVuGAp9cjvbYc8Ec/bCYSg0zoiHilk1tHxqsqEsYlML4kjIpT/eurJxRNPweQU5VdrWaOEo1fgKAVbBgXIz73kF3R/ph+ghgdzMYWM29eAWlBJqgZaFlFYtC6nhWpaDqnSGlIlV1WjJ3DloDNgyNLncudqgX//Ucg3LxuStHGuhi8pqKCW3rqV342rwFjRznKm+/LNaN2yC237ThgF2wxcfMLeP6+ncrKzoPoKTGeLQbYbg4TNoC5iZPJY5HGVRdSNZAWYBclD3FzBQzrR8hACAKdzBzKA/4/IYioDQaOskBbpEG6PO8qKKSAEi3CnEb0Pw4oMf0OmKbTDWqh3Lw6EIiNBZi5lxh3wz4puBD5ovqAMvxhHSdFKxE1CQe3m/07TeTX4lcJdAhE+1Sv65Z5P/ByvIGTRowIZ9igbtXnmrOsbTvgj+kHBNMuBu9OdVw8EeU4nC1A0cYmAHZOTRrLhra4Z8ywnSN6vZHAFTA2WnnMfQB3qz73ddsOZM8CACFDIPSgQXqebXEgqgeZcAeEe6pXasm1f8ew3igMtAHWac0Uc/jYdyAaP0xEBwFsmgUPqbJ0NE2UKj4EGcahiOzuyhagaHpnmtgcVgTcCMuua7YdyAHbA3ArQNscVFbb4635aD6fnYaTvxxi9UNP7ddMXaRWVBdAcaLk6bDXPZCNZ9uBXEsDUX1T2Cc9yjig6Z0EHg3LK8/aqf6MwJKchkXfks1+0+JtSq3qLPa23BRR1B+T/6nkfMaW1r9hPt/MLtYfTLEpP+T9FNoAAAAASUVORK5CYII=);
+            }
+
+            &::after {
+                opacity: 1;
+                right: 0;
+                width: 400px;
+                height: 10px;
+                border-top-right-radius: 24px;
+                background: linear-gradient(90deg, transparent, #4dd0e1);
+                max-width: 50vw;
+            }
+        }
+    }
+
+    h3 {
+        border: none;
+
+        .header-anchor {
+            margin: 30px 0;
+            font-size: 18px;
+            position: relative;
+            padding: 4px 32px;
+            width: max-content;
+            color: #4dd0e1;
+            font-weight: 700;
+
+            &::before,
+            &::after {
+                opacity: 1;
+                content: "";
+                display: block;
+                position: absolute;
+                bottom: 0;
+            }
+
+            &::before {
+                border-bottom: 2px solid #4dd0e1;
+                width: 100%;
+                content: "";
+                display: block;
+                height: 28px;
+                position: absolute;
+                left: 0;
+                top: 0;
+                bottom: -2px;
+                margin: auto;
+                background-size: 28px 28px;
+                background-image: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAABRklEQVRYR2NkGGDAOMD2M4w6YDQERkNg+ITAppcfY/8zMv3wF+NdTUrZQpUQ2PT6cz8Dw/8CkMWMDIwNvqK8jcQ6gmIHNN19EaXPx1XPyMCghrCUKcpPlGc5MY6gyAE+Fx52MjL8j3cU5a1UYWXtZGBkEAVb+p8hxU+Mby5NHQCxnKEMaskzJ37uFmUetkmMjAzrfUX4woixHBJlZAA0y2EmPPYU4enLkhGeQIqRJDsAh+UgO7duNpD3IcVykkOA2paT5ABaWE60A2hlOdEO8D3/4CMDIyMfWvySFefoaYSoROh74eFXBgYGLiTNVLGc+BC48PAnAwMDG9QBVLOcaAd8P5ox+x/jf5AjGLgYfnwnKqv9/8/PwPO/kFF/MSj0cAKiouD/0bgYoixFU8RovWgJIX1EOYCQIZTIjzpgNARGQ2DAQwAAvHBaIdB7zxsAAAAASUVORK5CYII=);
+                background-repeat: no-repeat;
+                animation: h3AnimationBefore 2s infinite alternate;
+            }
+
+            &::after {
+                content: "";
+                display: block;
+                width: 28px;
+                height: 28px;
+                position: absolute;
+                border: 2px solid #4dd0e1;
+                border-radius: 50%;
+                right: -15px;
+                top: 0;
+                bottom: 0;
+                margin: auto;
+                background-size: 28px 28px;
+                background-image: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAABRklEQVRYR2NkGGDAOMD2M4w6YDQERkNg+ITAppcfY/8zMv3wF+NdTUrZQpUQ2PT6cz8Dw/8CkMWMDIwNvqK8jcQ6gmIHNN19EaXPx1XPyMCghrCUKcpPlGc5MY6gyAE+Fx52MjL8j3cU5a1UYWXtZGBkEAVb+p8hxU+Mby5NHQCxnKEMaskzJ37uFmUetkmMjAzrfUX4woixHBJlZAA0y2EmPPYU4enLkhGeQIqRJDsAh+UgO7duNpD3IcVykkOA2paT5ABaWE60A2hlOdEO8D3/4CMDIyMfWvySFefoaYSoROh74eFXBgYGLiTNVLGc+BC48PAnAwMDG9QBVLOcaAd8P5ox+x/jf5AjGLgYfnwnKqv9/8/PwPO/kFF/MSj0cAKiouD/0bgYoixFU8RovWgJIX1EOYCQIZTIjzpgNARGQ2DAQwAAvHBaIdB7zxsAAAAASUVORK5CYII=);
+                animation: h3AnimationAfter 2s infinite alternate;
+            }
+        }
+    }
+
+    h4,
+    h5,
+    h6 {
+        .header-anchor {
+            & > span {
+                &::before {
+                    content: var(--prefix-icon);
+                }
+            }
+        }
+    }
+
+
+    blockquote { /*> 引用内容*/
+        margin: 15px 0;
+        padding: 24px 32px;
+        border-left: 4px solid #26c6da;
+        background: rgba(77, 208, 225, 0.15);
+        position: relative;
+
+        &::before {
+            content: "❝";
+            top: 8px;
+            left: 8px;
+            color: rgb(77, 208, 225);
+            font-size: 30px;
+            line-height: 1;
+            font-weight: 700;
+            position: absolute;
+            opacity: 0.7;
+        }
+
+        &::after {
+            content: "❞";
+            font-size: 30px;
+            position: absolute;
+            right: 8px;
+            bottom: 0;
+            color: rgb(77, 208, 225);
+            opacity: 0.7;
+        }
+    }
+
+
+    :not(pre) > code { /*`内容`*/
+        background-color: rgba(77, 208, 225, 0.08);
+        color: #26c6da;
+    }
+
+    table {
+        width: 100%;
+        display: table;
+    }
+}
+
+.aside {
+    .outline-link:hover,
+    .outline-link.active {
+        color: #7adce9;
+    }
+
+    .outline-marker {
+        background-color: #26c6da;
+    }
+}
+
+/*h3 animate*/
+@keyframes h3AnimationBefore {
+    0% {
+        width: 28px;
+    }
+
+    25% {
+        width: 100%;
+    }
+    50% {
+        width: 100%;
+    }
+    100% {
+        width: 100%;
+    }
+}
+
+@keyframes h3AnimationAfter {
+    0% {
+        transform: rotate(0);
+    }
+    10% {
+        transform: rotate(0);
+    }
+    50% {
+        transform: rotate(-1turn);
+    }
+
+    100% {
+        transform: rotate(-1turn);
+    }
+}
+
+
+/* 自定义鼠标样式 */
+#aside-content .card-widget .card-info-social-icons,
+#bber>section>ul>li>div .bber-info-from,
+#bber>section>ul>li>div .bber-info-time,
+html {
+    cursor: url(https://cdn.npmmirror.com/packages/pixpro/1.7.6/files/static/images/alternate.png) 16 16, auto !important
+}
+
+#article-container .highlight-tools .copy-button,
+#aside-content .aside-list>.aside-list-item,
+#aside-content .card-info #author-info__sayhi,
+#aside-content .card-widget#card-wechat,
+#recent-posts .recent-post-item,
+#recent-posts>.recent-post-item>.recent-post-info,
+#rightMenu .rightMenu-group .rightMenu-item,
+#twikoo .tk-comments .OwO .OwO-body,
+.OwO .OwO-body .OwO-bar .OwO-packages li,
+.OwO .OwO-body .OwO-items .OwO-item,
+.article-categories-original,
+.bber-reply,
+.card-author,
+.card-title,
+.category-bar-next,
+.code-expand-btn,
+.comment-barrage-item .barrageContent,
+.el-input__inner,
+.modal-article-date,
+.nav-button,
+.pagination span,
+.reward-button,
+.share-link .share-button,
+.title,
+.tk-avatar-img,
+.tk-comments-title span,
+.tk-expand,
+.tk-submit-action-icon,
+.topGroup .banner-button,
+.topGroup .recent-post-item,
+a,
+a span,
+button,
+i.bber-logo,
+img,
+input,
+summary {
+    cursor: url(https://cdn.npmmirror.com/packages/pixpro/1.7.6/files/static/images/link.png) 16 16, pointer !important
+}
+
+#toPageText,
+.local-search-box--input,
+h2,
+label,
+p,
+span,
+textarea,
+time {
+    cursor: url(https://cdn.npmmirror.com/packages/pixpro/1.7.6/files/static/images/text.png) 16 16, text !important
+}
+
+
+/* ========================twikoo美化====================== */
+/* 隐藏评论者头像 
+#twikoo .tk-comments .tk-submit .tk-avatar.tk-has-avatar {
+    display: none;
+}*/
+
+/* 下面表情和按钮那一栏的设置 */
+#twikoo .tk-comments .tk-submit .tk-row.actions{
+    margin-bottom: 0;
+    margin-left: 0;
+}
+
+/* 个人信息和文本输入之间的空位置 */
+.tk-main .tk-submit .tk-col .tk-meta-input,
+#twikoo .tk-comments .tk-submit .tk-col .tk-meta-input{
+    margin-bottom: 16px;
+}
+
+/* 直接固定高度，解决提交按钮有时高度不起作用的问题 */
+.tk-row.actions button.el-button {
+    height: 32px;
+}
+
+/* 解决图片大小超出范围问题 */
+.tk-main .tk-content img {
+  max-width: 100%;
+  height: auto;
+}
+
+/* 圆角设置 */
+.tk-meta-input input {
+    border-top-right-radius: 12px;
+    border-bottom-right-radius: 12px;
+}
+
+.tk-meta-input div {
+    border-top-left-radius: 12px;
+    border-bottom-left-radius: 12px;
+}
+
+/* 输入框样式 */
+.tk-input.el-textarea textarea {
+    border-radius: 12px;
+    min-height: 150px !important;
+    height: auto;
+}
+
+/* 宽度太窄的时候去掉预览按钮 */
+@media screen and (max-width:420px) {
+    .tk-main .tk-submit .tk-row.actions button.el-button.tk-preview.el-button--default.el-button--small{
+        display: none;
+    }
+}
+
+:root {
+  --liushen-radius: 12px;
+  --liushen-card-border-width: 1px;
+}
+
+/* 浅色模式颜色 */
+[data-theme=light] {
+  --liushen-border-color: #e3e8f7;
+  --liushen-card-bg: #fff;
+  --liushen-card-border: #e3e8f7;
+  --style-border-always: 1px solid var(--liushen-card-border);
+  --liushen-blue: #425AEF;
+}
+
+/* 深色模式颜色 */
+[data-theme=dark] {
+  --liushen-border-color: #42444a;
+  --liushen-card-bg: #2c2c2c;
+  --liushen-card-border: #42444a;
+  --style-border-always: 1px solid var(--liushen-card-border);
+  --liushen-blue: #0084FF;
+}
+
+/* 评论区评论大框 */
+.twikoo .tk-comments-container>.tk-comment,
+.twikoo .tk-comments .tk-submit {
+  /* 内边距 */
+  padding: 20px;
+  margin-top: 2rem;  /* 增加上边距 */
+  margin-bottom: 20px;
+  /* 圆角 */
+  border-radius: var(--liushen-radius);
+  /* 背景颜色 */
+  background: var(--liushen-card-bg);
+  /* 变动动画时长 */
+  transition: .3s;
+}
+
+/* 浅色模式评论区评论大框 */
+[data-theme=light] 
+.twikoo .tk-comments-container>.tk-comment,
+.twikoo .tk-comments .tk-submit {
+  /* 阴影 */
+  box-shadow: var(--card-box-shadow);
+}
+
+/* 浅色模式评论区评论大框阴影悬浮加深 */
+[data-theme=light] 
+.twikoo .tk-comments-container>.tk-comment:hover,
+.twikoo .tk-comments .tk-submit:hover {
+  /* 阴影（浅色模式突出层次感） */
+  box-shadow: var(--card-hover-box-shadow);
+}
+
+/* 黑暗模式评论区评论大框 */
+[data-theme=dark] 
+.twikoo .tk-comments-container>.tk-comment,
+.twikoo .tk-comments .tk-submit {
+  /* 边框样式 */
+  border-style: solid;
+  /* 边框宽度 */
+  border-width: var(--liushen-card-border-width);
+  /* 边框颜色 */
+  border-color: var(--liushen-card-border);
+}
+
+/* 设备信息 */
+.twikoo .tk-extra {
+  /* 圆角 */
+  border-radius: var(--liushen-radius);
+  /* 背景颜色 */
+  background: var(--liushen-card-bg);
+  /* 内边距 */
+  padding: 0.4rem;
+  /* 底边距 */
+  margin-bottom: 1rem;
+  /* 变动动画时长 */
+  transition: .3s;
+}
+
+/* 浅色模式设备信息 */
+[data-theme=light] .twikoo .tk-extra {
+  /* 阴影 */
+  box-shadow: var(--card-box-shadow);
+}
+
+/* 浅色模式设备信息阴影悬浮加深 */
+[data-theme=light] .twikoo .tk-extra:hover {
+  /* 阴影 */
+  box-shadow: var(--card-hover-box-shadow);
+}
+
+/* 黑暗模式设备信息 */
+[data-theme=dark] .twikoo .tk-extra {
+  /* 边框样式 */
+  border-style: solid;
+  /* 边框宽度 */
+  border-width: var(--liushen-card-border-width);
+  /* 边框颜色 */
+  border-color: var(--liushen-card-border);
+}
+
+/* 加载更多按钮 */
+.twikoo .tk-expand {
+  /* 圆角 */
+  border-radius: var(--liushen-radius);
+}
+
+/* 浅色模式加载更多按钮 */
+[data-theme=light] .twikoo .tk-expand {
+  /* 阴影 */
+  box-shadow: var(--card-box-shadow);
+}
+
+/* 浅色模式加载更多按钮（鼠标悬浮时） */
+[data-theme=light] .twikoo .tk-expand:hover {
+  /* 阴影 */
+  box-shadow: var(--card-hover-box-shadow);
+  /* 背景颜色 */
+  background-color: var(--btn-bg);
+}
+
+/* 黑暗模式加载更多按钮（鼠标悬浮时） */
+[data-theme=dark] .twikoo .tk-expand:hover {
+  /* 背景颜色 */
+  background-color: var(--liushen-blue);
+}
+
+/* 黑暗模式加载更多按钮 */
+[data-theme=dark] .twikoo .tk-expand {
+  /* 边框样式 */
+  border-style: solid;
+  /* 边框宽度 */
+  border-width: var(--liushen-card-border-width);
+  /* 边框颜色 */
+  border-color: var(--liushen-card-border);
+}
+
+/* 分类卡片移动端个人信息卡片只显示两个 */
+@media screen and (max-width:570px) {
+    .tk-main .tk-extras {
+        display: none;
+    }
+}
+
+/* 评论区按钮样式 */
+.tk-row.actions button.el-button {
+    border-radius: 12px !important;
+}
+
+/* 由于twikoo内部函数不宜修改，为了合适，去掉弹窗中的刷新按钮，该部分不需要，这是为了适配右键回复弹窗的内容的
+#popup #twikoo .tk-comments .tk-comments-container .tk-comments-title > span:nth-child(2) > span:nth-child(1) {
+	display: none;
+} */
+
+/* 评论框背景图片优化 */
+.twikoo .el-input__inner,
+.twikoo .el-textarea__inner {
+    transition: background-position-y 0.3s ease-in-out 0s !important;
+}
+
+.twikoo .el-input__inner:focus,
+.twikoo .el-textarea__inner:focus {
+    background-position-y: 350px;
+}
+
+.tk-input .el-textarea__inner {
+    -moz-background-size: contain;
+    -webkit-background-size: contain;
+    -moz-background-size: contain;
+    background-size: contain
+}
+/* ========================twikoo美化====================== */
+
+/* ========================twikoo输入内容提示=============== */
+/* 设置文字内容 :nth-child(1)的作用是选择第几个 */
+.el-input.el-input--small.el-input-group.el-input-group--prepend:nth-child(1):before {
+  content: '输入QQ号会自动获取昵称和头像🐧';
+}
+
+.el-input.el-input--small.el-input-group.el-input-group--prepend:nth-child(2):before {
+  content: '收到回复将会发送到您的邮箱📧';
+}
+
+.el-input.el-input--small.el-input-group.el-input-group--prepend:nth-child(3):before {
+  content: '可以通过昵称访问您的网站🔗';
+}
+
+/* 当用户点击输入框时显示 */
+.el-input.el-input--small.el-input-group.el-input-group--prepend:focus-within::before,
+.el-input.el-input--small.el-input-group.el-input-group--prepend:focus-within::after {
+  display: block;
+}
+
+/* 主内容区 */
+.el-input.el-input--small.el-input-group.el-input-group--prepend::before {
+  /* 先隐藏起来 */
+  display: none;
+  /* 绝对定位 */
+  position: absolute;
+  /* 向上移动60像素 */
+  top: -60px;
+  /* 文字强制不换行，防止left:50%导致的文字换行 */
+  white-space: nowrap;
+  /* 圆角 */
+  border-radius: 10px;
+  /* 距离左边50% */
+  left: 50%;
+  /* 然后再向左边挪动自身的一半，即可实现居中 */
+  transform: translate(-50%);
+  /* 填充 */
+  padding: 14px 18px;
+  background: #444;
+  color: #fff;
+}
+
+/* 小角标 */
+.el-input.el-input--small.el-input-group.el-input-group--prepend::after {
+  display: none;
+  content: '';
+  position: absolute;
+  /* 内容大小（宽高）为0且边框大小不为0的情况下，每一条边（4个边）都是一个三角形，组成一个正方形。
+  我们先将所有边框透明，再给其中的一条边添加颜色就可以实现小三角图标 */
+  border: 12px solid transparent;
+  border-top-color: #444;
+  left: 50%;
+  transform: translate(-50%, -48px);
+}
+/* ========================twikoo输入内容提示=============== */

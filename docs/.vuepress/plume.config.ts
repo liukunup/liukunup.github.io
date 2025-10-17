@@ -52,8 +52,8 @@ export default defineThemeConfig({
     avatar: 'https://theme-plume.vuejs.press/plume.png',
     name: '我的代码温柔如风',
     description: '我的博客',
-    // circle: true,
-    // location: '',
+    circle: true,
+    location: 'Hubei, China',
     // organization: '',
   },
 
