@@ -2,52 +2,52 @@
   <div class="container">
     <canvas ref="canvasRef"></canvas>
     <div class="head-social">
-
-      <a href="https://github.com/XingJi-love" target="_blank" class="head-social-btn"> <icon name="mdi:github"/> </a>
+      <a href="https://github.com/zhenghaoyang24" target="_blank" class="head-social-btn">
+        <icon name="grommet-icons:github" />
+      </a>
+      <a href="https://gitee.com/zhenghaoyang24" target="_blank" class="head-social-btn">
+        <icon name="simple-icons:gitee" />
+      </a>
       <router-link to="/blog/" class="head-social-avatar"><img src="https://i.p-i.vip/47/20241024-67192acae3bb8.png" alt="avatar"></router-link>
-      <a href="mailto:fingawjavier@gmail.com" target="_blank" class="head-social-btn"><icon class="head-social-btn" name="ic:baseline-email"></icon></a>
-
+      <a href="https://codepen.io/zhenghaoyang24" target="_blank" class="head-social-btn">
+        <icon class="head-social-btn" name="simple-icons:codepen"></icon>
+      </a>
+      <a href="mailto:zhenghaoyang24@foxmail.com" target="_blank" class="head-social-btn">
+        <icon class="head-social-btn" name="streamline-flex:mail-send-email-message-circle-solid"></icon>
+      </a>
     </div>
     <div class="about-me">
       <div class="card-content grid-row-3-2">
-        <AboutMeName/>
+        <AboutMeName />
         <AboutMeText>
           <template #motto>
             <slot name="motto">
               <p class="about-me-card-title-normal">座右铭</p>
-              <p class="about-me-card-text-big">迄今所有人生都大写着失败，</p>
-              <p class="about-me-card-text-big about-me-card-text-color">但不妨碍我继续向前✨</p>
+              <p class="about-me-card-text-big">老师，</p>
+              <p class="about-me-card-text-big about-me-card-text-color">我太想进步了。</p>
             </slot>
           </template>
         </AboutMeText>
       </div>
       <div class="card-content grid-row-3-2">
-        <AboutMeSkill/>
-        <AboutMeLife/>
+        <AboutMeSkill />
+        <AboutMeLife />
       </div>
       <div class="card-content grid-row-1-1">
         <AboutMeText>
           <template #motto>
             <slot name="motto">
-              <p class="about-me-card-title-normal">提交记录</p>
-              <picture>
-                <source media="(prefers-color-scheme: light),(prefers-color-scheme: dark)"
-                        srcset="https://raw.githubusercontent.com/XingJi-love/XingJi-love/output/github-contribution-grid-snake-dark.svg"
-                        class="source-dark">
-                <source media="not all"
-                        srcset="https://raw.githubusercontent.com/XingJi-love/XingJi-love/output/github-contribution-grid-snake.svg"
-                        class="source-light">
-                <img alt="github contribution grid snake animation"
-                     src="https://raw.githubusercontent.com/XingJi-love/XingJi-love/output/github-contribution-grid-snake.svg"
-                     style="visibility: visible; max-width: 100%;">
-              </picture>
+              <p class="about-me-card-title-normal">追求</p>
+              <p class="about-me-card-text-big about-me-card-text-soft">用心去<span style="color: #3a5ccc">感受</span>
+              </p>
+              <p class="about-me-card-text-big">用热爱去<span style="color: #d53737">创造</span></p>
             </slot>
           </template>
         </AboutMeText>
-        <AboutMeCharacter/>
+        <AboutMeCharacter />
       </div>
       <div class="card-content grid-row-1">
-        <AboutMeFriendLink/>
+        <AboutMeFriendLink />
       </div>
     </div>
   </div>
@@ -67,7 +67,8 @@ canvas {
   position: fixed;
   top: -1px;
   left: -1px;
-  pointer-events: none; /* 允许鼠标事件穿透 */
+  pointer-events: none;
+  /* 允许鼠标事件穿透 */
   overflow: hidden;
 }
 
@@ -82,10 +83,15 @@ canvas {
     border-radius: 30%;
     overflow: hidden;
     width: 60px;
-    transition: transform 0.2s;
+    transition: all 0.2s;
+    box-shadow: 0 4px 6px var(--avatartar-shadow-color, rgba(0, 0, 0, 0.1));
 
+    /* 更柔和的阴影 */
     &:hover {
-      transform: scale(1.1);
+      transform: translateY(-2px);
+      /* 轻微上浮效果替代缩放 */
+      box-shadow: 0 6px 12px var(--avatartar-shadow-color, rgba(0, 0, 0, 0.2));
+      /* 悬停时阴影扩散 */
     }
   }
 
@@ -107,6 +113,7 @@ canvas {
   max-width: 1380px;
   margin: 0 auto;
   width: 90%;
+
   @media screen and (max-width: 770px) {
     width: 94%;
   }
@@ -116,6 +123,7 @@ canvas {
   margin-top: 20px;
   display: grid;
   gap: 20px;
+
   @media screen and (max-width: 770px) {
     display: flex;
     flex-direction: column;
@@ -133,13 +141,11 @@ canvas {
 .grid-row-1 {
   grid-template-columns: 1fr;
 }
-
-
 </style>
 
 
 <script setup lang="ts">
-import {ref, onMounted, onUnmounted} from 'vue'
+import { ref, onMounted, onUnmounted } from 'vue'
 import AboutMeName from "./AboutMeName.vue";
 import AboutMeText from "./AboutMeText.vue";
 import AboutMeSkill from "./AboutMeSkill.vue";
@@ -230,8 +236,8 @@ const drawGrid = () => {
 const createComet = () => {
   const direction = Math.random() > 0.5 ? 'horizontal' : 'vertical'
   const maxPosition = direction === 'horizontal'
-      ? Math.floor(window.innerHeight / linesGap)
-      : Math.floor(window.innerWidth / linesGap)
+    ? Math.floor(window.innerHeight / linesGap)
+    : Math.floor(window.innerWidth / linesGap)
 
   const position = Math.floor(Math.random() * maxPosition) * linesGap
 
@@ -249,7 +255,7 @@ const drawComet = (comet: Comet) => {
   if (!context || !canvas) return
 
   const length = 80
-  const {direction, position, progress} = comet
+  const { direction, position, progress } = comet
 
   if (direction === 'horizontal') {
     const x = progress * canvas.width
