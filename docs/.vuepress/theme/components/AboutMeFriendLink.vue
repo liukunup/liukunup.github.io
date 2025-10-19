@@ -7,15 +7,18 @@ import FRIENDS from '../data/friends.json'
     <p class="about-me-card-title-normal">友情链接</p>
     <div class="about-me-friends-title">
       <p class="about-me-card-text-big about-me-card-text-color">我的好友们</p>
-      <router-link to="/more/friends/">
+      <!-- <router-link to="/more/friends/">
         <icon name="game-icons:three-friends"/>
         所有好友
-      </router-link>
+      </router-link> -->
     </div>
     <div class="about-me-friends-content">
       <a :href="item.link" target="_blank" class="about-me-friends-item" v-for="(item, index) in FRIENDS" :key="index"
          :title="item.name+':'+item.link">
         <img :src="item.avatar" alt="头像">
+      </a>
+      <a href="/friends/" target="_blank" class="about-me-friends-item about-me-card-text-color" title="查看更多好友">
+        <img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0Ij48ZyBmaWxsPSJub25lIiBzdHJva2U9ImN1cnJlbnRDb2xvciIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIiBzdHJva2UtbGluZWpvaW49InJvdW5kIiBzdHJva2Utd2lkdGg9IjEuNSI+PHBhdGggZD0iTTE1LjUgMTFhMy41IDMuNSAwIDEgMC03IDBhMy41IDMuNSAwIDAgMCA3IDAiLz48cGF0aCBkPSJNMTUuNDgzIDExLjM1cS40ODQuMTQ5IDEuMDE3LjE1YTMuNSAzLjUgMCAxIDAtMy40ODMtMy44NW0tMi4wMzQgMGEzLjUgMy41IDAgMSAwLTIuNDY2IDMuN00yMiAxNi41YzAtMi43NjEtMi40NjItNS01LjUtNW0xIDhjMC0yLjc2MS0yLjQ2Mi01LTUuNS01cy01LjUgMi4yMzktNS41IDUiLz48cGF0aCBkPSJNNy41IDExLjVjLTMuMDM4IDAtNS41IDIuMjM5LTUuNSA1Ii8+PC9nPjwvc3ZnPg==" alt="更多好友">
       </a>
     </div>
   </div>
@@ -57,6 +60,7 @@ import FRIENDS from '../data/friends.json'
   line-height: 45px;
   overflow: hidden;
   text-overflow: ellipsis;
+
   @media screen and (max-width: 770px) {
     max-height: 200px;
   }

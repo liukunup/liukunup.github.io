@@ -1,4 +1,6 @@
 ---
+title: 关于我
+createTime: 2025/10/19 18:00:00
 permalink: /about/
 comment: false
 contributors: false
@@ -9,18 +11,16 @@ readingTime: false
 lastUpdated: false
 prev: false
 next: false
-title: about
-createTime: 2025/03/30 21:20:05
 ---
 
 <center>
-  <a href="https://home.xingji.fun/">
-    <img src="/images/hello.png" alt="Hello">
+  <a href="https://liukunup.github.io/">
+    <img src="/poster.jpg" alt="Joker">
   </a>
 </center>
 
 <p align="center">
-<img src="https://readme-typing-svg.demolab.com?font=Orbitron&size=25&pause=1000&center=true&vCenter=true&random=false&width=600&lines=Welcome+to+my+GitHub+profile+page!;I+am+XINGJI+obsessed+with+programming!" />
+<img src="https://readme-typing-svg.demolab.com?font=Orbitron&size=25&pause=1000&center=true&vCenter=true&random=false&width=600&lines=Welcome+to+my+GitHub+profile+page!;I+am+liukunup+obsessed+with+programming!" />
 </p>
 
 <center>
@@ -36,14 +36,14 @@ createTime: 2025/03/30 21:20:05
 
 <p align="center"><img width="450px" src="https://github.com/abhisheknaiidu/abhisheknaiidu/raw/master/code.gif?raw=true"></p>
 
-大家好，我是 **XINGJI**，一名 00 后 Java 后端初学者，正在成都边学边做。  
+大家好，我是 **liukunup**，一名 90 后 Java 后端初学者，正在成都边学边做。  
 坚信「**打好基础、多做项目、持续输出**」是成长最快的路径。
 
-- 🌱 **学习阶段**：Java、Mysql、JDBC
-- 📫 **联系方式**：  
-  - 邮箱：3968523679@qq.com  
-  - GitHub：[XingJi-love](https://github.com/XingJi-love)  
-- 🏠 **个人主页**：[https://home.xingji.fun](https://home.xingji.fun)
+- 🌱 **学习阶段**：Go / React / vue
+- 📫 **联系方式**：
+  - 邮箱：liukunup@outlook.com
+  - GitHub：[liukunup](https://github.com/liukunup)  
+- 🏠 **个人主页**：[https://liukunup.github.io/](https://liukunup.github.io/)
 
 欢迎大佬们指点，也欢迎同路人一起结伴学习！
 
@@ -79,15 +79,6 @@ createTime: 2025/03/30 21:20:05
 
 
 ## 🌐 网站运营
-| Icon         | 名称       | 链接                                                               |
+| Icon         | Name       | Link                                                               |
 | ------------ | ---------- | ------------------------------------------------------------------ |
-| 🏠 Home       | 个人主页   | [https://home.xingji.fun/](https://home.xingji.fun/)               |
-| 🪄 Blog       | 个人博客   | [https://love.xingji.fun/](https://love.xingji.fun/)               |
-| 🪄 Blog       | 技术博客   | [https://blog.xingji.fun/](https://blog.xingji.fun/)               |
-| 🪄 Blog       | Vite博客   | [https://vite.xingji.fun/](https://vite.xingji.fun/)               |
-| 🪄 Blog       | Vue博客    | [https://vue.xingji.fun/](https://vue.xingji.fun/)                 |
-| 📊 Statistics | 访客统计   | [https://umami.xingji.fun/](https://umami.xingji.fun/)             |
-| 🎨 Design     | 封面设计   | [https://cover.xingji.fun/](https://cover.xingji.fun/)             |
-| 🖥️ Detection  | 站点检测   | [https://status.xingji.fun/](https://status.xingji.fun/)           |
-| 🤖 GPT        | 自建GPT    | [https://chat.xingji.fun/](https://chat.xingji.fun/)               |
-| ☁️ Tencent    | 腾讯开发者 | [https://cloud.tencent.com/](https://cloud.tencent.com/)           |
+| 🪄 Blog      | 个人博客    | [https://liukunup.github.io/](https://liukunup.github.io/)               |

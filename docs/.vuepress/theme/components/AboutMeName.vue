@@ -5,8 +5,8 @@
 <template>
   <div class="about-me-name">
     <p>你好，很高兴认识你！👋</p>
-    <p class="about-me-card-text-big">你可以叫我 Hoey .</p>
-    <p>是一名爱幻想的幻想家，更是一名实干家。</p>
+    <p class="about-me-card-text-big">你可以叫我 KUN .</p>
+    <p>是一个靠谱的测试工程师，更是一个爱好广泛的全栈工程师。</p>
   </div>
 </template>
 

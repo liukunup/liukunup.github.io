@@ -2,17 +2,22 @@
   <div class="container">
     <canvas ref="canvasRef"></canvas>
     <div class="head-social">
-      <a href="https://github.com/zhenghaoyang24" target="_blank" class="head-social-btn">
+      <!-- GitHub -->
+      <a href="https://github.com/liukunup" target="_blank" class="head-social-btn">
         <icon name="grommet-icons:github" />
       </a>
-      <a href="https://gitee.com/zhenghaoyang24" target="_blank" class="head-social-btn">
+      <!-- Gitee -->
+      <a href="https://gitee.com/liukunup" target="_blank" class="head-social-btn">
         <icon name="simple-icons:gitee" />
       </a>
-      <router-link to="/blog/" class="head-social-avatar"><img src="https://i.p-i.vip/47/20241024-67192acae3bb8.png" alt="avatar"></router-link>
-      <a href="https://codepen.io/zhenghaoyang24" target="_blank" class="head-social-btn">
+      <!-- Blog -->
+      <router-link to="/blog/" class="head-social-avatar"><img src="/avatar.jpg" alt="avatar"></router-link>
+      <!-- CodePen -->
+      <a href="https://codepen.io/liukunup" target="_blank" class="head-social-btn">
         <icon class="head-social-btn" name="simple-icons:codepen"></icon>
       </a>
-      <a href="mailto:zhenghaoyang24@foxmail.com" target="_blank" class="head-social-btn">
+      <!-- Email -->
+      <a href="mailto:liukunup@outlook.com" target="_blank" class="head-social-btn">
         <icon class="head-social-btn" name="streamline-flex:mail-send-email-message-circle-solid"></icon>
       </a>
     </div>
@@ -23,8 +28,8 @@
           <template #motto>
             <slot name="motto">
               <p class="about-me-card-title-normal">座右铭</p>
-              <p class="about-me-card-text-big">老师，</p>
-              <p class="about-me-card-text-big about-me-card-text-color">我太想进步了。</p>
+              <p class="about-me-card-text-big">富在术数，不在劳身；</p>
+              <p class="about-me-card-text-big">利在势居，不在力耕。</p>
             </slot>
           </template>
         </AboutMeText>
@@ -38,9 +43,8 @@
           <template #motto>
             <slot name="motto">
               <p class="about-me-card-title-normal">追求</p>
-              <p class="about-me-card-text-big about-me-card-text-soft">用心去<span style="color: #3a5ccc">感受</span>
-              </p>
-              <p class="about-me-card-text-big">用热爱去<span style="color: #d53737">创造</span></p>
+              <p class="about-me-card-text-big about-me-card-text-soft"><span style="color: #000">一次性</span>&nbsp;把&nbsp;<span style="color: #e53935">正确的事情</span><span style="color: #43a047">&nbsp;做正确</span></p>
+              <p class="about-me-card-text-big">打造<span class="about-me-card-text-color">极致用户体验</span></p>
             </slot>
           </template>
         </AboutMeText>
@@ -142,7 +146,6 @@ canvas {
   grid-template-columns: 1fr;
 }
 </style>
-
 
 <script setup lang="ts">
 import { ref, onMounted, onUnmounted } from 'vue'

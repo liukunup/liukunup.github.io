@@ -14,14 +14,12 @@ import * as echarts from "echarts";
 
 const chartRef = ref(null);
 
-// 示例数据
 const lifeData = [
-  { name: "学习", value: 3 },
-  { name: "游戏", value: 4 },
-  { name: "阅读", value: 2 },
-  { name: "动漫", value: 1 },
-  { name: "生活", value: 6 },
-  { name: "工作", value: 5 },
+  { name: "生活", value: 5 },
+  { name: "阅读", value: 1 },
+  { name: "游戏", value: 3 },
+  { name: "学习", value: 4 },
+  { name: "工作", value: 2 },
 ];
 onMounted(() => {
   const myChart = echarts.init(chartRef.value);
