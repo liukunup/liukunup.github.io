@@ -32,12 +32,11 @@ next: false
 </center>
 
 
-## 👨‍💻 关于我
+## 🙋‍♂️关于我
 
 <p align="center"><img width="450px" src="https://github.com/abhisheknaiidu/abhisheknaiidu/raw/master/code.gif?raw=true"></p>
 
-大家好，我是 **liukunup**，一名 90 后 Java 后端初学者，正在成都边学边做。  
-坚信「**打好基础、多做项目、持续输出**」是成长最快的路径。
+大家好，我是 **liukunup**，一名 90 后 算法测试工程师。  
 
 - 🌱 **学习阶段**：Go / React / vue
 - 📫 **联系方式**：
@@ -47,21 +46,53 @@ next: false
 
 欢迎大佬们指点，也欢迎同路人一起结伴学习！
 
+## 👨‍💻编程语言
 
-## ☕ Java 后端技术栈
-
-<p align="center">
+<p>
   <a href="https://skillicons.dev">
-    <img src="https://skillicons.dev/icons?i=java,html,css,ts,js,vue,spring,gradle,maven,hibernate,redis,nginx,kafka,rabbitmq,linux,kali,mysql,postgresql,mongodb,postman,idea,webstorm,vscode,sublime,git,github" />
+    <img src="https://skillicons.dev/icons?i=c,cpp,cs" />
   </a>
 </p>
 
-### Java 后端技术栈
+<p>
+  <a href="https://skillicons.dev">
+    <img src="https://skillicons.dev/icons?i=java,python,go" />
+  </a>
+</p>
+
+<p>
+  <a href="https://skillicons.dev">
+    <img src="https://skillicons.dev/icons?i=html,css,js,ts,react,vue" />
+  </a>
+</p>
+
+## 💪测试技能
+
+1. 熟练掌握测试规划、测试设计、测试执行、测试报告撰写的整套测试基础流程；
+2. 熟练掌握质量策划、质量运营、质量管理相关方法，具备质量体系构建能力；
+3. 熟悉IPD流程、擅长探索性测试，习惯于建立测试标准、降低执行难度；
+4. 熟悉项目管理，具备测试团队管理经验，项目经验丰富。
+
+## 职业证书
+
+- Tencent Cloud Practitioner (云从业者证书/2022)
+- Tencent Cloud Artificial Intelligence Practitioner (人工智能从业者证书/2022)
+
+## 🏅荣誉奖项
+
+- 2024 **小红书** 技术与效率突破 ==优秀项目奖==
+- 2024 **小红书** 企业效率 ==使命必达奖== for「CNY重保」项目
+- 2024 **小红书** 企业效率 ==用户价值奖== for「REDoc」项目
+- 2018 **华为** 中央硬件工程院 ==总裁奖-最佳部件(鲁班奖)==
+- 2017 **华为** ==明日之星==
+- 2013 **全国大学生电子设计竞赛** ==优胜奖==
+- 2012 **南京朗坤电子科技节** ==二等奖==
+
+## 技术栈
 
 | 类别             | 技术/工具                                                                                                  |
 |------------------|------------------------------------------------------------------------------------------------------------|
-| **编程语言**     | Java 8/**17**/**21** Groovy                                                                           |
-| **核心框架**     | Spring Boot, Spring Framework (Core/MVC/AOP), Spring Cloud, Spring Security, Spring Data                   |
+| **核心框架**     | Spring Boot, Spring Framework, Spring Cloud, Flask, Django, FastAPI, go-nunu, go-zero                      |
 | **ORM/数据库访问** | Spring Data JPA, MyBatis-Plus, Hibernate                                                                   |
 | **数据库**       | MySQL, PostgreSQL, TiDB (HTAP), Oracle, MongoDB (NoSQL)                                                    |
 | **缓存**         | Redis (分布式), Caffeine (本地), Memcached                                                                 |
@@ -75,10 +106,9 @@ next: false
 | **监控告警**     | Prometheus (指标), Grafana (可视化), ELK/EFK (日志), Zipkin/SkyWalking (链路追踪)                          |
 | **CI/CD**        | Jenkins, GitHub Actions, GitLab CI/CD, Argo CD (GitOps)                                                    |
 | **云平台**       | AWS, 阿里云, 腾讯云, 华为云                                                                               |
-| **开发工具**     | IntelliJ IDEA (IDE), Postman (API调试), Navicat (DB管理), iTerm2 (终端)                                    |
-
+| **开发工具**     | IntelliJ IDEA (IDE), Postman (API调试), DBeaver CE (DB管理), iTerm2 (终端)                                    |
 
 ## 🌐 网站运营
 | Icon         | Name       | Link                                                               |
 | ------------ | ---------- | ------------------------------------------------------------------ |
-| 🪄 Blog      | 个人博客    | [https://liukunup.github.io/](https://liukunup.github.io/)               |
+| 🪄 Blog      | 个人博客    | [https://liukunup.github.io/](https://liukunup.github.io/)        |
