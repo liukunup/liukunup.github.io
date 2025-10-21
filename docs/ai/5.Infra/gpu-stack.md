@@ -11,8 +11,9 @@ permalink: /ai/infra/gpustack/
 @tab:active Docker
 
 ```shell
+export HF_TOKEN=""
 docker run -d \
-  -e GPUSTACK_HF_TOKEN="$HF_TOKEN" \
+  -e GPUSTACK_HF_TOKEN="${HF_TOKEN}" \
   -e GPUSTACK_HF_ENDPOINT="https://hf-mirror.com" \
   -v /path/to/gpustack:/var/lib/gpustack \
   --gpus all \
@@ -20,7 +21,7 @@ docker run -d \
   --ipc=host \
   --restart=unless-stopped \
   --name=gpustack \
-  gpustack/gpustack:v0.7.1
+  gpustack/gpustack:latest-cuda12.8
 ```
 
 如何获取密码?
