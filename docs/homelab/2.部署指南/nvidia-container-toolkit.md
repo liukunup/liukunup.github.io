@@ -38,7 +38,7 @@ sudo apt-get update
 
 ```shell
 # 1.设置版本号
-export NVIDIA_CONTAINER_TOOLKIT_VERSION=1.17.8-1
+export NVIDIA_CONTAINER_TOOLKIT_VERSION=1.18.0-1
 # 2.开始安装
 sudo apt-get install -y \
     nvidia-container-toolkit=${NVIDIA_CONTAINER_TOOLKIT_VERSION} \
