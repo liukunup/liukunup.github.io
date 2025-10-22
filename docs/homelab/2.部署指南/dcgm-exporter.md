@@ -1,46 +1,54 @@
 ---
 title: DCGM-Exporter
+tags:
+  - nvidia
 createTime: 2025/10/18 00:00:00
 permalink: /homelab/deploy/dcgm-exporter/
 ---
 
+::tdesign:logo-github-filled:: [DCGM-Exporter](https://github.com/NVIDIA/dcgm-exporter)
+
+::logos:grafana:: [Grafana Dashboard](https://grafana.com/grafana/dashboards/12239) use `12239`
+
 ## 部署指南
 
-### 通过 docker 方式部署
+::: tabs
+
+@tab:active Docker
 
 ```shell
+export DCGM_VERSION=4.4.1-4.6.0
 docker run -d \
   -p 9400:9400 \
   --gpus all \
   --cap-add SYS_ADMIN \
   --restart=unless-stopped \
   --name=dcgm-exporter \
-  nvcr.io/nvidia/k8s/dcgm-exporter:4.4.1-4.6.0-ubuntu22.04
+  nvcr.io/nvidia/k8s/dcgm-exporter:${DCGM_VERSION}-ubuntu22.04
 ```
 
-### 通过 docker compose 方式部署
+@tab Docker Compose
 
 ```yaml
 services:
   dcgm-exporter:
-    image: nvcr.io/nvidia/k8s/dcgm-exporter:4.4.1-4.6.0-ubuntu22.04
+    image: nvcr.io/nvidia/k8s/dcgm-exporter:{DCGM_VERSION:-4.4.1-4.6.0}-ubuntu22.04
     container_name: dcgm-exporter
     restart: unless-stopped
-    runtime: nvidia
+    ports:
+      - "9400:9400"
     deploy:
       resources:
         reservations:
           devices:
-            - capabilities: [gpu]
+            - driver: nvidia
+              capabilities: [utility]
+              count: all
     cap_add:
       - SYS_ADMIN
-    ports:
-      - "9400:9400"
-    environment:
-      - NVIDIA_VISIBLE_DEVICES=all
 ```
 
-### 通过 helm 方式部署
+@tab Helm
 
 1. 添加仓库
 
@@ -58,4 +66,12 @@ helm repo update
 
 ```shell
 helm install --generate-name gpu-helm-charts/dcgm-exporter
+```
+
+:::
+
+## 查看指标
+
+```shell
+curl localhost:9400/metrics
 ```
