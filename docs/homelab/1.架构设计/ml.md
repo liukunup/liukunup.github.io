@@ -99,3 +99,85 @@ permalink: /homelab/architecture/ml/
     rm -rf /var/log/*
     ```
 :::
+
+## 监控方案
+
+::: steps
+
+1. compose.yaml
+
+    ```yaml
+    networks:
+      monitoring:
+        driver: bridge
+
+    services:
+      # Node Exporter - 收集主机系统指标
+      node-exporter:
+        image: quay.io/prometheus/node-exporter:latest
+        container_name: node-exporter
+        restart: unless-stopped
+        ports:
+          - "9100:9100"
+        volumes:
+          - /:/host:ro,rslave
+        command:
+          - --path.rootfs=/host
+          - --path.procfs=/host/proc
+          - --path.sysfs=/host/sys
+          - --collector.filesystem.mount-points-exclude=^/(sys|proc|dev|host|etc)($$|/)
+        networks:
+          - monitoring
+
+      # DCGM Exporter - 收集 NVIDIA GPU 指标
+      dcgm-exporter:
+        image: nvcr.io/nvidia/k8s/dcgm-exporter:4.4.1-4.6.0-ubuntu22.04
+        container_name: dcgm-exporter
+        restart: unless-stopped
+        ports:
+          - "9400:9400"
+        deploy:
+          resources:
+            reservations:
+              devices:
+                - driver: nvidia
+                  capabilities: [utility]
+                  count: all
+        cap_add:
+          - SYS_ADMIN
+        networks:
+          - monitoring
+
+      # cAdvisor - 收集容器指标
+      cadvisor:
+        image: gcr.io/cadvisor/cadvisor:v0.49.1
+        container_name: cadvisor
+        restart: unless-stopped
+        privileged: true
+        ports:
+          - "8080:8080"
+        volumes:
+          - /:/rootfs:ro
+          - /var/run:/var/run:ro
+          - /sys:/sys:ro
+          - /var/lib/docker/:/var/lib/docker:ro
+          - /dev/disk/:/dev/disk:ro
+        devices:
+          - /dev/kmsg:/dev/kmsg
+        networks:
+          - monitoring
+    ```
+
+    - 1Panel 请替换网络
+
+    ```yaml
+    networks:
+      1panel-network:
+        external: true
+    ```
+
+2. 拉起容器
+
+    ```shell
+    docker compose -p monitoring up -d
+    ```
