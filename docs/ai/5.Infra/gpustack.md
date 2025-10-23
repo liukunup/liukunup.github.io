@@ -4,11 +4,13 @@ createTime: 2025/10/13 11:53:44
 permalink: /ai/infra/gpustack/
 ---
 
+[GPUStack Docs](https://docs.gpustack.ai/latest/overview/)
+
 ![GPUStack Architecture](https://docs.gpustack.ai/latest/assets/gpustack-architecture.png)
 
 ## 部署指南
 
-### 单机部署
+### **单机部署**
 
 ::: tabs
 
@@ -95,6 +97,8 @@ cat /var/lib/gpustack/token
 
 @tab Windows
 
+[查看命令样例](https://docs.gpustack.ai/latest/installation/installation-script/)
+
 ```powershell
 Invoke-Expression (Invoke-WebRequest -Uri "https://get.gpustack.ai" -UseBasicParsing).Content
 ```
@@ -109,7 +113,7 @@ Get-Content -Path "$env:APPDATA\gpustack\initial_admin_password" -Raw
 
 :::
 
-### (可选) 添加工作节点
+### **(可选) 添加工作节点**
 
 前置工作：
 
@@ -144,7 +148,7 @@ curl -sfL https://get.gpustack.ai | sh -s - --server-url http://your_gpustack_ur
 Invoke-Expression "& { $((Invoke-WebRequest -Uri 'https://get.gpustack.ai' -UseBasicParsing).Content) } -- --server-url 'http://your_gpustack_url' --token 'your_gpustack_token' --worker-ip '192.168.100.60'"
 ```
 
-> Windows 可能需要在`高级安全 Windows Defender 防火墙`添加入站规则，允许TCP端口10150访问。 
+> ==Windows==操作系统可能需要在`高级安全 Windows Defender 防火墙`添加入站规则，允许TCP端口10150访问。 
 
 :::
 
@@ -160,10 +164,15 @@ export HF_TOKEN=hf_token
 
 **推荐模型列表**
 
+[与Dify集成使用](https://docs.gpustack.ai/latest/integrations/integrate-with-dify/)
+
 - `LLM` Qwen/Qwen3-8B
 - `LLM` Qwen/Qwen2.5-VL-3B-Instruct
 - `Embedding` BAAI/bge-m3
 - `Rerank` BAAI/bge-reranker-v2-m3
+
+推荐列表：
+
 - `LLM` unsloth/DeepSeek-R1-Distill-Qwen-7B-GGUF
 - `OCR` deepseek-ai/DeepSeek-OCR
 - `TTS` FunAudioLLM/CosyVoice2-0.5B
