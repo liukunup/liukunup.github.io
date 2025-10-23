@@ -31,7 +31,7 @@ docker run -d --name gpustack \
 - 推荐配置
 
 ```shell
-# Hugging Face Token
+# Hugging Face Mirror
 export HF_TOKEN=""
 export HF_ENDPOINT="https://hf-mirror.com"
 # settings: Hugging Face / Port / SSL / DB / OIDC and use CUDA 12.8
@@ -162,7 +162,7 @@ export HF_TOKEN=hf_token
 ./hfd.sh <model>
 ```
 
-**推荐模型列表**
+**推荐模型**
 
 [与Dify集成使用](https://docs.gpustack.ai/latest/integrations/integrate-with-dify/)
 
@@ -171,7 +171,7 @@ export HF_TOKEN=hf_token
 - `Embedding` BAAI/bge-m3
 - `Rerank` BAAI/bge-reranker-v2-m3
 
-推荐列表：
+推荐列表
 
 - `LLM` unsloth/DeepSeek-R1-Distill-Qwen-7B-GGUF
 - `OCR` deepseek-ai/DeepSeek-OCR
