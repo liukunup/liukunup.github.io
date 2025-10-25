@@ -1,5 +1,8 @@
 ---
 title: GPUStack
+tags:
+  - GPU Cluster
+  - Serving
 createTime: 2025/10/13 11:53:44
 permalink: /ai/infra/gpustack/
 ---
@@ -34,7 +37,7 @@ docker run -d --name gpustack \
 # Hugging Face Mirror
 export HF_TOKEN=""
 export HF_ENDPOINT="https://hf-mirror.com"
-# settings: Hugging Face / Port / SSL / DB / OIDC and use CUDA 12.8
+# settings: HF / Port / SSL / DB / OIDC and use CUDA 12.8
 docker run -d \
   -e GPUSTACK_HF_TOKEN="${HF_TOKEN}" \
   -e GPUSTACK_HF_ENDPOINT="${HF_ENDPOINT}" \
@@ -46,7 +49,7 @@ docker run -d \
   -e GPUSTACK_OIDC_CLIENT_ID="your-client-id" \
   -e GPUSTACK_OIDC_CLIENT_SECRET="your-client-secret" \
   -e GPUSTACK_OIDC_REDIRECT_URI="{your-server-url}/auth/oidc/callback" \
-  -e GPUSTACK_EXTERNAL_AUTH_NAME="email" \
+  -e GPUSTACK_EXTERNAL_AUTH_NAME="preferred_username" \
   -e GPUSTACK_EXTERNAL_AUTH_FULL_NAME="name" \
   -e GPUSTACK_EXTERNAL_AUTH_AVATAR_URL="picture" \
   -v /path/to/gpustack:/var/lib/gpustack \
@@ -67,7 +70,7 @@ docker run -d \
 docker exec -it gpustack cat /var/lib/gpustack/initial_admin_password
 ```
 
-如何获取`Token`？
+如何获取工作节点加入所需的`Token`？
 
 ```shell
 docker exec -it gpustack cat /var/lib/gpustack/token
@@ -89,7 +92,7 @@ curl -sfL https://get.gpustack.ai | sh -s -
 cat /var/lib/gpustack/initial_admin_password
 ```
 
-如何获取`Token`？
+如何获取工作节点加入所需的`Token`？
 
 ```shell
 cat /var/lib/gpustack/token
@@ -174,10 +177,6 @@ export HF_TOKEN=hf_token
 推荐列表
 
 - `LLM` unsloth/DeepSeek-R1-Distill-Qwen-7B-GGUF
-- `OCR` deepseek-ai/DeepSeek-OCR
-- `TTS` FunAudioLLM/CosyVoice2-0.5B
-- `TTS` FunAudioLLM/CosyVoice-300M
-- `TTS` FunAudioLLM/CosyVoice-300M-SFT
-- `TTS` FunAudioLLM/CosyVoice-300M-Instruct
-- `ASR` FunAudioLLM/SenseVoiceSmall
-- `ASR` openai/whisper-large-v3-turbo
+- `ASR` Systran/faster-whisper-small
+- `TTS` gpustack/CosyVoice-300M-Instruct
+- `IMG` gpustack/stable-diffusion-v3-5-large-turbo-GGUF
