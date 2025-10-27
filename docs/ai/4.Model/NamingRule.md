@@ -87,6 +87,38 @@ permalink: /ai/model/naming-rule/
 - **A22B**：激活参数量
 - **MoE**：混合专家架构
 
+### 模型系列
+
+- Qwen3
+  - Qwen3-Next
+  - Qwen3-VL
+  - Qwen3-Omni
+  - Qwen3-Coder
+  - Qwen3-Image
+  - Qwen3-Reranker
+  - Qwen3-Embedding
+  - Qwen3Guard
+
+- Qwen2.5
+  - Qwen2.5-VL
+  - Qwen2.5-Omni
+  - Qwen2.5-Coder
+  - Qwen2.5-Math
+  - Qwen2.5-1M
+
+- Qwen2
+  - Qwen2-VL
+  - Qwen2-Math
+  - Qwen2-Audio
+
+- Qwen1.5
+
+- Qwen
+
+- WorldPM
+- QVQ
+- QwQ
+
 ## OpenAI
 
 ### 模型系列
