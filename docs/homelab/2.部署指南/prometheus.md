@@ -165,15 +165,18 @@ scrape_configs:
 
     重启Prometheus服务以使配置生效，或采用文件服务发现，方法如下：
 
-    ```yaml{5-8}
+    ```yaml
     scrape_configs:
 
       - job_name: 'node-exporter'
         scrape_interval: 15s
-        file_sd_configs:
-          - files:
-              - '/etc/prometheus/targets/node-exporters.yml'
-            refresh_interval: 1m
+        static_configs:                 #  [!code --]
+          - targets:                    #  [!code --]
+            - 'target.homelab.lan:9100' #  [!code --]
+        file_sd_configs:                                     #  [!code ++]
+          - files:                                           #  [!code ++]
+              - '/etc/prometheus/targets/node-exporters.yml' #  [!code ++]
+            refresh_interval: 1m                             #  [!code ++]
         relabel_configs:
           # 使用 域名 或 IP地址 作为 实例名
           - source_labels: [__address__]
