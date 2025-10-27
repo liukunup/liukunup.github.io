@@ -278,6 +278,10 @@ scrape_configs:
 
 ### [DCGM-Exporter](https://github.com/NVIDIA/dcgm-exporter)
 
+::tdesign:logo-github-filled:: [DCGM-Exporter](https://github.com/NVIDIA/dcgm-exporter)
+
+::logos:grafana:: [Grafana Dashboard](https://grafana.com/grafana/dashboards/12239) use `12239`
+
 ::: steps
 
 1. 部署
@@ -314,6 +318,17 @@ scrape_configs:
                   count: all
         cap_add:
           - SYS_ADMIN
+    ```
+
+    - Helm
+
+    ```shell
+    # 添加仓库
+    helm repo add gpu-helm-charts https://nvidia.github.io/dcgm-exporter/helm-charts
+    # 更新仓库
+    helm repo update
+    # 安装部署
+    helm install --generate-name gpu-helm-charts/dcgm-exporter
     ```
 
 2. 配置
@@ -481,40 +496,40 @@ scrape_configs:
 
 2. 配置
 
-  ```yaml
-  scrape_configs:
+    ```yaml
+    scrape_configs:
 
-    - job_name: mysql
-      scrape_interval: 30s
-      metrics_path: /probe
-      static_configs:
-        - targets:
-          - mysql.homelab.lan:3306
-          - mysql.staging.homelab.lan:3306
-      relabel_configs:
-        - source_labels: [__address__]
-          target_label: __param_target
-          regex: '([^:]+)\.homelab\.lan:(\d+)'
-          replacement: '${1}.homelab.lan:${2}'
-        - source_labels: [__address__]
-          target_label: instance
-          regex: '([^:]+)\.homelab\.lan:\d+'
-          replacement: '${1}'
-        - target_label: __address__
-          replacement: 'docker.homelab.lan:9104'
-        - source_labels: [instance]
-          target_label: environment
-          regex: 'mysql\.staging'
-          replacement: 'staging'
-        - source_labels: [instance]
-          target_label: environment
-          regex: 'mysql\.homelab'
-          replacement: 'prod'
-        - target_label: service
-          replacement: 'mysql'
-        - target_label: db_system
-          replacement: 'mysql'
-  ```
+      - job_name: mysql
+        scrape_interval: 30s
+        metrics_path: /probe
+        static_configs:
+          - targets:
+            - mysql.homelab.lan:3306
+            - mysql.staging.homelab.lan:3306
+        relabel_configs:
+          - source_labels: [__address__]
+            target_label: __param_target
+            regex: '([^:]+)\.homelab\.lan:(\d+)'
+            replacement: '${1}.homelab.lan:${2}'
+          - source_labels: [__address__]
+            target_label: instance
+            regex: '([^:]+)\.homelab\.lan:\d+'
+            replacement: '${1}'
+          - target_label: __address__
+            replacement: 'docker.homelab.lan:9104'
+          - source_labels: [instance]
+            target_label: environment
+            regex: 'mysql\.staging'
+            replacement: 'staging'
+          - source_labels: [instance]
+            target_label: environment
+            regex: 'mysql\.homelab'
+            replacement: 'prod'
+          - target_label: service
+            replacement: 'mysql'
+          - target_label: db_system
+            replacement: 'mysql'
+    ```
 
 3. 重启
 
