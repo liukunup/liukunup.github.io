@@ -172,7 +172,7 @@ scrape_configs:
         scrape_interval: 15s
         static_configs:                 #  [!code --]
           - targets:                    #  [!code --]
-            - 'target.homelab.lan:9100' #  [!code --]
+            - 'server.homelab.lan:9100' #  [!code --]
         file_sd_configs:                                     #  [!code ++]
           - files:                                           #  [!code ++]
               - '/etc/prometheus/targets/node-exporters.yml' #  [!code ++]
@@ -203,65 +203,173 @@ scrape_configs:
 
 :::
 
-### cAdvisor
+### [cAdvisor](https://github.com/google/cadvisor)
 
 ::: steps
 
 1. 部署
 
+    - Docker
+
+    ```shell
+    VERSION=v0.49.1 # use the latest release version from https://github.com/google/cadvisor/releases
+    sudo docker run \
+      --volume=/:/rootfs:ro \
+      --volume=/var/run:/var/run:ro \
+      --volume=/sys:/sys:ro \
+      --volume=/var/lib/docker/:/var/lib/docker:ro \
+      --volume=/dev/disk/:/dev/disk:ro \
+      --publish=8080:8080 \
+      --detach=true \
+      --name=cadvisor \
+      --privileged \
+      --device=/dev/kmsg \
+      gcr.io/cadvisor/cadvisor:$VERSION
+    ```
+
+    - Docker Compose
+
+    ```yaml
+    services:
+      cadvisor:
+        image: gcr.io/cadvisor/cadvisor:${VERSION:-v0.49.1} # use the latest release version from https://github.com/google/cadvisor/releases
+        container_name: cadvisor
+        privileged: true
+        ports:
+          - "8080:8080"
+        volumes:
+          - '/:/rootfs:ro'
+          - '/var/run:/var/run:ro'
+          - '/sys:/sys:ro'
+          - '/var/lib/docker/:/var/lib/docker:ro'
+          - '/dev/disk/:/dev/disk:ro'
+        devices:
+          - '/dev/kmsg:/dev/kmsg'
+    ```
+
 2. 配置
 
-  ```yaml
-  scrape_configs:
+    ```yaml
+    scrape_configs:
 
-    - job_name: 'cadvisor'
-      scrape_interval: 15s
-      static_configs:
-        - targets:
-          - 'docker.homelab.lan:8080'
-          - 'standby.homelab.lan:8080'
-          - 'quts.homelab.lan:8080'
-          - 'gpu.homelab.lan:8080'
-      relabel_configs:
-        - source_labels: [job]
-          target_label: job
-          regex: '(.*)'
-          replacement: 'node-exporter'
-        - source_labels: [__address__]
-          target_label: instance
-          regex: '([^:]+)\.homelab\.lan:\d+'
-          replacement: '${1}'
-  ```
+      - job_name: 'cadvisor'
+        scrape_interval: 15s
+        static_configs:
+          - targets:
+            - 'server.homelab.lan:8080'
+        relabel_configs:
+          # 使用 域名 或 IP地址 作为 实例名
+          - source_labels: [__address__]
+            target_label: instance
+            regex: '([^:]+):\d+'  # 捕获域名或IP地址
+            replacement: '${1}'
+          # 如果匹配 *.homelab.lan 表达式则设置 主机名
+          - source_labels: [instance]
+            target_label: hostname
+            regex: '(.+)\.homelab\.lan'
+            replacement: '${1}'
+    ```
 
 3. 重启
+
+    重启Prometheus服务以使配置生效，或采用文件服务发现。
 
 :::
 
-### DCGM Exporter
+### [DCGM-Exporter](https://github.com/NVIDIA/dcgm-exporter)
 
 ::: steps
 
 1. 部署
 
+    - Docker
+
+    ```shell
+    VERSION=4.4.1-4.6.0
+    docker run -d \
+      -p 9400:9400 \
+      --gpus all \
+      --cap-add SYS_ADMIN \
+      --restart=unless-stopped \
+      --name=dcgm-exporter \
+      nvcr.io/nvidia/k8s/dcgm-exporter:${VERSION}-ubuntu22.04
+    ```
+
+    - Docker Compose
+
+    ```yaml
+    services:
+      dcgm-exporter:
+        image: nvcr.io/nvidia/k8s/dcgm-exporter:{VERSION:-4.4.1-4.6.0}-ubuntu22.04
+        container_name: dcgm-exporter
+        restart: unless-stopped
+        ports:
+          - "9400:9400"
+        deploy:
+          resources:
+            reservations:
+              devices:
+                - driver: nvidia
+                  capabilities: [utility]
+                  count: all
+        cap_add:
+          - SYS_ADMIN
+    ```
+
 2. 配置
 
-  ```yaml
-  scrape_configs:
+    ```yaml
+    scrape_configs:
 
-    - job_name: 'dcgm-exporter'
-      scrape_interval: 15s
-      metrics_path: /metrics
-      static_configs:
-        - targets:
-          - 'gpu.homelab.lan:9400'
-      relabel_configs:
-        - source_labels: [__address__]
-          target_label: instance
-          regex: '([^:]+)\.homelab\.lan:\d+'
-          replacement: '${1}'
-  ```
+      - job_name: 'dcgm-exporter'
+        scrape_interval: 15s
+        metrics_path: /metrics
+        static_configs:
+          - targets:
+            - 'server.homelab.lan:9400'
+        relabel_configs:
+          # 使用 域名 或 IP地址 作为 实例名
+          - source_labels: [__address__]
+            target_label: instance
+            regex: '([^:]+):\d+'  # 捕获域名或IP地址
+            replacement: '${1}'
+          # 如果匹配 *.homelab.lan 表达式则设置 主机名
+          - source_labels: [instance]
+            target_label: hostname
+            regex: '(.+)\.homelab\.lan'
+            replacement: '${1}'
+    ```
 
 3. 重启
+
+    重启Prometheus服务以使配置生效，或采用文件服务发现。
+
+:::
+
+### [nvidia_gpu_exporter](https://github.com/utkuozdemir/nvidia_gpu_exporter)
+
+::: steps
+
+1. 部署
+
+    ```shell
+    docker run -d \
+      --name nvidia_smi_exporter \
+      --restart unless-stopped \
+      --device /dev/nvidiactl:/dev/nvidiactl \
+      --device /dev/nvidia0:/dev/nvidia0 \
+      -v /usr/lib/x86_64-linux-gnu/libnvidia-ml.so:/usr/lib/x86_64-linux-gnu/libnvidia-ml.so \
+      -v /usr/lib/x86_64-linux-gnu/libnvidia-ml.so.1:/usr/lib/x86_64-linux-gnu/libnvidia-ml.so.1 \
+      -v /usr/bin/nvidia-smi:/usr/bin/nvidia-smi \
+      -p 9835:9835 \
+      utkuozdemir/nvidia_gpu_exporter:1.3.1
+    ```
+
+2. 配置
+
+3. 重启
+
+    重启Prometheus服务以使配置生效，或采用文件服务发现。
 
 :::
 
@@ -271,37 +379,97 @@ scrape_configs:
 
 1. 部署
 
+    不涉及。
+
 2. 配置
 
-  ```yaml
-  scrape_configs:
+    - 目录结构
 
-    - job_name: 'minio-main'
-      bearer_token: eyJhbGciOiJIUzUxMiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJwcm9tZXRoZXVzIiwic3ViIjoiTGVoWEJvVlRoeXlEVTN2WiIsImV4cCI6NDkxMDk0MjkxNn0.WmoOYi0povXim89zN1D3LsbIF9Wb-UB6YgZalN01I3x0fnpjW7SEqDd3LW3JIYQwJ0N1SARXh51lDBOtC8DdmA
-      metrics_path: /minio/v2/metrics/cluster
-      scheme: https
-      tls_config:
-        insecure_skip_verify: true
-      scrape_interval: 60s
-      static_configs:
-        - targets: ['minio.homelab.lan:9000']
-          labels:
-            instance: 'main'
+    ```plaintext
+    /etc/prometheus/
+    ├── prometheus.yml
+    ├── file_sd/
+    │   └── minio-targets.yml
+    └── secrets/
+        ├── minio-token-prod
+        └── minio-token-staging
+    ```
 
-    - job_name: 'minio-staging'
-      bearer_token: eyJhbGciOiJIUzUxMiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJwcm9tZXRoZXVzIiwic3ViIjoiTGVoWEJvVlRoeXlEVTN2WiIsImV4cCI6NDkxMDk0MzAxNX0.jHpV2ceWx00MklIsnrLqkCUj_2UmRm52xzUPknkS1tT_vOaw9wrZ_Byq0ZmSPAwW_e8W_Z5KXdHOgK3jAObYkg
-      metrics_path: /minio/v2/metrics/cluster
-      scheme: https
-      tls_config:
-        insecure_skip_verify: true
-      scrape_interval: 60s
-      static_configs:
-        - targets: ['minio.staging.homelab.lan:9000']
-          labels:
-            instance: 'staging'
-  ```
+    ```yaml
+    scrape_configs:
+
+      - job_name: 'minio-cluster'
+        scrape_interval: 15s
+        metrics_path: /minio/v2/metrics/cluster
+        scheme: https
+        tls_config:
+          insecure_skip_verify: false
+        file_sd_configs:
+          - files:
+              - '/etc/prometheus/file_sd/minio-targets.yml'
+            refresh_interval: 1m
+        relabel_configs:
+          # 从目标元数据中提取 Bearer Token 文件路径
+          - source_labels: [__meta_minio_auth_token_file]
+            target_label: __bearer_token_file
+            replacement: /etc/prometheus/secrets/${1}
+          # 动态配置 TLS
+          - source_labels: [__meta_minio_tls_skip_verify]
+            target_label: __tls_insecure_skip_verify
+            regex: "false"
+            replacement: "true"
+          # 环境标识
+          - source_labels: [__meta_minio_environment]
+            target_label: environment
+          - source_labels: [__meta_minio_cluster]
+            target_label: cluster
+          - source_labels: [__meta_minio_region]
+            target_label: region
+          # 使用 域名 或 IP地址 作为 实例名
+          - source_labels: [__address__]
+            target_label: instance
+            regex: '([^:]+):\d+'  # 捕获域名或IP地址
+            replacement: '${1}'
+          - target_label: job
+            replacement: "minio"
+    ```
+
+    - /etc/prometheus/file_sd/minio-targets.yml
+
+    ```yaml
+    - targets:
+        - 'minio.homelab.lan:9000'
+      labels:
+        # 环境标识
+        environment: 'prod'
+        cluster: 'xxx'
+        region: 'us-east-1'
+        # 元数据配置
+        __meta_minio_auth_token_file: 'minio-token-prod'
+        __meta_minio_tls_skip_verify: 'false'
+
+    - targets:
+        - 'minio.staging.homelab.lan:9000'
+      labels:
+        environment: 'staging'
+        cluster: 'yyy'
+        region: 'us-east-1'
+        __meta_minio_auth_token_file: 'minio-token-staging'
+        __meta_minio_tls_skip_verify: 'true'
+
+    - targets:
+        - 'minio.testing.homelab.lan:9000'
+      labels:
+        environment: 'testing'
+        cluster: 'zzz'
+        region: 'us-east-1'
+        __meta_minio_auth_token_file: 'minio-token-testing'
+        __meta_minio_tls_skip_verify: 'true'
+    ```
 
 3. 重启
+
+    重启Prometheus服务以使配置生效，或采用文件服务发现。
 
 :::
 
@@ -350,6 +518,8 @@ scrape_configs:
 
 3. 重启
 
+    重启Prometheus服务以使配置生效，或采用文件服务发现。
+
 :::
 
 ### [Prometheus Valkey & Redis Metrics Exporter](https://github.com/oliver006/redis_exporter)
@@ -358,44 +528,53 @@ scrape_configs:
 
 1. 部署
 
+    ```shell
+    docker run -d \
+      -p 9121:9121 \
+      --name redis_exporter \
+      oliver006/redis_exporter
+    ```
+
 2. 配置
 
-  ```yaml
-  scrape_configs:
+    ```yaml
+    scrape_configs:
 
-    - job_name: redis
-      scrape_interval: 30s
-      metrics_path: /scrape
-      static_configs:
-        - targets:
-          - redis://redis.homelab.lan:6379
-          - redis://redis.staging.homelab.lan:6379
-      relabel_configs:
-        - source_labels: [__address__]
-          target_label: __param_target
-          regex: 'redis://([^:]+\.homelab\.lan:\d+)'
-          replacement: 'redis://${1}'
-        - source_labels: [__param_target]
-          target_label: instance
-          regex: 'redis://([^:]+)\.homelab\.lan:\d+'
-          replacement: '${1}'
-        - target_label: __address__
-          replacement: 'docker.homelab.lan:9121'
-        - source_labels: [instance]
-          target_label: environment
-          regex: 'redis\.staging'
-          replacement: 'staging'
-        - source_labels: [instance]
-          target_label: environment
-          regex: 'redis\.homelab'
-          replacement: 'prod'
-        - target_label: job
-          replacement: 'redis-exporter'
-        - target_label: monitored_by
-          replacement: 'redis_exporter'
-  ```
+      - job_name: redis
+        scrape_interval: 30s
+        metrics_path: /scrape
+        static_configs:
+          - targets:
+            - redis://redis.homelab.lan:6379
+            - redis://redis.staging.homelab.lan:6379
+        relabel_configs:
+          - source_labels: [__address__]
+            target_label: __param_target
+            regex: 'redis://([^:]+\.homelab\.lan:\d+)'
+            replacement: 'redis://${1}'
+          - source_labels: [__param_target]
+            target_label: instance
+            regex: 'redis://([^:]+)\.homelab\.lan:\d+'
+            replacement: '${1}'
+          - target_label: __address__
+            replacement: 'docker.homelab.lan:9121'
+          - source_labels: [instance]
+            target_label: environment
+            regex: 'redis\.staging'
+            replacement: 'staging'
+          - source_labels: [instance]
+            target_label: environment
+            regex: 'redis\.homelab'
+            replacement: 'prod'
+          - target_label: job
+            replacement: 'redis-exporter'
+          - target_label: monitored_by
+            replacement: 'redis_exporter'
+    ```
 
 3. 重启
+
+    重启Prometheus服务以使配置生效，或采用文件服务发现。
 
 :::
 
@@ -405,22 +584,42 @@ scrape_configs:
 
 1. 部署
 
+    ```shell
+    # Start an example database
+    docker run --net=host -it --rm -e POSTGRES_PASSWORD=password postgres
+    # Connect to it
+    docker run \
+      --net=host \
+      -e DATA_SOURCE_URI="localhost:5432/postgres?sslmode=disable" \
+      -e DATA_SOURCE_USER=postgres \
+      -e DATA_SOURCE_PASS=password \
+      quay.io/prometheuscommunity/postgres-exporter
+    ```
+
 2. 配置
 
-  ```yaml
-  scrape_configs:
+    ```yaml
+    scrape_configs:
 
-    - job_name: postgres
-      scrape_interval: 30s
-      static_configs:
-        - targets:
-          - docker.homelab.lan:9187
-          labels:
-            component: 'database'
-            db_type: 'postgresql'
-  ```
+      - job_name: postgres
+        scrape_interval: 15s
+        metrics_path: /probe
+        static_configs:
+          - targets:
+            - server1:5432
+            - server2:5432
+        relabel_configs:
+          - source_labels: [__address__]
+            target_label: __param_target
+          - source_labels: [__param_target]
+            target_label: instance
+          - target_label: __address__
+            replacement: 127.0.0.1:9116  # The postgres exporter's real hostname:port.
+    ```
 
 3. 重启
+
+    重启Prometheus服务以使配置生效，或采用文件服务发现。
 
 :::
 
@@ -430,23 +629,68 @@ scrape_configs:
 
 1. 部署
 
+    修改`config.yaml`配置文件
+
+    ```yaml
+    plugin_attr:
+      prometheus:                               # Plugin: prometheus attributes
+        export_uri: /apisix/prometheus/metrics  # Set the URI for the Prometheus metrics endpoint.
+        metric_prefix: apisix_                  # Set the prefix for Prometheus metrics generated by APISIX.
+        enable_export_server: true              # Enable the Prometheus export server.
+        export_addr:                            # Set the address for the Prometheus export server.
+          ip: 127.0.0.1                         # Set the IP.
+          port: 9091                            # Set the port.
+        # metrics:                              # Create extra labels for metrics.
+        #  http_status:                         # These metrics will be prefixed with `apisix_`.
+        #    extra_labels:                      # Set the extra labels for http_status metrics.
+        #      - upstream_addr: $upstream_addr
+        #      - status: $upstream_status
+        #    expire: 0                          # The expiration time of metrics in seconds.
+                                                # 0 means the metrics will not expire.
+        #  http_latency:
+        #    extra_labels:                      # Set the extra labels for http_latency metrics.
+        #      - upstream_addr: $upstream_addr
+        #    expire: 0                          # The expiration time of metrics in seconds.
+                                                # 0 means the metrics will not expire.
+        #  bandwidth:
+        #    extra_labels:                      # Set the extra labels for bandwidth metrics.
+        #      - upstream_addr: $upstream_addr
+        #    expire: 0                          # The expiration time of metrics in seconds.
+                                                # 0 means the metrics will not expire.
+        # default_buckets:                      # Set the default buckets for the `http_latency` metrics histogram.
+        #   - 10
+        #   - 50
+        #   - 100
+        #   - 200
+        #   - 500
+        #   - 1000
+        #   - 2000
+        #   - 5000
+        #   - 10000
+        #   - 30000
+        #   - 60000
+        #   - 500
+    ```
+
 2. 配置
 
-  ```yaml
-  scrape_configs:
+    ```yaml
+    scrape_configs:
 
-    - job_name: 'apisix'
-      scrape_interval: 5s
-      metrics_path: /apisix/prometheus/metrics
-      static_configs:
-        - targets:
-          - 'apisix:9091'
-          labels:
-            service: 'apisix-gateway'
-            component: 'api-gateway'
-  ```
+      - job_name: 'apisix'
+        scrape_interval: 5s
+        metrics_path: /apisix/prometheus/metrics
+        static_configs:
+          - targets:
+            - 'apisix:9091'
+            labels:
+              service: 'apisix-gateway'
+              component: 'api-gateway'
+    ```
 
 3. 重启
+
+    重启Prometheus服务以使配置生效，或采用文件服务发现。
 
 :::
 
@@ -456,46 +700,70 @@ scrape_configs:
 
 1. 部署
 
-  Note: You may want to [enable ipv6 in your docker configuration](https://docs.docker.com/v17.09/engine/userguide/networking/default_network/ipv6/)
+    Note: You may want to [enable ipv6 in your docker configuration](https://docs.docker.com/v17.09/engine/userguide/networking/default_network/ipv6/)
 
-  ```shell
-  docker run --rm \
-    -p 9115/tcp \
-    -v $(pwd):/config \
-    --name blackbox_exporter \
-    quay.io/prometheus/blackbox-exporter:latest \
-    --config.file=/config/blackbox.yml
-  ```
+    ```shell
+    docker run --rm \
+      -p 9115/tcp \
+      -v $(pwd):/config \
+      --name blackbox_exporter \
+      quay.io/prometheus/blackbox-exporter:latest \
+      --config.file=/config/blackbox.yml
+    ```
 
 2. 配置
 
-  ```yaml
-  scrape_configs:
+    ```yaml
+    scrape_configs:
 
-    - job_name: blackbox_all
-      metrics_path: /probe
-      params:
-        module: [ http_2xx ]  # Look for a HTTP 200 response.
-      dns_sd_configs:
-        - names:
-            - example.com
-            - prometheus.io
-          type: A
-          port: 443
-      relabel_configs:
-        - source_labels: [__address__]
-          target_label: __param_target
-          replacement: https://$1/  # Make probe URL be like https://1.2.3.4:443/
-        - source_labels: [__param_target]
-          target_label: instance
-        - target_label: __address__
-          replacement: 127.0.0.1:9115  # The blackbox exporter's real hostname:port.
-        - source_labels: [__meta_dns_name]
-          target_label: __param_hostname  # Make domain name become 'Host' header for probe requests
-        - source_labels: [__meta_dns_name]
-          target_label: vhost  # and store it in 'vhost' label
-  ```
+      - job_name: blackbox_all
+        metrics_path: /probe
+        params:
+          module: [ http_2xx ]  # Look for a HTTP 200 response.
+        dns_sd_configs:
+          - names:
+              - example.com
+              - prometheus.io
+            type: A
+            port: 443
+        relabel_configs:
+          - source_labels: [__address__]
+            target_label: __param_target
+            replacement: https://$1/  # Make probe URL be like https://1.2.3.4:443/
+          - source_labels: [__param_target]
+            target_label: instance
+          - target_label: __address__
+            replacement: 127.0.0.1:9115  # The blackbox exporter's real hostname:port.
+          - source_labels: [__meta_dns_name]
+            target_label: __param_hostname  # Make domain name become 'Host' header for probe requests
+          - source_labels: [__meta_dns_name]
+            target_label: vhost  # and store it in 'vhost' label
+    ```
 
 3. 重启
+
+    重启Prometheus服务以使配置生效，或采用文件服务发现。
+
+:::
+
+### [Windows exporter](https://github.com/prometheus-community/windows_exporter)
+
+::: steps
+
+1. 部署
+
+
+    ```shell
+    docker run -d \
+      --restart=unless-stopped \
+      --name=windows-exporter \
+      prometheuscommunity/windows-exporter
+    ```
+
+2. 配置
+
+3. 重启
+
+    重启Prometheus服务以使配置生效，或采用文件服务发现。
 
 :::
