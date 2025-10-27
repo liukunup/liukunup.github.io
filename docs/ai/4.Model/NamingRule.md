@@ -6,12 +6,44 @@ permalink: /ai/model/naming-rule/
 
 本文档整理了主流AI大模型的命名规则和标识含义，帮助开发者快速理解模型特性。
 
-## Common Mark
+## 常见标识
 
-### 量化精度标识
-- **FP8**：8位浮点量化，兼顾精度与性能
-- **INT4**：4位整数量化，极致压缩
-- **NF4**：4位NormalFloat量化，优化数值分布
+- 版本
+  - 数字版本
+    - GPT-4
+    - Qwen3
+  - 发行版本
+    - Beta
+    - Preview
+- 参数量
+  - 7B
+  - 32B
+  - 70B
+- 量化精度
+  - FP16
+  - FP8（8位浮点量化，兼顾精度与性能）
+  - INT4（4位整数量化，极致压缩）
+  - NF4（4位NormalFloat量化，优化数值分布）
+- 功能
+  - Chat 对话能力
+  - VL/Vision 视觉语言理解
+  - Audio/Speech 音频处理
+  - Image 图像能力
+  - Code/Coder 编程能力
+  - Math/Reasoning 数学推理
+  - Embedding 向量表示
+  - Reranker 检索优化
+  - Omni 多模态
+- 架构
+  - MoE 混合专家架构
+- 性能
+  - Turbo 响应速度优化版本
+- 规模
+  - Nano/Tiny/Lite
+  - Mini/Small
+  - Base
+  - Large
+  - Ultra
 
 ## DeepSeek
 
@@ -118,27 +150,3 @@ permalink: /ai/model/naming-rule/
 - **-Beta**：测试版本
 - **-Preview**：预览版本
 - 主要版本号表示架构重大更新
-
-## 通用命名模式
-
-### 版本号语义
-- **主版本**（v1→v2）：架构重大变革
-- **次版本**（v2.0→v2.1）：重要功能更新
-- **修订版本**（v2.1.0→v2.1.1）：问题修复与优化
-
-### 功能标识惯例
-- **Multimodal/Omni**：多模态能力
-- **Vision/VL**：视觉语言理解
-- **Audio/Speech**：语音处理
-- **Code/Coder**：编程能力
-- **Math/Reasoning**：数学推理
-- **Chat/Instruct**：对话交互
-- **Embedding**：向量表示
-- **Reranker**：检索优化
-
-### 规模标识
-- **Nano/Tiny**：极轻量级（<1B）
-- **Mini/Small**：轻量级（1B-7B）
-- **Medium/Base**：中等规模（7B-30B）
-- **Large/Pro**：大规模（30B-100B）
-- **Ultra/Giant**：超大规模（>100B）
