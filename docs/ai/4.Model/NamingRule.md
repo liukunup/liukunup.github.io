@@ -15,15 +15,29 @@ permalink: /ai/model/naming-rule/
   - 发行版本
     - Beta
     - Preview
+
 - 参数量
   - 7B
   - 32B
   - 70B
-- 量化精度
-  - FP16
-  - FP8（8位浮点量化，兼顾精度与性能）
-  - INT4（4位整数量化，极致压缩）
-  - NF4（4位NormalFloat量化，优化数值分布）
+
+- 量化
+
+| 标识 | 全称 | 说明 | 适用场景 |
+|-----|------|------|----------|
+| **FP16** | 16位浮点数 | 默认精度，不量化 | 训练、高精度推理 |
+| **FP8** | 8位浮点量化 | 兼顾精度与性能 | 高性能推理 |
+| **INT8** | 8位整数量化 | 平衡压缩与精度 | 通用推理加速 |
+| **INT4** | 4位整数量化 | 极致压缩，高内存效率 | 边缘设备、内存受限场景 |
+| **NF4** | 4位NormalFloat | 优化数值分布，保持精度 | 语言模型量化 |
+
+| 标识 | 全称 | 说明 | 优势 |
+|-----|------|------|------|
+| **GPTQ** | GPT Quantization | 基于梯度的后训练量化 | 高精度保持，适合大模型 |
+| **AWQ** | Activation-aware Weight Quantization | 激活感知权重量化 | 更好的精度保持 |
+| **GGUF** | GPT-Generated Unified Format | 通用模型格式 | 跨平台兼容性好 |
+| **QLoRA** | Quantized Low-Rank Adaptation | 量化低秩适配 | 高效微调 |
+
 - 功能
   - Chat 对话能力
   - VL/Vision 视觉语言理解
@@ -34,10 +48,13 @@ permalink: /ai/model/naming-rule/
   - Embedding 向量表示
   - Reranker 检索优化
   - Omni 多模态
+
 - 架构
   - MoE 混合专家架构
+
 - 性能
   - Turbo 响应速度优化版本
+
 - 规模
   - Nano/Tiny/Lite
   - Mini/Small
