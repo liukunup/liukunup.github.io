@@ -1,7 +1,72 @@
 ---
 title: Go
+tags:
+  - golang
 createTime: 2025/10/10 00:00:00
 permalink: /notes/go/
 ---
 
-- [搭建开发环境](./搭建开发环境.md)
+## 安装`Go`
+
+[官方安装指南](https://go.dev/doc/install)
+
+::: tabs
+
+@tab:active Windows
+
+1.  运行下载的 MSI 文件，按提示完成安装。
+    （安装后请关闭并重新打开命令提示符，以确保环境变量生效。）
+
+2.  验证安装：
+    1.  打开“开始”菜单，输入 `cmd` 并回车。
+    2.  在命令提示符中输入：
+        ```PowerShell
+        go version
+        ```
+    3.  确认显示已安装的 Go 版本。
+
+@tab macOS
+
+1.  打开下载的包文件，按提示完成安装。
+    （安装后建议重启终端会话，以确保环境变量生效。）
+
+2.  验证安装：
+    1.  打开终端，输入：
+        ```PowerShell
+        go version
+        ```
+    2.  确认显示已安装的 Go 版本。
+
+@tab Linux
+
+1.  清理旧版本并解压新版本（请酌情使用 `sudo`）：
+    ```bash
+    rm -rf /usr/local/go && tar -C /usr/local -xzf go1.25.2.linux-amd64.tar.gz
+    ```
+
+2.  配置环境变量：
+    将以下内容添加到 `$HOME/.profile` 或 `/etc/profile` 中：
+    ```bash
+    export PATH=$PATH:/usr/local/go/bin
+    ```
+    执行 `source $HOME/.profile` 使配置立即生效。
+
+3.  验证安装：
+    ```bash
+    go version
+    ```
+    确认显示已安装的 Go 版本。
+
+:::
+
+## 应用脚手架
+
+### [Nunu](https://github.com/go-nunu/nunu) — A CLI tool for building Go applications.
+
+## 开发框架
+
+### [go-zero](https://github.com/zeromicro/go-zero) is a web and rpc framework with lots of builtin engineering practices.
+
+[Docs](https://go-zero.dev/)
+
+## 常用依赖库
