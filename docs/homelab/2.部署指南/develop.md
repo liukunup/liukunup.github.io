@@ -21,7 +21,7 @@ docker compose --profile xxx up -d
 
 - .env.example
 
-```plaintext
+```plaintext :collapsed-lines
 # Docker Compose Project Name
 COMPOSE_PROJECT_NAME=dev-stack
 
@@ -143,7 +143,7 @@ CLICKHOUSE_PASSWORD=
 
 - docker-compose.yml
 
-```yaml
+```yaml :collapsed-lines
 # Dev Stack
 
 networks:
