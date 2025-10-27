@@ -54,7 +54,7 @@ permalink: /homelab/architecture/ml/
     # 安装依赖
     pip install jupyterlab -i https://mirrors.aliyun.com/pypi/simple
     pip install modelscope -i https://mirrors.aliyun.com/pypi/simple
-    pip install huggingface-hub -i https://mirrors.aliyun.com/pypi/simple
+    pip install "huggingface_hub[cli]" -i https://mirrors.aliyun.com/pypi/simple
     ```
 
 5. 配置 `/etc/docker/daemon.json`
