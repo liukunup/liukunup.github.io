@@ -3,7 +3,7 @@ title: Code Server
 tags:
   - code-server
 createTime: 2025/10/20 20:13:56
-permalink: /homelab/deploy/code-server
+permalink: /homelab/deploy/code-server/
 ---
 
 [linuxserver/code-server](https://docs.linuxserver.io/images/docker-code-server/)

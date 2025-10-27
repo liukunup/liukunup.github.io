@@ -3,7 +3,7 @@ title: Coder
 tags:
   - coder
 createTime: 2025/10/20 20:13:56
-permalink: /homelab/deploy/coder
+permalink: /homelab/deploy/coder/
 ---
 
 ::tdesign:logo-github-filled:: [Coder](https://github.com/coder/coder)
