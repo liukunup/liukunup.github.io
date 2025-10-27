@@ -36,6 +36,12 @@ docker run -d \
 
 @tab Docker Compose
 
+查看当前用户的`UID`和`GID`
+
+```shell
+id
+```
+
 ```yaml
 services:
   prometheus:
@@ -66,7 +72,7 @@ services:
 
 ## 配置样例
 
-### 基础配置
+### Prometheus (itself)
 
 ```yaml
 global:
@@ -103,57 +109,94 @@ scrape_configs:
 
 1. 部署
 
-  - Docker
+    - Docker
 
-  ```shell
-  docker run -d \
-    --net="host" \
-    --pid="host" \
-    -v "/:/host:ro,rslave" \
-    --restart=unless-stopped \
-    --name=node-exporter \
-    quay.io/prometheus/node-exporter:latest \
-    --path.rootfs=/host
-  ```
+    ```shell
+    docker run -d \
+      --net="host" \
+      --pid="host" \
+      -v "/:/host:ro,rslave" \
+      --restart=unless-stopped \
+      --name=node-exporter \
+      quay.io/prometheus/node-exporter:latest \
+      --path.rootfs=/host
+    ```
 
-  - Docker Compose
+    - Docker Compose
 
-  ```yaml
-  services:
-    node-exporter:
-      image: quay.io/prometheus/node-exporter:latest
-      container_name: node-exporter
-      restart: unless-stopped
-      network_mode: host
-      pid: host
-      command:
-        - '--path.rootfs=/host'
-      volumes:
-        - '/:/host:ro,rslave'
-  ```
+    ```yaml
+    services:
+      node-exporter:
+        image: quay.io/prometheus/node-exporter:latest
+        container_name: node-exporter
+        restart: unless-stopped
+        network_mode: host
+        pid: host
+        command:
+          - '--path.rootfs=/host'
+        volumes:
+          - '/:/host:ro,rslave'
+    ```
 
 2. 配置
 
-  ```yaml
-  scrape_configs:
+    ```yaml
+    scrape_configs:
 
-    - job_name: 'node-exporter'
-      scrape_interval: 15s
-      static_configs:
-        - targets:
-          - 'target.homelab.lan:9100'
-      relabel_configs:
-        - source_labels: [job]
-          target_label: job
-          regex: '(.*)'
-          replacement: 'node-exporter'
-        - source_labels: [__address__]
-          target_label: instance
-          regex: '([^:]+)\.homelab\.lan:\d+'
-          replacement: '${1}'
-  ```
+      - job_name: 'node-exporter'
+        scrape_interval: 15s
+        static_configs:
+          - targets:
+            - 'target.homelab.lan:9100'
+        relabel_configs:
+          # 使用 域名 或 IP地址 作为 实例名
+          - source_labels: [__address__]
+            target_label: instance
+            regex: '([^:]+):\d+'  # 捕获域名或IP地址
+            replacement: '${1}'
+          # 如果匹配 *.homelab.lan 表达式则自动设置 主机名
+          - source_labels: [instance]
+            target_label: hostname
+            regex: '(.+)\.homelab\.lan'
+            replacement: '${1}'
+    ```
 
 3. 重启
+
+    重启Prometheus服务以使配置生效，或采用文件服务发现，方法如下：
+
+    ```yaml{5-8}
+    scrape_configs:
+
+      - job_name: 'node-exporter'
+        scrape_interval: 15s
+        file_sd_configs:
+          - files:
+              - '/etc/prometheus/targets/node-exporters.yml'
+            refresh_interval: 1m
+        relabel_configs:
+          # 使用 域名 或 IP地址 作为 实例名
+          - source_labels: [__address__]
+            target_label: instance
+            regex: '([^:]+):\d+'  # 捕获域名或IP地址
+            replacement: '${1}'
+          # 如果匹配 *.homelab.lan 表达式则设置 主机名
+          - source_labels: [instance]
+            target_label: hostname
+            regex: '(.+)\.homelab\.lan'
+            replacement: '${1}'
+    ```
+
+    - /etc/prometheus/targets/node-exporters.yml
+
+    ```yaml
+    - targets:
+        - 'server1.homelab.lan:9100'
+        - 'server2.homelab.lan:9100'
+        - 'server3.homelab.lan:9100'
+      labels:
+        group: 'production'
+    ```
 
 :::
 
