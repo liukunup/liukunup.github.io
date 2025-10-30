@@ -10,14 +10,14 @@ permalink: /homelab/deploy/bind9/
 
 1. 创建目录用于数据持久化；
 
-    ```bash
+    ```shell
     mkdir -p /opt/bind9/{config,cache,records}
     cd /opt/bind9
     ```
 
 2. 设置目录权限；
 
-    ```bash
+    ```shell
     chmod -R 755 /opt/bind9
     chown -R 1000:1000 /opt/bind9  # 适配镜像的默认用户
     ```
@@ -26,14 +26,14 @@ permalink: /homelab/deploy/bind9/
 
 ::: tabs
 
-@tab Docker
+@tab:active Docker
 
-    ```bash
+    ```shell
     docker run -d \
       -p 53:53 \
-      -p /opt/bind9/config:/etc/bind \
-      -p /opt/bind9/cache:/var/cache/bind \
-      -p /opt/bind9/records:/var/lib/bind \  
+      -v /opt/bind9/config:/etc/bind \
+      -v /opt/bind9/cache:/var/cache/bind \
+      -v /opt/bind9/records:/var/lib/bind \
       -e TZ=Asia/Shanghai \
       -e BIND9_USER=bind \
       --restart=unless-stopped \
@@ -41,7 +41,7 @@ permalink: /homelab/deploy/bind9/
       ubuntu/bind9:9.18-24.04_beta
     ```
 
-@tab:active Docker Compose
+@tab Docker Compose
 
     ```yaml
     services:
@@ -134,7 +134,7 @@ permalink: /homelab/deploy/bind9/
 
 3. 区域数据文件
 
-    创建`/opt/docker-bind9/zones/db.homelab.lan`
+    创建`/opt/bind9/zones/db.homelab.lan`
 
     ```plaintext
     ; homelab.lan 区域文件
@@ -163,7 +163,7 @@ permalink: /homelab/deploy/bind9/
     ; 其他服务可以在此添加
     ```
 
-    创建反向解析文件`/opt/docker-bind9/zones/db.192.168.100`
+    创建反向解析文件`/opt/bind9/zones/db.192.168.100`
 
     ```plaintext
     ; 192.168.100.0/24 反向区域文件
@@ -188,13 +188,13 @@ permalink: /homelab/deploy/bind9/
 
     设置文件权限
 
-    ```bash
-    chmod 644 /opt/docker-bind9/zones/db.*
+    ```shell
+    chmod 644 /opt/bind9/zones/db.*
     ```
 
     验证配置文件语法
 
-    ```bash
+    ```shell
     docker exec bind9-server named-checkconf
     docker exec bind9-server named-checkzone homelab.lan /etc/bind/zones/db.homelab.lan
     ```
@@ -215,7 +215,7 @@ permalink: /homelab/deploy/bind9/
 
 使用以下命令测试DNS解析
 
-    ```bash
+    ```shell
     # 测试基础域名解析
     nslookup homelab.lan 192.168.100.1
 
@@ -231,7 +231,7 @@ permalink: /homelab/deploy/bind9/
 
 ### 反向解析测试
 
-    ```bash
+    ```shell
     nslookup 192.168.100.12 192.168.100.1
     nslookup 192.168.100.13 192.168.100.1
     ```
@@ -240,9 +240,9 @@ permalink: /homelab/deploy/bind9/
 
 - prometheus
 
-    创建`/opt/docker-bind9/etc/named.conf.options`启用统计通道
+    创建`/opt/bind9/config/named.conf.options`启用统计通道
 
-    ```bash
+    ```shell
     options {        
         // 统计通道配置
         statistics-channels {
