@@ -16,49 +16,51 @@ permalink: /homelab/deploy/code-server/
 
 @tab:active Docker
 
-```shell
-docker run -d \
-  -p 8443:8443 \
-  -e PUID=1000 \
-  -e PGID=1000 \
-  -e TZ=Etc/UTC \
-  -e PASSWORD=password `#optional` \
-  -e HASHED_PASSWORD= `#optional` \
-  -e SUDO_PASSWORD=password `#optional` \
-  -e SUDO_PASSWORD_HASH= `#optional` \
-  -e PROXY_DOMAIN=code-server.my.domain `#optional` \
-  -e DEFAULT_WORKSPACE=/config/workspace `#optional` \
-  -e PWA_APPNAME=code-server `#optional` \
-  -v /path/to/code-server/config:/config \
-  --restart unless-stopped \
-  --name=code-server \
-  lscr.io/linuxserver/code-server:latest
-```
+    ```shell
+    docker run -d \
+      -p 8443:8443 \
+      -e PUID=1000 \
+      -e PGID=1000 \
+      -e TZ=Asia/Shanghai \
+      -e PASSWORD=password `#optional` \
+      -e HASHED_PASSWORD= `#optional` \
+      -e SUDO_PASSWORD=password `#optional` \
+      -e SUDO_PASSWORD_HASH= `#optional` \
+      -e PROXY_DOMAIN=code-server.my.domain `#optional` \
+      -e DEFAULT_WORKSPACE=/config/workspace `#optional` \
+      -e PWA_APPNAME=code-server `#optional` \
+      -v "${HOME}/.config:/config" \
+      -v "${PWD}:/config/project" \
+      --restart unless-stopped \
+      --name=code-server \
+      lscr.io/linuxserver/code-server:latest
+    ```
 
 @tab Docker Compose
 
-```shell
-services:
-  code-server:
-    image: lscr.io/linuxserver/code-server:latest
-    container_name: code-server
-    restart: unless-stopped
-    ports:
-      - 8443:8443
-    environment:
-      - PUID=1000
-      - PGID=1000
-      - TZ=Etc/UTC
-      - PASSWORD=password #optional
-      - HASHED_PASSWORD= #optional
-      - SUDO_PASSWORD=password #optional
-      - SUDO_PASSWORD_HASH= #optional
-      - PROXY_DOMAIN=code-server.my.domain #optional
-      - DEFAULT_WORKSPACE=/config/workspace #optional
-      - PWA_APPNAME=code-server #optional
-    volumes:
-      - /path/to/code-server/config:/config
-```
+    ```yaml
+    services:
+      code-server:
+        image: lscr.io/linuxserver/code-server:latest
+        container_name: code-server
+        restart: unless-stopped
+        ports:
+          - 8443:8443
+        environment:
+          - PUID=1000
+          - PGID=1000
+          - TZ=Asia/Shanghai
+          - PASSWORD=password #optional
+          - HASHED_PASSWORD= #optional
+          - SUDO_PASSWORD=password #optional
+          - SUDO_PASSWORD_HASH= #optional
+          - PROXY_DOMAIN=code-server.my.domain #optional
+          - DEFAULT_WORKSPACE=/config/workspace #optional
+          - PWA_APPNAME=code-server #optional
+        volumes:
+          - "${HOME}/.config:/config"
+          - "${PWD}:/config/project"
+    ```
 
 :::
 
@@ -122,3 +124,15 @@ services:
     ```
 
 :::
+
+## ⚙️ 配置指南
+
+- 配置Git
+
+    1. 将你的ssh key拷贝到`/config/.ssh`目录下
+    2. 配置用户名和邮箱
+
+    ```shell
+    git config --global user.name "username"
+    git config --global user.email "email address"
+    ```
