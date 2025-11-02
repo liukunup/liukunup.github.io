@@ -109,4 +109,6 @@ export default defineNavbarConfig([
       },
     ]
   },
+  { text: '友链', link: '/friends/', icon: 'carbon:friendship' },
+  { text: '关于', link: '/about/', icon: 'carbon:user' },
 ])
