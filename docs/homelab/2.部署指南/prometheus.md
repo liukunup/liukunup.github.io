@@ -10,7 +10,7 @@ permalink: /homelab/deploy/prometheus/
 
 ![Architecture](https://prometheus.io/assets/docs/architecture.svg)
 
-## 部署指南
+## 🚀 部署指南
 
 ::: tabs
 
@@ -70,7 +70,7 @@ services:
 
 :::
 
-## 配置样例
+## ⚙️ 配置样例
 
 ### Prometheus (itself)
 
@@ -780,5 +780,255 @@ scrape_configs:
 3. 重启
 
     重启Prometheus服务以使配置生效，或采用文件服务发现。
+
+:::
+
+
+## 💻 最近实践
+
+### 🔥 主机&容器
+
+::: steps
+
+1. 部署
+
+    ```yaml :collapsed-lines
+    networks:
+      monitoring:
+        driver: bridge
+
+    services:
+      node-exporter:  # Node Exporter - 收集主机系统指标
+        image: quay.io/prometheus/node-exporter:latest
+        container_name: node-exporter
+        restart: unless-stopped
+        ports:
+          - "9100:9100"
+        volumes:
+          - /:/host:ro,rslave
+        command:
+          - --path.rootfs=/host
+          - --path.procfs=/host/proc
+          - --path.sysfs=/host/sys
+          - --collector.filesystem.mount-points-exclude=^/(sys|proc|dev|host|etc)($$|/)
+        networks:
+          - monitoring
+
+      cadvisor:  # cAdvisor - 收集容器指标
+        image: gcr.io/cadvisor/cadvisor:v0.49.1
+        container_name: cadvisor
+        restart: unless-stopped
+        privileged: true
+        ports:
+          - "8080:8080"
+        volumes:
+          - /:/rootfs:ro
+          - /var/run:/var/run:ro
+          - /sys:/sys:ro
+          - /var/lib/docker/:/var/lib/docker:ro
+          - /dev/disk/:/dev/disk:ro
+        devices:
+          - /dev/kmsg:/dev/kmsg
+        networks:
+          - monitoring
+    ```
+
+2. 配置
+
+    ```yaml :collapsed-lines
+    scrape_configs:
+
+      - job_name: 'node-exporter'
+        scrape_interval: 15s
+        static_configs:
+          - targets:
+            - 'target.homelab.lan:9100'
+        relabel_configs:
+          # 使用 域名 或 IP地址 作为 实例名
+          - source_labels: [__address__]
+            target_label: instance
+            regex: '([^:]+):\d+'  # 捕获域名或IP地址
+            replacement: '${1}'
+          # 如果匹配 *.homelab.lan 表达式则自动设置 主机名
+          - source_labels: [instance]
+            target_label: hostname
+            regex: '(.+)\.homelab\.lan'
+            replacement: '${1}'
+
+      - job_name: 'cadvisor'
+        scrape_interval: 15s
+        static_configs:
+          - targets:
+            - 'server.homelab.lan:8080'
+        relabel_configs:
+          # 使用 域名 或 IP地址 作为 实例名
+          - source_labels: [__address__]
+            target_label: instance
+            regex: '([^:]+):\d+'  # 捕获域名或IP地址
+            replacement: '${1}'
+          # 如果匹配 *.homelab.lan 表达式则设置 主机名
+          - source_labels: [instance]
+            target_label: hostname
+            regex: '(.+)\.homelab\.lan'
+            replacement: '${1}'
+    ```
+
+3. 数据看板
+
+:::
+
+### 1Panel 数据库三套件
+
+::: steps
+
+1. 部署
+
+    ```yaml :collapsed-lines
+
+    ```
+
+2. 配置
+
+    ```yaml :collapsed-lines
+    scrape_configs:
+
+      - job_name: mysql
+        scrape_interval: 30s
+        metrics_path: /probe
+        static_configs:
+          - targets:
+            - mysql.homelab.lan:3306
+            - mysql.staging.homelab.lan:3306
+        relabel_configs:
+          - source_labels: [__address__]
+            target_label: __param_target
+            regex: '([^:]+)\.homelab\.lan:(\d+)'
+            replacement: '${1}.homelab.lan:${2}'
+          - source_labels: [__address__]
+            target_label: instance
+            regex: '([^:]+)\.homelab\.lan:\d+'
+            replacement: '${1}'
+          - target_label: __address__
+            replacement: 'docker.homelab.lan:9104'
+          - source_labels: [instance]
+            target_label: environment
+            regex: 'mysql\.staging'
+            replacement: 'staging'
+          - source_labels: [instance]
+            target_label: environment
+            regex: 'mysql\.homelab'
+            replacement: 'prod'
+          - target_label: service
+            replacement: 'mysql'
+          - target_label: db_system
+            replacement: 'mysql'
+
+      - job_name: postgres
+        scrape_interval: 15s
+        metrics_path: /probe
+        static_configs:
+          - targets:
+            - server1:5432
+            - server2:5432
+        relabel_configs:
+          - source_labels: [__address__]
+            target_label: __param_target
+          - source_labels: [__param_target]
+            target_label: instance
+          - target_label: __address__
+            replacement: 127.0.0.1:9116  # The postgres exporter's real hostname:port.
+
+      - job_name: redis
+        scrape_interval: 30s
+        metrics_path: /scrape
+        static_configs:
+          - targets:
+            - redis://redis.homelab.lan:6379
+            - redis://redis.staging.homelab.lan:6379
+        relabel_configs:
+          - source_labels: [__address__]
+            target_label: __param_target
+            regex: 'redis://([^:]+\.homelab\.lan:\d+)'
+            replacement: 'redis://${1}'
+          - source_labels: [__param_target]
+            target_label: instance
+            regex: 'redis://([^:]+)\.homelab\.lan:\d+'
+            replacement: '${1}'
+          - target_label: __address__
+            replacement: 'docker.homelab.lan:9121'
+          - source_labels: [instance]
+            target_label: environment
+            regex: 'redis\.staging'
+            replacement: 'staging'
+          - source_labels: [instance]
+            target_label: environment
+            regex: 'redis\.homelab'
+            replacement: 'prod'
+          - target_label: job
+            replacement: 'redis-exporter'
+          - target_label: monitored_by
+            replacement: 'redis_exporter'
+    ```
+
+3. 数据看板
+
+:::
+
+### GPU
+
+::: steps
+
+1. 部署
+
+    ```yaml :collapsed-lines
+    networks:
+      monitoring:
+        driver: bridge
+
+    services:
+      dcgm-exporter:  # DCGM Exporter - 收集 NVIDIA GPU 指标
+        image: nvcr.io/nvidia/k8s/dcgm-exporter:4.4.1-4.6.0-ubuntu22.04
+        container_name: dcgm-exporter
+        restart: unless-stopped
+        ports:
+          - "9400:9400"
+        deploy:
+          resources:
+            reservations:
+              devices:
+                - driver: nvidia
+                  capabilities: [utility]
+                  count: all
+        cap_add:
+          - SYS_ADMIN
+        networks:
+          - monitoring
+    ```
+
+2. 配置
+
+    ```yaml :collapsed-lines
+    scrape_configs:
+
+      - job_name: 'dcgm-exporter'
+        scrape_interval: 15s
+        metrics_path: /metrics
+        static_configs:
+          - targets:
+            - 'server.homelab.lan:9400'
+        relabel_configs:
+          # 使用 域名 或 IP地址 作为 实例名
+          - source_labels: [__address__]
+            target_label: instance
+            regex: '([^:]+):\d+'  # 捕获域名或IP地址
+            replacement: '${1}'
+          # 如果匹配 *.homelab.lan 表达式则设置 主机名
+          - source_labels: [instance]
+            target_label: hostname
+            regex: '(.+)\.homelab\.lan'
+            replacement: '${1}'
+    ```
+
+3. 数据看板
 
 :::
