@@ -59,7 +59,7 @@ const tools = ref([
   {type: 'Anaconda', icon: 'skill-icons:anaconda-light'},
   {type: 'Visual Studio Code', icon: 'vscode-icons:file-type-vscode'},
   {type: 'IntelliJ IDEA', icon: 'logos:intellij-idea'},
-  {type: 'PyCharm', icon: 'skill-icons:pycharm-light'},
+  {type: 'PyCharm', icon: 'logos:pycharm'},
   {type: 'Vim', icon: 'skill-icons:vim-light'},
   {type: 'Docker', icon: 'skill-icons:docker'},
   {type: 'Kubernetes', icon: 'skill-icons:kubernetes'},
