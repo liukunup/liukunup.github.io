@@ -32,21 +32,29 @@ next: false
 </center>
 
 
-## 🙋‍♂️关于我
+## 🙋‍♂️ 关于我
 
 <p align="center"><img width="450px" src="https://github.com/abhisheknaiidu/abhisheknaiidu/raw/master/code.gif?raw=true"></p>
 
-大家好，我是 **liukunup**，一名 90 后 算法测试工程师。  
+屏幕对面的朋友你好，我是**KUN**，一个从业10年、提桶数个大厂、做过算法测试、带过测试团队的测试工程师。
 
-- 🌱 **学习阶段**：Go / React / vue
-- 📫 **联系方式**：
-  - 邮箱：liukunup@outlook.com
-  - GitHub：[liukunup](https://github.com/liukunup)  
-- 🏠 **个人主页**：[https://liukunup.github.io/](https://liukunup.github.io/)
+- **测试技能**
+  1. 熟练掌握测试规划、测试设计、测试执行、测试报告撰写的整套测试基础流程；
+  2. 熟练掌握质量策划、质量运营、质量管理相关方法，具备质量体系构建能力；
+  3. 熟悉IPD流程、擅长探索性测试，习惯于建立测试标准、降低执行难度；
+  4. 熟悉项目管理，具备测试团队管理经验，项目经验丰富。
 
-欢迎大佬们指点，也欢迎同路人一起结伴学习！
+- **参考标签** 机器视觉、OCR、NLP、影像/图像、LLM、文本客服、三维重建、双摄标定、在线协作文档、性能测试、高可用、质量管理、摄影
 
-## 👨‍💻编程语言
+- **职业生涯规划**
+  - [x] 3年 增加广度，充分了解行业
+  - [x] 5年 增加深度，对着一个城墙口冲
+  - [x] 10年 增加高度，努力成为权威专家
+  - [ ] 20年 不要为自己设限，一切皆有可能
+
+欢迎大佬们指点、提携，也欢迎同路人一起结伴学习！
+
+## 👨‍💻 编程语言
 
 <p>
   <a href="https://skillicons.dev">
@@ -62,23 +70,16 @@ next: false
 
 <p>
   <a href="https://skillicons.dev">
-    <img src="https://skillicons.dev/icons?i=html,css,js,ts,react,vue" />
+    <img src="https://skillicons.dev/icons?i=html,css,js,ts,less,react,vue" />
   </a>
 </p>
 
-## 💪测试技能
-
-1. 熟练掌握测试规划、测试设计、测试执行、测试报告撰写的整套测试基础流程；
-2. 熟练掌握质量策划、质量运营、质量管理相关方法，具备质量体系构建能力；
-3. 熟悉IPD流程、擅长探索性测试，习惯于建立测试标准、降低执行难度；
-4. 熟悉项目管理，具备测试团队管理经验，项目经验丰富。
-
-## 职业证书
+## 📜 职业证书
 
 - Tencent Cloud Practitioner (云从业者证书/2022)
 - Tencent Cloud Artificial Intelligence Practitioner (人工智能从业者证书/2022)
 
-## 🏅荣誉奖项
+## 🏅 荣誉奖项
 
 - 2024 **小红书** 技术与效率突破 ==优秀项目奖==
 - 2024 **小红书** 企业效率 ==使命必达奖== for「CNY重保」项目
@@ -88,7 +89,7 @@ next: false
 - 2013 **全国大学生电子设计竞赛** ==优胜奖==
 - 2012 **南京朗坤电子科技节** ==二等奖==
 
-## 技术栈
+## 📚 技术栈（待整理ing...）
 
 | 类别             | 技术/工具                                                                                                  |
 |------------------|------------------------------------------------------------------------------------------------------------|
@@ -111,4 +112,4 @@ next: false
 ## 🌐 网站运营
 | Icon         | Name       | Link                                                               |
 | ------------ | ---------- | ------------------------------------------------------------------ |
-| 🪄 Blog      | 个人博客    | [https://liukunup.github.io/](https://liukunup.github.io/)        |
+| 📝 Blog      | 个人博客    | [https://liukunup.github.io/](https://liukunup.github.io/)        |
