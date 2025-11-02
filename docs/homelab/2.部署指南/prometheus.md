@@ -494,6 +494,29 @@ scrape_configs:
 
 1. 部署
 
+    ```shell
+    docker run -d \
+      -p 9104:9104 \
+      -v ./my.cnf:/.my.cnf \
+      --restart=unless-stopped \
+      --name=mysqld-exporter \
+      prom/mysqld-exporter:latest
+    ```
+
+    - my.cnf
+
+    ```plaintext
+    [client]
+    user=exporter
+    password=your_password
+    [client.prod]
+    host=mysql.homelab.lan
+    port=3306
+    [client.staging]
+    host=mysql.staging.homelab.lan
+    port=3306
+    ```
+
 2. 配置
 
     ```yaml
@@ -802,8 +825,9 @@ scrape_configs:
         image: quay.io/prometheus/node-exporter:latest
         container_name: node-exporter
         restart: unless-stopped
+        pid: host
         ports:
-          - "9100:9100"
+          - 9100:9100
         volumes:
           - /:/host:ro,rslave
         command:
@@ -820,7 +844,7 @@ scrape_configs:
         restart: unless-stopped
         privileged: true
         ports:
-          - "8080:8080"
+          - 8080:8080
         volumes:
           - /:/rootfs:ro
           - /var/run:/var/run:ro
@@ -884,7 +908,70 @@ scrape_configs:
 1. 部署
 
     ```yaml :collapsed-lines
+    networks:
+      1panel-network:
+        external: true
 
+    services:
+
+      mysqld-exporter:  # MySQL
+        image: prom/mysqld-exporter:latest
+        container_name: mysqld-exporter
+        restart: unless-stopped
+        volumes:
+          - ./my.cnf:/.my.cnf
+        ports:
+          - 9104:9104
+        networks:
+          - 1panel-network
+
+      redis-exporter:  # Redis
+        image: oliver006/redis_exporter:latest
+        container_name: redis-exporter
+        restart: unless-stopped
+        ports:
+          - 9121:9121
+        environment:
+          REDIS_ADDR: redis://redis.staging.homelab.lan:6379
+          REDIS_PASSWORD: ${REDIS_PASSWORD}
+        networks:
+          - 1panel-network
+
+      postgres-exporter:  # PostgreSQL
+        image: quay.io/prometheuscommunity/postgres-exporter:latest
+        container_name: postgres-exporter
+        restart: unless-stopped
+        ports:
+          - 9187:9187
+        environment:
+          DATA_SOURCE_URI: postgresql:5432/postgres?sslmode=disable
+          DATA_SOURCE_USER: ${POSTGRE_USERNAME}
+          DATA_SOURCE_PASS: ${POSTGRE_PASSWORD}
+        networks:
+          - 1panel-network
+    ```
+
+    - my.cnf
+
+    ```plaintext
+    [client]
+    user=exporter
+    password=your_password
+    [client.prod]
+    host=mysql.homelab.lan
+    port=3306
+    [client.staging]
+    host=mysql.staging.homelab.lan
+    port=3306
+    ```
+
+    - .env
+
+    ```plaintext
+    COMPOSE_PROJECT_NAME=monitoring
+    REDIS_PASSWORD=
+    POSTGRE_USERNAME=
+    POSTGRE_PASSWORD=
     ```
 
 2. 配置
