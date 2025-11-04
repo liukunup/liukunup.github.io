@@ -2,11 +2,15 @@
 title: Prometheus
 tags:
   - monitoring
+  - prometheus
+  - grafana
 createTime: 2025/10/27 09:46:50
 permalink: /homelab/deploy/prometheus/
 ---
 
-[Prometheus Docs](https://prometheus.io/docs/introduction/overview/)
+## 🏗️ 架构图
+
+📖 [Prometheus Docs](https://prometheus.io/docs/introduction/overview/)
 
 ![Architecture](https://prometheus.io/assets/docs/architecture.svg)
 
@@ -72,7 +76,7 @@ services:
 
 ## ⚙️ 配置样例
 
-### Prometheus (itself)
+### 📦 Prometheus (itself)
 
 ```yaml
 global:
@@ -103,7 +107,7 @@ scrape_configs:
       - targets: [ 'localhost:9090' ]
 ```
 
-### [Node exporter](https://github.com/prometheus/node_exporter)
+### 📦 [Node exporter](https://github.com/prometheus/node_exporter)
 
 ::: steps
 
@@ -111,7 +115,7 @@ scrape_configs:
 
     - Docker
 
-    ```shell
+    ```shell :collapsed-lines
     docker run -d \
       --net="host" \
       --pid="host" \
@@ -119,12 +123,15 @@ scrape_configs:
       --restart=unless-stopped \
       --name=node-exporter \
       quay.io/prometheus/node-exporter:latest \
-      --path.rootfs=/host
+      --path.rootfs=/host \
+      --path.procfs=/host/proc \
+      --path.sysfs=/host/sys \
+      --collector.filesystem.mount-points-exclude=^/(sys|proc|dev|host|etc)($$|/)
     ```
 
     - Docker Compose
 
-    ```yaml
+    ```yaml :collapsed-lines
     services:
       node-exporter:
         image: quay.io/prometheus/node-exporter:latest
@@ -132,15 +139,18 @@ scrape_configs:
         restart: unless-stopped
         network_mode: host
         pid: host
-        command:
-          - '--path.rootfs=/host'
         volumes:
-          - '/:/host:ro,rslave'
+          - /:/host:ro,rslave
+        command:
+          - --path.rootfs=/host
+          - --path.procfs=/host/proc
+          - --path.sysfs=/host/sys
+          - --collector.filesystem.mount-points-exclude=^/(sys|proc|dev|host|etc)($$|/)
     ```
 
 2. 配置
 
-    ```yaml
+    ```yaml :collapsed-lines
     scrape_configs:
 
       - job_name: 'node-exporter'
@@ -149,15 +159,10 @@ scrape_configs:
           - targets:
             - 'target.homelab.lan:9100'
         relabel_configs:
-          # 使用 域名 或 IP地址 作为 实例名
+          # 使用 域名 或 IP地址 作为实例名，缩短名称长度
           - source_labels: [__address__]
             target_label: instance
             regex: '([^:]+):\d+'  # 捕获域名或IP地址
-            replacement: '${1}'
-          # 如果匹配 *.homelab.lan 表达式则自动设置 主机名
-          - source_labels: [instance]
-            target_label: hostname
-            regex: '(.+)\.homelab\.lan'
             replacement: '${1}'
     ```
 
@@ -178,15 +183,10 @@ scrape_configs:
               - '/etc/prometheus/targets/node-exporters.yml' #  [!code ++]
             refresh_interval: 1m                             #  [!code ++]
         relabel_configs:
-          # 使用 域名 或 IP地址 作为 实例名
+          # 使用 域名 或 IP地址 作为实例名，缩短名称长度
           - source_labels: [__address__]
             target_label: instance
             regex: '([^:]+):\d+'  # 捕获域名或IP地址
-            replacement: '${1}'
-          # 如果匹配 *.homelab.lan 表达式则设置 主机名
-          - source_labels: [instance]
-            target_label: hostname
-            regex: '(.+)\.homelab\.lan'
             replacement: '${1}'
     ```
 
@@ -201,9 +201,15 @@ scrape_configs:
         group: 'production'
     ```
 
+4. ::logos:grafana::图表
+
+    - `1860` [Node Exporter Full](https://grafana.com/grafana/dashboards/1860)
+    - `8919` [TenSunS自动同步版](https://grafana.com/grafana/dashboards/8919)
+    - `16098` [通用JOB分组版](https://grafana.com/grafana/dashboards/16098)
+
 :::
 
-### [cAdvisor](https://github.com/google/cadvisor)
+### 📦 [cAdvisor](https://github.com/google/cadvisor)
 
 ::: steps
 
@@ -257,30 +263,20 @@ scrape_configs:
         static_configs:
           - targets:
             - 'server.homelab.lan:8080'
-        relabel_configs:
-          # 使用 域名 或 IP地址 作为 实例名
-          - source_labels: [__address__]
-            target_label: instance
-            regex: '([^:]+):\d+'  # 捕获域名或IP地址
-            replacement: '${1}'
-          # 如果匹配 *.homelab.lan 表达式则设置 主机名
-          - source_labels: [instance]
-            target_label: hostname
-            regex: '(.+)\.homelab\.lan'
-            replacement: '${1}'
     ```
 
 3. 重启
 
     重启Prometheus服务以使配置生效，或采用文件服务发现。
 
+4. ::logos:grafana::图表
+
+    - `193` [Docker monitoring](https://grafana.com/grafana/dashboards/193)
+    - `19908` [cAdvisor Docker Insights](https://grafana.com/grafana/dashboards/19908)
+
 :::
 
-### [DCGM-Exporter](https://github.com/NVIDIA/dcgm-exporter)
-
-::tdesign:logo-github-filled:: [DCGM-Exporter](https://github.com/NVIDIA/dcgm-exporter)
-
-::logos:grafana:: [Grafana Dashboard](https://grafana.com/grafana/dashboards/12239) use `12239`
+### 📦 [DCGM-Exporter](https://github.com/NVIDIA/dcgm-exporter)
 
 ::: steps
 
@@ -342,22 +338,15 @@ scrape_configs:
         static_configs:
           - targets:
             - 'server.homelab.lan:9400'
-        relabel_configs:
-          # 使用 域名 或 IP地址 作为 实例名
-          - source_labels: [__address__]
-            target_label: instance
-            regex: '([^:]+):\d+'  # 捕获域名或IP地址
-            replacement: '${1}'
-          # 如果匹配 *.homelab.lan 表达式则设置 主机名
-          - source_labels: [instance]
-            target_label: hostname
-            regex: '(.+)\.homelab\.lan'
-            replacement: '${1}'
     ```
 
 3. 重启
 
     重启Prometheus服务以使配置生效，或采用文件服务发现。
+
+4. ::logos:grafana::图表
+
+    - `12239` [NVIDIA DCGM Exporter Dashboard](https://grafana.com/grafana/dashboards/12239)
 
 :::
 
@@ -488,7 +477,7 @@ scrape_configs:
 
 :::
 
-### [MySQL Server Exporter](https://github.com/prometheus/mysqld_exporter)
+### 📦 [MySQL Server Exporter](https://github.com/prometheus/mysqld_exporter)
 
 ::: steps
 
@@ -540,27 +529,20 @@ scrape_configs:
             replacement: '${1}'
           - target_label: __address__
             replacement: 'docker.homelab.lan:9104'
-          - source_labels: [instance]
-            target_label: environment
-            regex: 'mysql\.staging'
-            replacement: 'staging'
-          - source_labels: [instance]
-            target_label: environment
-            regex: 'mysql\.homelab'
-            replacement: 'prod'
-          - target_label: service
-            replacement: 'mysql'
-          - target_label: db_system
-            replacement: 'mysql'
     ```
 
 3. 重启
 
     重启Prometheus服务以使配置生效，或采用文件服务发现。
 
+4. ::logos:grafana::图表
+
+    - `7362` [MySQL Overview](https://grafana.com/grafana/dashboards/7362)
+    - `14057` [MySQL Exporter Quickstart and Dashboard](https://grafana.com/grafana/dashboards/14057)
+
 :::
 
-### [Prometheus Valkey & Redis Metrics Exporter](https://github.com/oliver006/redis_exporter)
+### 📦 [Prometheus Valkey & Redis Metrics Exporter](https://github.com/oliver006/redis_exporter)
 
 ::: steps
 
@@ -596,23 +578,15 @@ scrape_configs:
             replacement: '${1}'
           - target_label: __address__
             replacement: 'docker.homelab.lan:9121'
-          - source_labels: [instance]
-            target_label: environment
-            regex: 'redis\.staging'
-            replacement: 'staging'
-          - source_labels: [instance]
-            target_label: environment
-            regex: 'redis\.homelab'
-            replacement: 'prod'
-          - target_label: job
-            replacement: 'redis-exporter'
-          - target_label: monitored_by
-            replacement: 'redis_exporter'
     ```
 
 3. 重启
 
     重启Prometheus服务以使配置生效，或采用文件服务发现。
+
+4. ::logos:grafana::图表
+
+    - `14091` [Redis Exporter Quickstart and Dashboard](https://grafana.com/grafana/dashboards/14091)
 
 :::
 
@@ -640,24 +614,21 @@ scrape_configs:
     scrape_configs:
 
       - job_name: postgres
-        scrape_interval: 15s
-        metrics_path: /probe
+        scrape_interval: 30s
+        metrics_path: /metrics
         static_configs:
           - targets:
-            - server1:5432
-            - server2:5432
-        relabel_configs:
-          - source_labels: [__address__]
-            target_label: __param_target
-          - source_labels: [__param_target]
-            target_label: instance
-          - target_label: __address__
-            replacement: 127.0.0.1:9116  # The postgres exporter's real hostname:port.
+            - postgres.homelab.lan:9187
+            - postgres.staging.homelab.lan:9187
     ```
 
 3. 重启
 
     重启Prometheus服务以使配置生效，或采用文件服务发现。
+
+4. ::logos:grafana::图表
+
+    - `12485` [PostgreSQL Exporter](https://grafana.com/grafana/dashboards/12485)
 
 :::
 
@@ -809,7 +780,7 @@ scrape_configs:
 
 ## 💻 最佳实践
 
-### 🔥 主机&容器
+### 主机&容器 🔥🔥🔥
 
 ::: steps
 
@@ -868,15 +839,10 @@ scrape_configs:
           - targets:
             - 'target.homelab.lan:9100'
         relabel_configs:
-          # 使用 域名 或 IP地址 作为 实例名
+          # 使用 域名 或 IP地址 作为实例名，缩短名称长度
           - source_labels: [__address__]
             target_label: instance
             regex: '([^:]+):\d+'  # 捕获域名或IP地址
-            replacement: '${1}'
-          # 如果匹配 *.homelab.lan 表达式则自动设置 主机名
-          - source_labels: [instance]
-            target_label: hostname
-            regex: '(.+)\.homelab\.lan'
             replacement: '${1}'
 
       - job_name: 'cadvisor'
@@ -884,20 +850,14 @@ scrape_configs:
         static_configs:
           - targets:
             - 'server.homelab.lan:8080'
-        relabel_configs:
-          # 使用 域名 或 IP地址 作为 实例名
-          - source_labels: [__address__]
-            target_label: instance
-            regex: '([^:]+):\d+'  # 捕获域名或IP地址
-            replacement: '${1}'
-          # 如果匹配 *.homelab.lan 表达式则设置 主机名
-          - source_labels: [instance]
-            target_label: hostname
-            regex: '(.+)\.homelab\.lan'
-            replacement: '${1}'
     ```
 
-3. 数据看板
+3. ::logos:grafana::图表
+
+    - `1860` [Node Exporter Full](https://grafana.com/grafana/dashboards/1860)
+    - `16098` [通用JOB分组版](https://grafana.com/grafana/dashboards/16098)
+    - `193` [Docker monitoring](https://grafana.com/grafana/dashboards/193)
+    - `19908` [cAdvisor Docker Insights](https://grafana.com/grafana/dashboards/19908)
 
 :::
 
@@ -941,8 +901,7 @@ scrape_configs:
         image: quay.io/prometheuscommunity/postgres-exporter:latest
         container_name: postgres-exporter
         restart: unless-stopped
-        ports:
-          - 9187:9187
+        network_mode: host
         environment:
           DATA_SOURCE_URI: postgresql:5432/postgres?sslmode=disable
           DATA_SOURCE_USER: ${POSTGRE_USERNAME}
@@ -997,33 +956,6 @@ scrape_configs:
             replacement: '${1}'
           - target_label: __address__
             replacement: 'docker.homelab.lan:9104'
-          - source_labels: [instance]
-            target_label: environment
-            regex: 'mysql\.staging'
-            replacement: 'staging'
-          - source_labels: [instance]
-            target_label: environment
-            regex: 'mysql\.homelab'
-            replacement: 'prod'
-          - target_label: service
-            replacement: 'mysql'
-          - target_label: db_system
-            replacement: 'mysql'
-
-      - job_name: postgres
-        scrape_interval: 15s
-        metrics_path: /probe
-        static_configs:
-          - targets:
-            - server1:5432
-            - server2:5432
-        relabel_configs:
-          - source_labels: [__address__]
-            target_label: __param_target
-          - source_labels: [__param_target]
-            target_label: instance
-          - target_label: __address__
-            replacement: 127.0.0.1:9116  # The postgres exporter's real hostname:port.
 
       - job_name: redis
         scrape_interval: 30s
@@ -1043,21 +975,21 @@ scrape_configs:
             replacement: '${1}'
           - target_label: __address__
             replacement: 'docker.homelab.lan:9121'
-          - source_labels: [instance]
-            target_label: environment
-            regex: 'redis\.staging'
-            replacement: 'staging'
-          - source_labels: [instance]
-            target_label: environment
-            regex: 'redis\.homelab'
-            replacement: 'prod'
-          - target_label: job
-            replacement: 'redis-exporter'
-          - target_label: monitored_by
-            replacement: 'redis_exporter'
+
+      - job_name: postgres
+        scrape_interval: 30s
+        metrics_path: /metrics
+        static_configs:
+          - targets:
+            - postgres.homelab.lan:9187
+            - postgres.staging.homelab.lan:9187
     ```
 
-3. 数据看板
+3. ::logos:grafana::图表
+
+    - `7362` [MySQL Overview](https://grafana.com/grafana/dashboards/7362)
+    - `14091` [Redis Exporter Quickstart and Dashboard](https://grafana.com/grafana/dashboards/14091)
+    - `12485` [PostgreSQL Exporter](https://grafana.com/grafana/dashboards/12485)
 
 :::
 
@@ -1103,19 +1035,10 @@ scrape_configs:
         static_configs:
           - targets:
             - 'server.homelab.lan:9400'
-        relabel_configs:
-          # 使用 域名 或 IP地址 作为 实例名
-          - source_labels: [__address__]
-            target_label: instance
-            regex: '([^:]+):\d+'  # 捕获域名或IP地址
-            replacement: '${1}'
-          # 如果匹配 *.homelab.lan 表达式则设置 主机名
-          - source_labels: [instance]
-            target_label: hostname
-            regex: '(.+)\.homelab\.lan'
-            replacement: '${1}'
     ```
 
-3. 数据看板
+3. ::logos:grafana::图表
+
+    - `12239` [Grafana Dashboard](https://grafana.com/grafana/dashboards/12239)
 
 :::
