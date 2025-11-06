@@ -16,6 +16,11 @@ export default defineNavbarConfig([
     icon: 'carbon:notebook',
     items: [
       {
+        text: 'Vibe Coding',
+        icon: 'vscode-icons:file-type-cursorrules',
+        link: '/notes/vibe-coding/'
+      },
+      {
         text: 'Python',
         icon: 'devicon:python',
         link: '/notes/python/'
