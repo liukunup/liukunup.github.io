@@ -1,5 +1,7 @@
 ---
 title: Keycloak
+tags:
+  - IdP
 createTime: 2026/01/12 09:52:09
 permalink: /homelab/deploy/keycloak/
 ---
@@ -10,7 +12,7 @@ Keycloak 是一个开源的身份和访问管理解决方案。
 
 ### 准备工作
 
-创建用于存储数据库数据的持久化目录：
+创建用于存储数据库数据的持久化目录
 
 ```bash
 mkdir -p /share/Container/keycloak/db
@@ -26,36 +28,32 @@ mkdir -p /share/Container/keycloak/db
 
 ```yaml
 services:
+
   keycloak:
     image: quay.io/keycloak/keycloak:26.5.0
-    container_name: keycloak
-    # 开发模式启动，生产环境请参考官方文档配置 https 配置
-    command: start-dev
+    restart: unless-stopped
+    command: start
+    ports:
+      - 8080:8080
     environment:
-      # 数据库配置
       KC_DB: postgres
       KC_DB_URL: jdbc:postgresql://postgres:5432/keycloak
       KC_DB_USERNAME: keycloak
       KC_DB_PASSWORD: password
-      # 初始管理员账号
       KC_BOOTSTRAP_ADMIN_USERNAME: admin
       KC_BOOTSTRAP_ADMIN_PASSWORD: admin
-    ports:
-      - 8080:8080
     depends_on:
       - postgres
-    restart: always
 
   postgres:
-    image: postgres:15
-    container_name: keycloak_db
-    volumes:
-      - /share/Container/keycloak/db:/var/lib/postgresql/data
+    image: postgres
+    restart: unless-stopped
     environment:
       POSTGRES_DB: keycloak
       POSTGRES_USER: keycloak
       POSTGRES_PASSWORD: password
-    restart: always
+    volumes:
+      - /share/Container/keycloak/db:/var/lib/postgresql
 ```
 
 @tab Docker CLI (开发模式)
@@ -63,9 +61,12 @@ services:
 快速启动开发模式，即使重启数据也会丢失（因为使用内存 H2 数据库），仅供测试使用。
 
 ```bash
-docker run -p 8080:8080 \
+docker run -d \
+  -p 8080:8080 \
   -e KC_BOOTSTRAP_ADMIN_USERNAME=admin \
   -e KC_BOOTSTRAP_ADMIN_PASSWORD=admin \
+  --restart unless-stopped \
+  --name keycloak \
   quay.io/keycloak/keycloak:26.5.0 \
   start-dev
 ```
