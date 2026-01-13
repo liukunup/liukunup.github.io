@@ -17,7 +17,7 @@ export default defineNavbarConfig([
     items: [
       {
         text: 'Vibe Coding',
-        icon: 'vscode-icons:file-type-cursorrules',
+        icon: 'material-icon-theme:claude',
         link: '/notes/vibe-coding/'
       },
       {
