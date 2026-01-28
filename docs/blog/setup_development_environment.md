@@ -6,38 +6,63 @@ permalink: /blog/iqlv7hop/
 
 ## Windows
 
-### WSL
-
 Windows Subsystem for Linux (WSL) 是在 Windows 上运行 Linux 环境的最佳方式。
 
-#### 安装 WSL2
+1. 安装 WSL 2
+
 ```powershell
 # 以管理员身份运行 PowerShell
 wsl --install
 ```
 
-#### 推荐的 Linux 发行版
-- **Ubuntu 22.04 LTS**: 最稳定的选择
-- **Debian**: 轻量级，适合服务器环境
+2. 运行指定的 Linux 发行版
 
-#### WSL 配置优化
+**Ubuntu 24.04 LTS**: 最稳定、最合适的选择
+
+```powershell
+wsl -d Ubuntu-24.04
+```
+
+3. 配置优化
+
 ```bash
 # 更新系统
-sudo apt update && sudo apt upgrade -y
+sudo apt-get update && sudo apt-get upgrade -y
 
-# 安装基础工具
-sudo apt install -y curl wget git vim htop tree unzip
+# 安装命令
+sudo apt-get install -y curl wget git vim htop tree unzip
 
 # 配置 Git
 git config --global user.name "Your Name"
 git config --global user.email "your.email@example.com"
+
+# 配置自动挂载选项👇
+vim /etc/wsl.conf
 ```
 
-#### WSL 文件访问
-- Windows 文件: `/mnt/c/`
-- Linux 文件: `\\wsl$\Ubuntu\home\username`
+- /etc/wsl.conf 样例
 
-#### 性能优化
+```plaintext
+[boot]
+systemd=true
+
+[user]
+default=kun105liu
+
+[automount]  // [!code ++]
+options = "metadata"  // [!code ++]
+```
+
+4. 使用说明
+
+- WSL 文件访问
+
+Windows 文件: `/mnt/c/`
+
+Linux 文件: `\\wsl$\Ubuntu\home\username`
+
+- 性能优化
+
 将项目代码放在 Linux 文件系统中，而不是 Windows 文件系统中，以获得更好的性能。
 
 ## Mac / Linux
