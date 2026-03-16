@@ -1,9 +1,9 @@
 ---
-title: 最佳实践
+title: IDE & 工具列表
 tags:
   - ai coding
 createTime: 2026/01/11 17:21:02
-permalink: /notes/vibe-coding/best-practice/
+permalink: /notes/ai-coding/ide-and-tools/
 ---
 
 ## AI Coding Tools

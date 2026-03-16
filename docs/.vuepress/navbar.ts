@@ -16,9 +16,9 @@ export default defineNavbarConfig([
     icon: 'carbon:notebook',
     items: [
       {
-        text: 'Vibe Coding',
+        text: 'AI Coding',
         icon: 'material-icon-theme:claude',
-        link: '/notes/vibe-coding/'
+        link: '/notes/ai-coding/'
       },
       {
         text: 'Python',
