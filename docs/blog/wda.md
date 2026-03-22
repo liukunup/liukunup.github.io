@@ -77,6 +77,109 @@ WebDriverAgent 是 Facebook 开源的一个 iOS 测试代理服务，它：
 
 这一阶段只需要执行一次，生成通用的安装包后，后续所有测试机都可以使用。
 
+直接使用以下脚本
+
+```bash
+#!/bin/bash
+set -e
+
+# ==================== 配置区域 ====================
+TEAM_ID="XXXXXXXXXX"                             # Team ID
+BUNDLE_ID="com.yourcompany.WebDriverAgentRunner" # Bundle ID
+VERSION=$(date +"%Y%m%d_%H%M%S")
+BUILD_DIR="wda_build_${VERSION}"
+OUTPUT_DIR="output"
+
+# ==================== 1. 环境检查 ====================
+echo "🔍 步骤1: 检查环境..."
+if ! command -v xcodebuild &> /dev/null; then
+    echo "❌ xcodebuild 未找到，请确保 Xcode 已安装"
+    exit 1
+fi
+
+# ==================== 2. 创建工作目录 ====================
+echo "📁 步骤2: 创建工作目录..."
+rm -rf $BUILD_DIR
+mkdir -p $BUILD_DIR
+cd $BUILD_DIR
+
+# ==================== 3. Clone WebDriverAgent ====================
+echo "📥 步骤3: 克隆 Appium 维护的 WebDriverAgent..."
+git clone https://github.com/appium/WebDriverAgent.git
+cd WebDriverAgent
+
+# ==================== 4. 修改 Bundle ID 和签名 ====================
+echo "🔐 步骤4: 配置签名..."
+
+# 备份原始文件
+cp WebDriverAgent.xcodeproj/project.pbxproj WebDriverAgent.xcodeproj/project.pbxproj.bak
+
+# 修改 Team ID
+sed -i '' "s/DEVELOPMENT_TEAM = .*/DEVELOPMENT_TEAM = $TEAM_ID;/g" WebDriverAgent.xcodeproj/project.pbxproj
+
+# 修改 Bundle ID
+sed -i '' "s/com.facebook.WebDriverAgentRunner/$BUNDLE_ID/g" WebDriverAgent.xcodeproj/project.pbxproj
+
+# 启用自动签名
+sed -i '' "s/CODE_SIGN_STYLE = .*/CODE_SIGN_STYLE = Automatic;/g" WebDriverAgent.xcodeproj/project.pbxproj
+
+# ==================== 5. 构建 .app ====================
+echo "🏗️ 步骤5: 构建 WebDriverAgent..."
+xcodebuild \
+    -project WebDriverAgent.xcodeproj \
+    -scheme WebDriverAgentRunner \
+    -configuration Release \
+    -sdk iphoneos \
+    -derivedDataPath ./build \
+    CODE_SIGN_STYLE=Automatic \
+    DEVELOPMENT_TEAM=$TEAM_ID \
+    PRODUCT_BUNDLE_IDENTIFIER=$BUNDLE_ID \
+    clean build
+
+# ==================== 6. 查找并打包 .app ====================
+echo "📦 步骤6: 打包 .app..."
+APP_PATH=$(find ./build -name "WebDriverAgentRunner-Runner.app" -type d | head -n 1)
+
+if [ -z "$APP_PATH" ]; then
+    echo "❌ 未找到 WebDriverAgentRunner-Runner.app"
+    exit 1
+fi
+
+echo "找到 App: $APP_PATH"
+
+# 打包成 ipa
+cd $(dirname $APP_PATH)
+mkdir -p Payload
+mv $(basename $APP_PATH) Payload/
+zip -r WebDriverAgentRunner_${VERSION}.ipa Payload/
+cd ../../../../../
+
+# 创建输出目录
+rm -rf $OUTPUT_DIR
+mkdir -p $OUTPUT_DIR
+cp "WebDriverAgent/$(dirname $APP_PATH)/WebDriverAgentRunner_${VERSION}.ipa" $OUTPUT_DIR/
+
+# ==================== 8. 创建安装配置信息 ====================
+echo "📝 步骤8: 生成元数据..."
+cat > $OUTPUT_DIR/metadata.json << EOF
+{
+    "version": "${VERSION}",
+    "bundle_id": "${BUNDLE_ID}",
+    "team_id": "${TEAM_ID}",
+    "build_time": "$(date -Iseconds)",
+    "app_file": "WebDriverAgentRunner_${VERSION}.ipa"
+}
+EOF
+
+# ==================== 10. 清理 ====================
+echo "🧹 步骤10: 清理临时文件..."
+rm -rf ./WebDriverAgent/build
+
+echo "✨ 构建完成！"
+echo "📦 版本: ${VERSION}"
+echo "📁 文件: WebDriverAgentRunner_${VERSION}.ipa"
+```
+
 ### 3.1 获取源码并修改 Bundle ID
 
 ```bash
@@ -207,10 +310,10 @@ sudo ios tunnel start
 # 启动 WDA（需要知道 Bundle ID）
 # 可以通过 `ios apps` 命令找到 Bundle ID
 ios runwda \
-  --udid 00008030-001C2D3A12345678 \
-  --bundleid com.yourname.WebDriverAgent.YOUR_NAME.xctrunner \
-  --testrunnerbundleid com.yourname.WebDriverAgent.YOUR_NAME.xctrunner \
-  --xctestconfig WebDriverAgentRunner.xctest
+  --bundleid com.yourcompany.WebDriverAgentRunner.xctrunner \
+  --testrunnerbundleid com.yourcompany.WebDriverAgentRunner.xctrunner \
+  --xctestconfig WebDriverAgentRunner.xctest \
+  --udid 00008030-001C2D3A12345678
 ```
 
 看到 `WebDriverAgent start successfully` 的提示，说明启动成功。
