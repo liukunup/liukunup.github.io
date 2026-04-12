@@ -81,103 +81,191 @@ WebDriverAgent 是 Facebook 开源的一个 iOS 测试代理服务，它：
 
 ```bash
 #!/bin/bash
+
 set -e
 
+# GitHub 克隆加速方法
+# 1. 打开 https://gh-proxy.com/ 页面
+# 2. 填入 https://github.com/appium/WebDriverAgent.git 选择 Git Clone 点击 转换链接 然后替换 GITHUB_PROXY 的内容
+
 # ==================== 配置区域 ====================
-TEAM_ID="XXXXXXXXXX"                             # Team ID
+TEAM_ID=""                                       # Team ID
 BUNDLE_ID="com.yourcompany.WebDriverAgentRunner" # Bundle ID
+GITHUB_PROXY="https://gh-proxy.org/"             # GitHub Proxy
+
+# 预设变量
 VERSION=$(date +"%Y%m%d_%H%M%S")
-BUILD_DIR="wda_build_${VERSION}"
-OUTPUT_DIR="output"
+OUTPUT_DIR="artifacts"
+CURRENT_DIR="${PWD}"
+
+# 颜色输出
+RED='\033[0;31m'
+GREEN='\033[0;32m'
+YELLOW='\033[1;33m'
+BLUE='\033[0;34m'
+NC='\033[0m' # No Color
+
+# ==================== 辅助函数 ====================
+log_info() {
+    echo -e "${GREEN}[INFO]${NC} $1"
+}
+
+log_warn() {
+    echo -e "${YELLOW}[WARN]${NC} $1"
+}
+
+log_error() {
+    echo -e "${RED}[ERROR]${NC} $1"
+}
+
+log_step() {
+    echo -e "\n${BLUE}========================================${NC}"
+    echo -e "${BLUE}$1${NC}"
+    echo -e "${BLUE}========================================${NC}"
+}
+
+cleanup() {
+    if [ $? -ne 0 ]; then
+        log_error "构建失败"
+    fi
+}
+
+trap cleanup EXIT
 
 # ==================== 1. 环境检查 ====================
-echo "🔍 步骤1: 检查环境..."
+log_step "🔍 步骤1: 检查环境..."
+
+# 检查 Xcode
 if ! command -v xcodebuild &> /dev/null; then
-    echo "❌ xcodebuild 未找到，请确保 Xcode 已安装"
+    log_error "检测到 Xcode 未安装"
+    exit 1
+fi
+if ! xcode-select -p &> /dev/null; then
+    log_error "检测到 Xcode 命令行工具 未安装"
+    exit 1
+fi
+log_info "Xcode: $(xcodebuild -version | head -n 1)"
+
+# 检查 Team ID
+if [ -z "${TEAM_ID}" ]; then
+    log_error "请先配置 Team ID"
+    log_info  "可以在 Apple Developer 网站找到您的 Team ID"
+    exit 1
+fi
+log_info "Team ID: ${TEAM_ID}"
+
+# 检查 Bundle ID
+if [ "${BUNDLE_ID}" = "com.yourcompany.WebDriverAgentRunner" ]; then
+    log_warn "请确认 Bundle ID 是否正确配置"
+fi
+log_info "Bundle ID: ${BUNDLE_ID}"
+
+# ==================== 2. Clone WebDriverAgent ====================
+log_step "📥 步骤2: 克隆 WebDriverAgent 仓库..."
+
+if [ -d WebDriverAgent ]; then
+    log_warn "WebDriverAgent 目录已存在，跳过克隆"
+else
+    log_info "克隆最新版本的 WebDriverAgent ..."
+    git clone --depth 1 "${GITHUB_PROXY}https://github.com/appium/WebDriverAgent.git"
+fi
+cd WebDriverAgent
+
+# ==================== 3. 修改 Bundle ID 和签名 ====================
+log_step "🔐 步骤3: 配置 Bundle ID 和签名..."
+
+PROJECT_FILE="WebDriverAgent.xcodeproj/project.pbxproj"
+if [ ! -f ${PROJECT_FILE} ]; then
+    log_error "找不到项目文件: ${PROJECT_FILE}"
     exit 1
 fi
 
-# ==================== 2. 创建工作目录 ====================
-echo "📁 步骤2: 创建工作目录..."
-rm -rf $BUILD_DIR
-mkdir -p $BUILD_DIR
-cd $BUILD_DIR
-
-# ==================== 3. Clone WebDriverAgent ====================
-echo "📥 步骤3: 克隆 Appium 维护的 WebDriverAgent..."
-git clone https://github.com/appium/WebDriverAgent.git
-cd WebDriverAgent
-
-# ==================== 4. 修改 Bundle ID 和签名 ====================
-echo "🔐 步骤4: 配置签名..."
-
 # 备份原始文件
-cp WebDriverAgent.xcodeproj/project.pbxproj WebDriverAgent.xcodeproj/project.pbxproj.bak
+if [ ! -f ${PROJECT_FILE}.bak ]; then
+    log_info "备份项目文件 ${PROJECT_FILE}"
+    cp ${PROJECT_FILE} ${PROJECT_FILE}.bak
+fi
 
 # 修改 Team ID
-sed -i '' "s/DEVELOPMENT_TEAM = .*/DEVELOPMENT_TEAM = $TEAM_ID;/g" WebDriverAgent.xcodeproj/project.pbxproj
+sed -i '' "s/DEVELOPMENT_TEAM = .*/DEVELOPMENT_TEAM = ${TEAM_ID};/g" ${PROJECT_FILE}
 
 # 修改 Bundle ID
-sed -i '' "s/com.facebook.WebDriverAgentRunner/$BUNDLE_ID/g" WebDriverAgent.xcodeproj/project.pbxproj
+sed -i '' "s/com.facebook.WebDriverAgentRunner/${BUNDLE_ID}/g" ${PROJECT_FILE}
 
 # 启用自动签名
-sed -i '' "s/CODE_SIGN_STYLE = .*/CODE_SIGN_STYLE = Automatic;/g" WebDriverAgent.xcodeproj/project.pbxproj
+sed -i '' "s/CODE_SIGN_STYLE = .*/CODE_SIGN_STYLE = Automatic;/g" ${PROJECT_FILE}
 
-# ==================== 5. 构建 .app ====================
-echo "🏗️ 步骤5: 构建 WebDriverAgent..."
+# ==================== 4. 构建 .app ====================
+log_step "🏗️ 步骤4: 构建 WebDriverAgent ..."
+
 xcodebuild \
     -project WebDriverAgent.xcodeproj \
     -scheme WebDriverAgentRunner \
+    -destination generic/platform=iOS \
     -configuration Release \
     -sdk iphoneos \
     -derivedDataPath ./build \
+    -allowProvisioningUpdates \
     CODE_SIGN_STYLE=Automatic \
-    DEVELOPMENT_TEAM=$TEAM_ID \
-    PRODUCT_BUNDLE_IDENTIFIER=$BUNDLE_ID \
-    clean build
+    DEVELOPMENT_TEAM=${TEAM_ID} \
+    PRODUCT_BUNDLE_IDENTIFIER=${BUNDLE_ID} \
+    clean build > xcodebuild.log
 
-# ==================== 6. 查找并打包 .app ====================
-echo "📦 步骤6: 打包 .app..."
-APP_PATH=$(find ./build -name "WebDriverAgentRunner-Runner.app" -type d | head -n 1)
-
-if [ -z "$APP_PATH" ]; then
-    echo "❌ 未找到 WebDriverAgentRunner-Runner.app"
+if [ ! $? ]; then
+    log_error "构建失败"
     exit 1
 fi
+log_info "构建成功"
 
-echo "找到 App: $APP_PATH"
+# ==================== 5. 查找并打包 .app ====================
+log_step "📦 步骤5: 打包应用 ..."
+
+# 更精确地查找 .app
+APP_PATH=$(find ./build -name "*.app" -type d | grep -E "WebDriverAgentRunner.*\.app" | head -n 1)
+
+if [ -z "${APP_PATH}" ]; then
+    log_error "未找到 WebDriverAgentRunner.app"
+    log_info "尝试查找所有 .app 文件:"
+    find ./build -name "*.app" -type d
+    exit 1
+fi
+log_info "找到 App: ${APP_PATH}"
 
 # 打包成 ipa
-cd $(dirname $APP_PATH)
+cd "$(dirname "${APP_PATH}")"
 mkdir -p Payload
-mv $(basename $APP_PATH) Payload/
-zip -r WebDriverAgentRunner_${VERSION}.ipa Payload/
-cd ../../../../../
+mv "$(basename "${APP_PATH}")" Payload/
+zip -r "WebDriverAgentRunner_${VERSION}.ipa" Payload/ > /dev/null
+cd "${CURRENT_DIR}"
 
-# 创建输出目录
-rm -rf $OUTPUT_DIR
-mkdir -p $OUTPUT_DIR
-cp "WebDriverAgent/$(dirname $APP_PATH)/WebDriverAgentRunner_${VERSION}.ipa" $OUTPUT_DIR/
+# 拷贝到输出目录
+mkdir -p ${OUTPUT_DIR}
+cp "WebDriverAgent/$(dirname "${APP_PATH}")/WebDriverAgentRunner_${VERSION}.ipa" ${OUTPUT_DIR}/
 
-# ==================== 8. 创建安装配置信息 ====================
-echo "📝 步骤8: 生成元数据..."
-cat > $OUTPUT_DIR/metadata.json << EOF
+# ==================== 6. 生成元数据 ====================
+log_step "📝 步骤6: 生成元数据..."
+METADATA="${OUTPUT_DIR}/metadata.json"
+cat > "${METADATA}" << EOF
 {
     "version": "${VERSION}",
     "bundle_id": "${BUNDLE_ID}",
     "team_id": "${TEAM_ID}",
     "build_time": "$(date -Iseconds)",
-    "app_file": "WebDriverAgentRunner_${VERSION}.ipa"
+    "app_file": "WebDriverAgentRunner_${VERSION}.ipa",
+    "build_host": "$(hostname)",
+    "xcode_version": "$(xcodebuild -version | head -n 1)"
 }
 EOF
+cat "${METADATA}"
 
-# ==================== 10. 清理 ====================
-echo "🧹 步骤10: 清理临时文件..."
-rm -rf ./WebDriverAgent/build
+# ==================== 7. 清理 ====================
+log_step "🧹 步骤7: 清理临时文件..."
+rm -rf WebDriverAgent/build
+rm -f  xcodebuild.log
 
-echo "✨ 构建完成！"
-echo "📦 版本: ${VERSION}"
-echo "📁 文件: WebDriverAgentRunner_${VERSION}.ipa"
+log_info "✨ 构建完成！"
+log_info "📁 文件: ${OUTPUT_DIR}/WebDriverAgentRunner_${VERSION}.ipa"
+log_info "😀 安装: ios install --udid xxx --path ${OUTPUT_DIR}/WebDriverAgentRunner_${VERSION}.ipa"
 ```
 
 ### 3.1 获取源码并修改 Bundle ID
