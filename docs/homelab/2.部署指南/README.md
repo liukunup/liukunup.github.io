@@ -11,6 +11,7 @@ permalink: /homelab/deploy/
 - [MySQL](mysql.md) - 关系型数据库
 - [PostgreSQL](postgres.md) - 对象关系数据库
 - [Redis](redis.md) - 内存数据结构存储
+- [Neo4j](neo4j.md) - 图数据库
 
 ## 基础设施
 
