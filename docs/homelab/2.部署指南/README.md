@@ -12,6 +12,8 @@ permalink: /homelab/deploy/
 - [PostgreSQL](postgres.md) - 对象关系数据库
 - [Redis](redis.md) - 内存数据结构存储
 - [Neo4j](neo4j.md) - 图数据库
+- [DuckDB](duckdb.md) - 嵌入式分析型数据库
+- [InfluxDB](influxdb.md) - 时序数据库
 
 ## 基础设施
 
