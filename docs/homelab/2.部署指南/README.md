@@ -59,6 +59,7 @@ permalink: /homelab/deploy/
 - [code-server](code-server.md) - VS Code Web 版
 - [Coder](coder.md) - 远程开发环境
 - [Dev Stack](develop.md) - 完整开发环境栈
+- [Jupyter Notebook](jupyter.md) - 交互式 Notebook
 
 ## 应用工具
 
