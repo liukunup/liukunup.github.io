@@ -47,6 +47,10 @@ permalink: /homelab/deploy/
 - [Jaeger](jaeger.md) - 分布式追踪系统
 - [DeepFlow](deepflow.md) - 可观测性平台
 
+## 物联网平台
+
+- [ThingsBoard](thingsboard.md) - 开源物联网平台
+
 ## 消息队列
 
 - [Kafka](kafka.md) - 分布式流处理平台
