@@ -50,6 +50,11 @@ permalink: /homelab/deploy/
 ## 物联网平台
 
 - [ThingsBoard](thingsboard.md) - 开源物联网平台
+- [MQTTX](mqttx.md) - MQTT 客户端工具
+
+## 智能家居
+
+- [ESPHome](esphome.md) - ESP 设备固件框架
 
 ## 消息队列
 
