@@ -38,6 +38,17 @@ docker run -d \
   --web.enable-lifecycle
 ```
 
+部署 Pushgateway
+
+```shell
+docker run -d \
+  -p 9091:9091 \
+  -e TZ=Asia/Shanghai \
+  --restart=unless-stopped \
+  --name=pushgateway \
+  prom/pushgateway:latest
+```
+
 @tab Docker Compose
 
 查看当前用户的`UID`和`GID`
@@ -70,6 +81,20 @@ services:
         limits:
           memory: '2g'
           cpus: '1.0'
+```
+
+部署 Pushgateway
+
+```yaml
+services:
+  pushgateway:
+    image: prom/pushgateway:latest
+    container_name: pushgateway
+    restart: unless-stopped
+    ports:
+      - "9091:9091"
+    environment:
+      - TZ=Asia/Shanghai
 ```
 
 :::
@@ -105,6 +130,13 @@ scrape_configs:
     scrape_interval: 30s
     static_configs:
       - targets: [ 'localhost:9090' ]
+
+  # Prometheus Pushgateway
+  # https://github.com/prometheus/pushgateway
+  - job_name: 'pushgateway'
+    scrape_interval: 30s
+    static_configs:
+      - targets: [ 'localhost:9091' ]
 ```
 
 ### 📦 [Node exporter](https://github.com/prometheus/node_exporter)
