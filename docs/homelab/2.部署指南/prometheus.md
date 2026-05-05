@@ -87,6 +87,9 @@ services:
 
 ```yaml
 services:
+
+  # Prometheus Pushgateway
+  # https://github.com/prometheus/pushgateway
   pushgateway:
     image: prom/pushgateway:latest
     container_name: pushgateway
@@ -131,8 +134,6 @@ scrape_configs:
     static_configs:
       - targets: [ 'localhost:9090' ]
 
-  # Prometheus Pushgateway
-  # https://github.com/prometheus/pushgateway
   - job_name: 'pushgateway'
     scrape_interval: 30s
     static_configs:
@@ -933,11 +934,12 @@ scrape_configs:
         image: quay.io/prometheuscommunity/postgres-exporter:latest
         container_name: postgres-exporter
         restart: unless-stopped
-        network_mode: host
+        ports:
+          - 9187:9187
         environment:
-          DATA_SOURCE_URI: postgresql:5432/postgres?sslmode=disable
-          DATA_SOURCE_USER: ${POSTGRE_USERNAME}
-          DATA_SOURCE_PASS: ${POSTGRE_PASSWORD}
+          DATA_SOURCE_URI: postgres:5432/postgres?sslmode=disable
+          DATA_SOURCE_USER: ${POSTGRES_USER}
+          DATA_SOURCE_PASS: ${POSTGRES_PASSWORD}
         networks:
           - 1panel-network
     ```
@@ -961,8 +963,8 @@ scrape_configs:
     ```plaintext
     COMPOSE_PROJECT_NAME=monitoring
     REDIS_PASSWORD=
-    POSTGRE_USERNAME=
-    POSTGRE_PASSWORD=
+    POSTGRES_USER=
+    POSTGRES_PASSWORD=
     ```
 
 2. 配置
@@ -987,7 +989,7 @@ scrape_configs:
             regex: '([^:]+)\.homelab\.lan:\d+'
             replacement: '${1}'
           - target_label: __address__
-            replacement: 'docker.homelab.lan:9104'
+            replacement: 'testing.homelab.lan:9104'
 
       - job_name: redis
         scrape_interval: 30s
@@ -1006,7 +1008,7 @@ scrape_configs:
             regex: 'redis://([^:]+)\.homelab\.lan:\d+'
             replacement: '${1}'
           - target_label: __address__
-            replacement: 'docker.homelab.lan:9121'
+            replacement: 'testing.homelab.lan:9121'
 
       - job_name: postgres
         scrape_interval: 30s

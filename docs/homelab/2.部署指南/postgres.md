@@ -32,19 +32,18 @@ services:
     ports:
       - 5432:5432
     environment:
-      POSTGRES_DB: ${DB_NAME?Variable not set}
-      POSTGRES_USER: ${DB_USER?Variable not set}
-      POSTGRES_PASSWORD: ${DB_PASSWORD?Variable not set}
+      POSTGRES_USER: ${POSTGRES_USER:-root}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-changeme}
     volumes:
       - /share/Container/postgresql:/var/lib/postgresql
     healthcheck:
       test: |
         CMD-SHELL
-        pg_isready -U ${DB_USER} -d ${DB_NAME}
-      interval: 10s
+        pg_isready -h 127.0.0.1 -p 5432 -q -U ${DB_USER}
+      interval: 30s
       timeout: 5s
       retries: 3
-      start_period: 15s
+      start_period: 30s
 
   adminer:
     image: adminer
