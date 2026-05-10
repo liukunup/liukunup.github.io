@@ -62,7 +62,9 @@ networks:
     driver: bridge
 ```
 
-@tab Docker CLI (macOS & Linux)
+@tab Docker CLI
+
+- Linux & macOS
 
 ```bash
 # 1. 创建网络
@@ -99,7 +101,7 @@ docker run \
   jenkins/jenkins:lts
 ```
 
-@tab Docker CLI (Windows)
+- Windows
 
 ```bash
 # 1. 创建网络
@@ -137,6 +139,8 @@ kubectl create namespace jenkins
 # 3. 安装部署
 helm install -f values.yaml jenkins jenkinsci/jenkins -n jenkins
 ```
+
+- values.yaml
 
 ```yaml :collapsed-lines
 controller:
