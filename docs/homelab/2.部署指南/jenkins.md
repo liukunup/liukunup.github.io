@@ -412,11 +412,69 @@ kubectl exec -n devops-tools deploy/jenkins -- cat /var/jenkins_home/secrets/ini
 5. 勾选 **Ignore browser preference and force this language to all users**
 6. 保存后刷新页面即可
 
-### 4. 配置插件镜像源
+## Configuration as Code
 
-修改更新中心地址：
-最后，登录 Jenkins 网页界面，在 Manage Jenkins -> Manage Plugins -> Advanced 页面的最下方，将 “Update Site” 的 URL 改为：
-https://mirrors.tuna.tsinghua.edu.cn/jenkins/updates/update-center.json
+```yaml
+jenkins:
+  systemMessage: "Jenkins configured automatically by Jenkins Configuration as Code plugin\n\n"
+```
+
+1. 将上述`jenkins.yaml`映射到`/var/jenkins_home/casc_configs`目录下
+2. 配置环境变量`CASC_JENKINS_CONFIG=/var/jenkins_home/casc_configs/jenkins.yaml`
+3. 安装`Configuration as Code`插件
+4. 重启容器使其生效
+
+想了解更多配置样例请移步 👉 [demos](https://github.com/jenkinsci/configuration-as-code-plugin/tree/master/demos)
+
+### 修改插件镜像源
+
+```yaml
+jenkins:
+  updateCenter:
+    sites:
+    - id: "default"
+      url: "https://updates.jenkins.io/update-center.json"
+```
+
+### Cloud
+
+> 记得将`/var/run/docker.sock`挂载到`jenkins`容器内
+
+```yaml
+jenkins:
+  clouds:
+  - docker:
+      name: "docker-cloud"
+      dockerApi:
+        dockerHost:
+          uri: "unix:///var/run/docker.sock"
+      templates:
+      - labelString: ""
+        dockerTemplateBase:
+          image: "jenkins/inbound-agent"
+        remoteFs: "/home/jenkins/agent"
+        connector: "attach"
+        instanceCapStr: "10"
+        retentionStrategy:
+          idleMinutes: 1
+```
+
+### LDAP
+
+配置[demo](https://github.com/jenkinsci/configuration-as-code-plugin/tree/master/demos/ldap)
+
+```yaml
+jenkins:
+  securityRealm:
+    ldap:
+      configurations:
+        - server: "ldap://quts.homelab.lan:389"
+          rootDN: "dc=quts,dc=homelab,dc=lan"
+          managerDN: "cn=admin,dc=quts,dc=homelab,dc=lan"
+          managerPasswordSecret: "changeme"
+          userSearchBase: "ou=people"
+          userSearch: "(uid={0})"
+```
 
 ## 🔐 LDAP 登录配置
 
@@ -938,3 +996,4 @@ tar -czf jenkins-backup-$(date +%Y%m%d).tar.gz /share/Container/jenkins/data
 *   [Jenkins OIDC Plugin](https://plugins.jenkins.io/oic-auth/)
 *   [Jenkins Docker Plugin](https://plugins.jenkins.io/docker/)
 *   [Grafana Jenkins Dashboards](https://grafana.com/grafana/dashboards/)
+*   [Configuration as Code](https://plugins.jenkins.io/configuration-as-code/)
