@@ -11,57 +11,47 @@ permalink: /homelab/deploy/jenkins/
 
 Jenkins 是一个开源的自动化服务器，用于构建、测试和部署软件。
 
-### 准备工作
-
-创建用于存储 Jenkins 数据的持久化目录：
-
-```bash
-mkdir -p /share/Container/jenkins/data
-mkdir -p /share/Container/jenkins/certs
-```
-
-### 启动服务
-
 ::: tabs
 
-@tab:active Docker Compose (推荐)
-
-包含 Docker-in-Docker 支持，可在流水线中执行 `docker` 命令。
+@tab:active Docker Compose
 
 ```yaml
 services:
+
   docker:
     image: docker:dind
     container_name: jenkins-docker
     restart: unless-stopped
+    command: --storage-driver overlay2
     privileged: true
-    networks:
-      - jenkins
     environment:
       DOCKER_TLS_CERTDIR: /certs
+    ports:
+      - 2376:2376
     volumes:
       - jenkins-data:/var/jenkins_home
       - jenkins-docker-certs:/certs/client
-    ports:
-      - "2376:2376"
-    command: --storage-driver overlay2
+    networks:
+      jenkins:
+        aliases:
+          - docker
 
   jenkins:
-    image: jenkins/jenkins:lts-jdk21
+    image: jenkins/jenkins:lts
     container_name: jenkins-blueocean
     restart: unless-stopped
-    networks:
-      - jenkins
     environment:
       DOCKER_HOST: tcp://docker:2376
       DOCKER_CERT_PATH: /certs/client
-      DOCKER_TLS_VERIFY: "1"
+      DOCKER_TLS_VERIFY: 1
     ports:
-      - "8080:8080"
-      - "50000:50000"
+      - 8080:8080
+      - 50000:50000
     volumes:
-      - /share/Container/jenkins/data:/var/jenkins_home
+      - jenkins-data:/var/jenkins_home
       - jenkins-docker-certs:/certs/client:ro
+    networks:
+      - jenkins
 
 volumes:
   jenkins-data:
@@ -72,44 +62,155 @@ networks:
     driver: bridge
 ```
 
-@tab Docker CLI
+@tab Docker CLI (macOS & Linux)
 
 ```bash
 # 1. 创建网络
 docker network create jenkins
 
-# 2. 启动 Docker-in-Docker 容器
-docker run -d \
+# 2. 启动 docker:dind 容器
+docker run \
   --name jenkins-docker \
-  --restart unless-stopped \
+  --rm \
+  --detach \
   --privileged \
   --network jenkins \
   --network-alias docker \
-  -e DOCKER_TLS_CERTDIR=/certs \
-  -v jenkins-data:/var/jenkins_home \
-  -v jenkins-docker-certs:/certs/client \
-  -p 2376:2376 \
+  --env DOCKER_TLS_CERTDIR=/certs \
+  --publish 2376:2376 \
+  --volume jenkins-data:/var/jenkins_home \
+  --volume jenkins-docker-certs:/certs/client \
   docker:dind \
   --storage-driver overlay2
 
-# 3. 启动 Jenkins 容器
-docker run -d \
+# 3. 启动 jenkins 容器
+docker run \
   --name jenkins-blueocean \
-  --restart unless-stopped \
+  --restart=on-failure \
+  --detach \
   --network jenkins \
-  -e DOCKER_HOST=tcp://docker:2376 \
-  -e DOCKER_CERT_PATH=/certs/client \
-  -e DOCKER_TLS_VERIFY=1 \
-  -p 8080:8080 \
-  -p 50000:50000 \
-  -v /share/Container/jenkins/data:/var/jenkins_home \
-  -v jenkins-docker-certs:/certs/client:ro \
-  jenkins/jenkins:lts-jdk21
+  --env DOCKER_HOST=tcp://docker:2376 \
+  --env DOCKER_CERT_PATH=/certs/client \
+  --env DOCKER_TLS_VERIFY=1 \
+  --publish 8080:8080 \
+  --publish 50000:50000 \
+  --volume jenkins-data:/var/jenkins_home \
+  --volume jenkins-docker-certs:/certs/client:ro \
+  jenkins/jenkins:lts
+```
+
+@tab Docker CLI (Windows)
+
+```bash
+# 1. 创建网络
+docker network create jenkins
+
+# 2. 启动 docker:dind 容器
+docker run --name jenkins-docker --rm --detach ^
+  --privileged --network jenkins --network-alias docker ^
+  --env DOCKER_TLS_CERTDIR=/certs ^
+  --publish 2376:2376 ^
+  --volume jenkins-data:/var/jenkins_home ^
+  --volume jenkins-docker-certs:/certs/client ^
+  docker:dind
+
+# 3. 启动 jenkins 容器
+docker run --name jenkins-blueocean --restart=on-failure --detach ^
+  --network jenkins --env DOCKER_HOST=tcp://docker:2376 ^
+  --env DOCKER_CERT_PATH=/certs/client --env DOCKER_TLS_VERIFY=1 ^
+  --publish 8080:8080 --publish 50000:50000 ^
+  --volume jenkins-data:/var/jenkins_home ^
+  --volume jenkins-docker-certs:/certs/client:ro ^
+  jenkins/jenkins:lts
+```
+
+@tab Kubernetes (Helm)
+
+```bash
+# 1. 添加 Helm 仓库
+helm repo add jenkinsci https://charts.jenkins.io
+helm repo update
+
+# 2. 创建命名空间
+kubectl create namespace jenkins
+
+# 3. 安装部署
+helm install -f values.yaml jenkins jenkinsci/jenkins -n jenkins
+```
+
+```yaml :collapsed-lines
+controller:
+  ingress:
+    enabled: true
+    hostName: jenkins.homelab.lan
+  installPlugins:
+    - kubernetes:4186.v1d804571d5d4
+    - workflow-aggregator:596.v8c21c963d92d
+    - git:5.2.1
+    - configuration-as-code:1775.v810dc950b_514
+    - ldap:711.vb_d1a_491714dc
+    - blueocean:1.27.11
+    - github:1.38.0
+  JCasC:
+    configScripts:
+      welcome-message: |
+        jenkins:
+          systemMessage: Welcome to our CI\CD server.
+      ldap-settings: |
+        jenkins:
+          securityRealm:
+            ldap:
+              configurations:
+                - server: "ldap://quts.homelab.lan:389"
+                  rootDN: "dc=quts,dc=homelab,dc=lan"
+                  userSearchBase: "ou=people"
+                  userSearch: "(uid={0})"
+                  managerDN: "cn=admin,dc=quts,dc=homelab,dc=lan"
+                  managerPasswordSecret: "changeme"
+      jenkins-casc-configs: |
+        credentials:
+          system:
+            domainCredentials:
+            - credentials:
+              - usernamePassword:
+                  id: "Billy"
+                  username: "billy"
+                  password: "changeme"
+                  scope: GLOBAL
+                  description: "It's me."
+    authorizationStrategy: |-
+      loggedInUsersCanDoAnything:
+        allowAnonymousRead: false
+
+agent:
+  podTemplates:
+    python: |
+      - name: python
+        namespace: jenkins
+        label: python
+        serviceAccount: jenkins
+        inheritFrom: python
+        containers:
+          - name: python
+            image: python:3.12-slim
+            command: "/bin/sh -c"
+            args: "cat"
+            ttyEnabled: true
+            privileged: true
+            resourceRequestCpu: "500m"
+            resourceRequestMemory: "512Mi"
+            resourceLimitCpu: "4"
+            resourceLimitMemory: "8Gi"
+
+persistence:
+  enabled: true
+  storageClass: standard
+  size: 100Gi
 ```
 
 @tab Kubernetes (YAML)
 
-```yaml
+```yaml :collapsed-lines
 ---
 apiVersion: v1
 kind: Namespace
@@ -259,69 +360,6 @@ spec:
 kubectl apply -f jenkins-k8s.yaml
 ```
 
-@tab Kubernetes (Helm)
-
-```bash
-# 1. 添加 Helm 仓库
-helm repo add jenkinsci https://charts.jenkins.io
-helm repo update
-
-# 2. 创建命名空间
-kubectl create namespace jenkins
-
-# 3. 安装 Jenkins
-helm install jenkins jenkinsci/jenkins \
-  --namespace jenkins \
-  --set controller.serviceType=NodePort \
-  --set controller.nodePort=32000 \
-  --set controller.installPlugins="kubernetes workflow-aggregator git configuration-as-code"
-```
-
-:::
-
-::: tip 仅需要基础功能？
-如果不需要在 Jenkins 流水线中使用 Docker，可以使用简化版本：
-
-```yaml
-services:
-  jenkins:
-    image: jenkins/jenkins:lts-jdk21
-    container_name: jenkins
-    restart: unless-stopped
-    ports:
-      - "8080:8080"
-      - "50000:50000"
-    volumes:
-      - /share/Container/jenkins/data:/var/jenkins_home
-      - /var/run/docker.sock:/var/run/docker.sock
-```
-
-:::
-
-::: tip 自定义 Helm 配置
-创建 `jenkins-values.yaml` 覆盖默认配置：
-
-```yaml
-controller:
-  serviceType: NodePort
-  nodePort: 32000
-  installPlugins:
-    - kubernetes
-    - workflow-aggregator
-    - git
-    - configuration-as-code
-    - docker-workflow
-  serviceAccount:
-    create: true
-persistence:
-  enabled: true
-  size: 10Gi
-```
-
-```bash
-helm install jenkins jenkinsci/jenkins -f jenkins-values.yaml -n jenkins
-```
-
 :::
 
 ## 📝 初始配置
@@ -369,6 +407,12 @@ kubectl exec -n devops-tools deploy/jenkins -- cat /var/jenkins_home/secrets/ini
 4. 设置 **Default Language** 为 `zh_CN`
 5. 勾选 **Ignore browser preference and force this language to all users**
 6. 保存后刷新页面即可
+
+### 4. 配置插件镜像源
+
+修改更新中心地址：
+最后，登录 Jenkins 网页界面，在 Manage Jenkins -> Manage Plugins -> Advanced 页面的最下方，将 “Update Site” 的 URL 改为：
+https://mirrors.tuna.tsinghua.edu.cn/jenkins/updates/update-center.json
 
 ## 🔐 LDAP 登录配置
 
