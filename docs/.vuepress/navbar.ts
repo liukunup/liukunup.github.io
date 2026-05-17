@@ -40,6 +40,11 @@ export default defineNavbarConfig([
         icon: 'devicon:cplusplus',
         link: '/notes/cpp/'
       },
+      {
+        text: 'ROS',
+        icon: 'devicon:ros',
+        link: '/notes/ros/'
+      },
       // {
       //   text: 'Linux',
       //   link: '/notes/linux/'
