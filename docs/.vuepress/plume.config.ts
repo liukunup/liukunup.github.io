@@ -53,7 +53,7 @@ export default defineThemeConfig({
     name: 'KUN',
     description: '资深测试专家',
     circle: true,
-    location: 'Wuhan, China',
+    location: 'Shenzhen, China',
     organization: 'HomeLab',
   },
 
