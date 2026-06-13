@@ -18,6 +18,7 @@ permalink: /homelab/deploy/
 ## 基础设施
 
 - [Docker](docker.md) - 容器运行时
+- [Watchtower](watchtower.md) - 自动更新 Docker 容器
 - [Nvidia Driver](nvidia-driver.md) - NVIDIA 显卡驱动
 - [Nvidia CUDA Toolkit](cuda.md) - CUDA 计算平台
 - [Nvidia Container Toolkit](nvidia-container-toolkit.md) - 容器 GPU 支持
@@ -41,6 +42,7 @@ permalink: /homelab/deploy/
 
 - [Prometheus](prometheus.md) - 时序数据库监控系统
 - [Grafana](grafana.md) - 可视化监控面板
+- [DataEase](dataease.md) - 开源数据可视化分析平台
 - [Elasticsearch](elasticsearch.md) - 搜索与分析引擎
 - [Kibana](kibana.md) - 数据可视化界面
 - [Logstash](logstash.md) - 数据处理管道
@@ -62,8 +64,14 @@ permalink: /homelab/deploy/
 
 ## 网络服务
 
+- [Traefik](traefik.md) - 反向代理和负载均衡器
 - [dnsmasq](dnsmasq.md) - DNS 缓存和 DHCP 服务器
 - [BIND 9](bind9.md) - DNS 服务器
+
+## AI 代理
+
+- [Hermes Agent](hermes-agent.md) - 自改进 AI 代理
+- [OpenClaw](openclaw.md) - 多平台 AI 网关
 
 ## 开发工具
 
@@ -76,4 +84,6 @@ permalink: /homelab/deploy/
 
 - [Vaultwarden](vaultwarden.md) - 密码管理器
 - [SiYuan Note](siyuan.md) - 笔记与知识管理
+- [Obsidian LiveSync](obsidian-livesync.md) - 自托管笔记同步
 - [Distribution](distribution.md) - Docker 私有镜像仓库
+- [OpenList](openlist.md) - 文件分享与管理平台

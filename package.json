@@ -3,7 +3,7 @@
   "type": "module",
   "version": "1.0.0",
   "description": "The website built on VuePress with Plume theme",
-  "packageManager": "pnpm@10.31.0",
+  "packageManager": "pnpm@11.6.0",
   "pnpm": {
     "onlyBuiltDependencies": [
       "@parcel/watcher",
