@@ -1,40 +1,51 @@
 ---
-title: minio mc mirror 数据同步
+title: MinIO 或 RustFS 如何进行数据同步&迁移
+tags:
+  - S3
+  - MinIO
+  - RustFS
 createTime: 2026/06/13 10:30:00
 permalink: /blog/minio-mc-mirror/
 ---
 
-## 背景
-
-在分布式存储系统中，经常需要将数据从 MinIO 同步到自研的 RustFS 存储系统。本文介绍如何利用 `mc mirror` 命令实现高效的数据同步。
-
 ## 前提条件
 
-1. 安装 MinIO Client (`mc`)
+1. 安装 MinIO Client `mc`
+
+::: tabs
+
+@tab:active Linux
 
 ```shell
-# 下载安装 mc
 wget https://dl.min.io/client/mc/release/linux-amd64/mc
 chmod +x mc
 sudo mv mc /usr/local/bin/
 ```
 
-2. 配置 MinIO 访问别名
+@tab macOS
 
 ```shell
+brew install minio/stable/mc
+```
+
+:::
+
+2. 配置访问别名
+
+```shell
+mc alias list
 mc alias set minio https://minio.example.com ACCESS_KEY SECRET_KEY
 ```
 
-## mc mirror 同步命令
+## 同步命令
 
 ### 基本用法
 
 ```shell
-# 将 MinIO bucket 同步到本地目录
-mc mirror minio/mybucket /local/rustfs-storage/
-
-# 带删除同步（目标端有而源端没有的文件会被删除）
-mc mirror --overwrite --remove minio/mybucket /local/rustfs-storage/
+# 同步到本地路径
+mc mirror minio/mybucket /local/path/
+# 实例间数据同步
+mc mirror minio/ rustfs/
 ```
 
 ### 常用参数
@@ -51,29 +62,7 @@ mc mirror --overwrite --remove minio/mybucket /local/rustfs-storage/
 
 ```shell
 # 监听模式，持续同步增量变化
-mc mirror --watch minio/mybucket /local/rustfs-storage/
-```
-
-## 与 RustFS 对接
-
-### 数据校验
-
-同步完成后建议进行数据校验：
-
-```shell
-# 对比源端和目标端的数据完整性
-md5sum /local/rustfs-storage/* > local_md5.txt
-mc cat minio/mybucket/* | md5sum > minio_md5.txt
-diff local_md5.txt minio_md5.txt
-```
-
-### 增量同步策略
-
-配合定时任务实现增量同步：
-
-```shell
-# crontab 示例，每小时同步一次
-0 * * * * mc mirror --overwrite minio/mybucket /local/rustfs-storage/
+mc mirror --watch minio/mybucket /local/path/
 ```
 
 ## 注意事项
