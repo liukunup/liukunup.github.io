@@ -31,6 +31,7 @@ permalink: /ai/model/
 
 - TTS [FunAudioLLM/CosyVoice](FunAudioLLM-CosyVoice.md)
 - ASR [FunAudioLLM/SenseVoice](FunAudioLLM-SenseVoice.md)
+- ASR [Qwen3-ASR](Qwen3-ASR.md)
 - TTS [VoxCPM 2](VoxCPM2.md)
 - TTS [IndexTTS](IndexTTS.md)
 
