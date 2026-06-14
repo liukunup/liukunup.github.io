@@ -31,5 +31,6 @@ permalink: /ai/model/
 
 - TTS [FunAudioLLM/CosyVoice](FunAudioLLM-CosyVoice.md)
 - ASR [FunAudioLLM/SenseVoice](FunAudioLLM-SenseVoice.md)
+- TTS [VoxCPM 2](VoxCPM2.md)
 
 ## Computer Vision
