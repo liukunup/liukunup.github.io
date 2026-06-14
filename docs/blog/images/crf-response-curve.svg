@@ -1,0 +1,101 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 350" width="600" height="350">
+  <rect width="600" height="350" fill="#f8f9fa" rx="8"/>
+  
+  <defs>
+    <linearGradient id="curveGrad" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#4a90d9"/>
+      <stop offset="100%" stop-color="#9c27b0"/>
+    </linearGradient>
+  </defs>
+
+  <!-- Title -->
+  <text x="300" y="30" text-anchor="middle" font-family="sans-serif" font-size="16" font-weight="bold" fill="#333">相机响应函数 (CRF) 曲线</text>
+  <text x="300" y="46" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#888">Camera Response Function</text>
+
+  <!-- Plot area -->
+  <g transform="translate(80, 60)">
+    <!-- Axes -->
+    <line x1="0" y1="230" x2="460" y2="230" stroke="#333" stroke-width="1.5"/>
+    <line x1="0" y1="230" x2="0" y2="0" stroke="#333" stroke-width="1.5"/>
+
+    <!-- Arrow heads -->
+    <polygon points="460,230 450,226 450,234" fill="#333"/>
+    <polygon points="0,0 4,10 -4,10" fill="#333"/>
+
+    <!-- X-axis label -->
+    <text x="230" y="260" text-anchor="middle" font-family="sans-serif" font-size="13" fill="#555">log(辐照度) →</text>
+    <text x="230" y="274" text-anchor="middle" font-family="sans-serif" font-size="10" fill="#999">log(Irradiance)</text>
+
+    <!-- Y-axis label -->
+    <text x="-35" y="115" text-anchor="middle" font-family="sans-serif" font-size="13" fill="#555" transform="rotate(-90, -35, 115)">像素值 →</text>
+    <text x="-48" y="115" text-anchor="middle" font-family="sans-serif" font-size="10" fill="#999" transform="rotate(-90, -48, 115)">Pixel Value</text>
+
+    <!-- Grid lines -->
+    <line x1="0" y1="46" x2="460" y2="46" stroke="#eee" stroke-width="0.5" stroke-dasharray="4,4"/>
+    <line x1="0" y1="92" x2="460" y2="92" stroke="#eee" stroke-width="0.5" stroke-dasharray="4,4"/>
+    <line x1="0" y1="138" x2="460" y2="138" stroke="#eee" stroke-width="0.5" stroke-dasharray="4,4"/>
+    <line x1="0" y1="184" x2="460" y2="184" stroke="#eee" stroke-width="0.5" stroke-dasharray="4,4"/>
+    <line x1="92" y1="0" x2="92" y2="230" stroke="#eee" stroke-width="0.5" stroke-dasharray="4,4"/>
+    <line x1="184" y1="0" x2="184" y2="230" stroke="#eee" stroke-width="0.5" stroke-dasharray="4,4"/>
+    <line x1="276" y1="0" x2="276" y2="230" stroke="#eee" stroke-width="0.5" stroke-dasharray="4,4"/>
+    <line x1="368" y1="0" x2="368" y2="230" stroke="#eee" stroke-width="0.5" stroke-dasharray="4,4"/>
+
+    <!-- Tick labels -->
+    <text x="0" y="248" text-anchor="middle" font-family="sans-serif" font-size="9" fill="#999">0</text>
+    <text x="92" y="248" text-anchor="middle" font-family="sans-serif" font-size="9" fill="#999">0.5</text>
+    <text x="184" y="248" text-anchor="middle" font-family="sans-serif" font-size="9" fill="#999">1.0</text>
+    <text x="276" y="248" text-anchor="middle" font-family="sans-serif" font-size="9" fill="#999">1.5</text>
+    <text x="368" y="248" text-anchor="middle" font-family="sans-serif" font-size="9" fill="#999">2.0</text>
+    <text x="460" y="248" text-anchor="middle" font-family="sans-serif" font-size="9" fill="#999">→</text>
+
+    <text x="-15" y="230" text-anchor="end" font-family="sans-serif" font-size="9" fill="#999">0</text>
+    <text x="-15" y="184" text-anchor="end" font-family="sans-serif" font-size="9" fill="#999">64</text>
+    <text x="-15" y="138" text-anchor="end" font-family="sans-serif" font-size="9" fill="#999">128</text>
+    <text x="-15" y="92" text-anchor="end" font-family="sans-serif" font-size="9" fill="#999">192</text>
+    <text x="-15" y="46" text-anchor="end" font-family="sans-serif" font-size="9" fill="#999">255</text>
+
+    <!-- Linear (gamma=1.0) reference line -->
+    <line x1="0" y1="230" x2="460" y2="0" stroke="#ddd" stroke-width="1" stroke-dasharray="6,4"/>
+    <text x="370" y="20" font-family="sans-serif" font-size="9" fill="#bbb">γ=1.0 (线性)</text>
+
+    <!-- CRF S-curve - using a smooth bezier path -->
+    <!-- The S-curve goes from (0,230) to (460,0) with S-shape -->
+    <path d="M 0 228 
+             C 40 228, 100 225, 140 220
+             C 180 215, 200 210, 220 195
+             C 240 180, 255 160, 270 135
+             C 285 110, 300 85, 320 65
+             C 340 45, 370 30, 400 18
+             C 430 8, 450 3, 460 2"
+          fill="none" stroke="url(#curveGrad)" stroke-width="2.5" stroke-linecap="round"/>
+
+    <!-- Knee region highlight -->
+    <ellipse cx="230" cy="115" rx="50" ry="30" fill="none" stroke="#e5a000" stroke-width="1" stroke-dasharray="4,3" opacity="0.6"/>
+    <text x="230" y="108" text-anchor="middle" font-family="sans-serif" font-size="9" fill="#e5a000">膝部区域 (Knee)</text>
+
+    <!-- Toe region -->
+    <ellipse cx="90" cy="210" rx="55" ry="20" fill="none" stroke="#9c27b0" stroke-width="1" stroke-dasharray="4,3" opacity="0.5"/>
+    <text x="90" y="198" text-anchor="middle" font-family="sans-serif" font-size="9" fill="#9c27b0">趾部 (Toe)</text>
+
+    <!-- Shoulder region -->
+    <ellipse cx="400" cy="30" rx="50" ry="18" fill="none" stroke="#e53" stroke-width="1" stroke-dasharray="4,3" opacity="0.5"/>
+    <text x="400" y="18" text-anchor="middle" font-family="sans-serif" font-size="9" fill="#e53">肩部 (Shoulder)</text>
+
+    <!-- Gamma annotations on the curve -->
+    <circle cx="240" cy="175" r="3.5" fill="#9c27b0"/>
+    <line x1="240" y1="175" x2="340" y2="160" stroke="#9c27b0" stroke-width="0.8" stroke-dasharray="3,2"/>
+    <text x="345" y="158" font-family="sans-serif" font-size="10" fill="#9c27b0">γ=2.2 (sRGB)</text>
+
+    <circle cx="310" cy="95" r="3.5" fill="#e53"/>
+    <line x1="310" y1="95" x2="345" y2="85" stroke="#e53" stroke-width="0.8" stroke-dasharray="3,2"/>
+    <text x="350" y="83" font-family="sans-serif" font-size="10" fill="#e53">γ=2.4 (Rec.709)</text>
+  </g>
+
+  <!-- Legend -->
+  <g transform="translate(90, 310)">
+    <line x1="0" y1="5" x2="25" y2="5" stroke="url(#curveGrad)" stroke-width="2.5"/>
+    <text x="30" y="9" font-family="sans-serif" font-size="10" fill="#666">CRF S-Curve</text>
+    <line x1="140" y1="5" x2="165" y2="5" stroke="#ddd" stroke-width="1" stroke-dasharray="4,3"/>
+    <text x="170" y="9" font-family="sans-serif" font-size="10" fill="#666">线性响应 (γ=1.0)</text>
+  </g>
+</svg>
