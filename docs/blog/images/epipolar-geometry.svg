@@ -1,0 +1,59 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 500 320">
+  <rect width="500" height="320" fill="#f8f9fa"/>
+
+  <!-- Left Camera -->
+  <g transform="translate(80, 140)">
+    <rect x="-25" y="-35" width="50" height="70" fill="#4a90d9" stroke="#2c5282" stroke-width="2" rx="3"/>
+    <circle cx="0" cy="0" r="4" fill="#333"/>
+    <text x="0" y="50" text-anchor="middle" font-size="12" fill="#333">O_l</text>
+  </g>
+
+  <!-- Right Camera -->
+  <g transform="translate(420, 140)">
+    <rect x="-25" y="-35" width="50" height="70" fill="#4a90d9" stroke="#2c5282" stroke-width="2" rx="3"/>
+    <circle cx="0" cy="0" r="4" fill="#333"/>
+    <text x="0" y="50" text-anchor="middle" font-size="12" fill="#333">O_r</text>
+  </g>
+
+  <!-- Baseline -->
+  <line x1="80" y1="140" x2="420" y2="140" stroke="#e53" stroke-width="2"/>
+  <text x="250" y="130" text-anchor="middle" font-size="12" fill="#c53">基线 t</text>
+
+  <!-- 3D Point -->
+  <circle cx="250" cy="60" r="6" fill="#2ecc71"/>
+  <text x="250" y="45" text-anchor="middle" font-size="12" fill="#27ae60">X</text>
+
+  <!-- Epipolar Plane -->
+  <polygon points="80,140 420,140 250,60" fill="#e8f5e9" stroke="#81c784" stroke-width="1" stroke-dasharray="3,3"/>
+
+  <!-- Projection Lines -->
+  <line x1="250" y1="60" x2="80" y2="140" stroke="#333" stroke-width="1"/>
+  <line x1="250" y1="60" x2="420" y2="140" stroke="#333" stroke-width="1"/>
+
+  <!-- Epipolar Lines on Image Planes -->
+  <rect x="10" y="180" width="15" height="80" fill="#ddd" stroke="#666"/>
+  <rect x="475" y="180" width="15" height="80" fill="#ddd" stroke="#666"/>
+
+  <!-- Projected Points -->
+  <circle cx="17" cy="200" r="4" fill="#e53"/>
+  <circle cx="482" cy="210" r="4" fill="#e53"/>
+
+  <!-- Epipolar Lines -->
+  <line x1="17" y1="180" x2="17" y2="260" stroke="#9c27b0" stroke-width="1" stroke-dasharray="4,4"/>
+  <line x1="482" y1="180" x2="482" y2="260" stroke="#9c27b0" stroke-width="1" stroke-dasharray="4,4"/>
+
+  <!-- Epipoles -->
+  <circle cx="17" cy="220" r="4" fill="#9c27b0"/>
+  <circle cx="482" cy="220" r="4" fill="#9c27b0"/>
+  <text x="17" y="275" text-anchor="middle" font-size="10" fill="#9c27b0">e_l</text>
+  <text x="482" y="275" text-anchor="middle" font-size="10" fill="#9c27b0">e_r</text>
+
+  <!-- Labels -->
+  <text x="17" y="165" text-anchor="middle" font-size="11" fill="#666">左图像</text>
+  <text x="482" y="165" text-anchor="middle" font-size="11" fill="#666">右图像</text>
+
+  <!-- Legend -->
+  <text x="250" y="300" text-anchor="middle" font-size="11" fill="#666">
+    极线约束: x_r^T × F × x_l = 0
+  </text>
+</svg>

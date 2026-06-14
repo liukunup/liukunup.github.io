@@ -1,0 +1,58 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 400">
+  <defs>
+    <marker id="arrowhead" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
+      <polygon points="0 0, 10 3.5, 0 7" fill="#333"/>
+    </marker>
+  </defs>
+
+  <!-- Background -->
+  <rect width="600" height="400" fill="#f8f9fa"/>
+
+  <!-- Left Camera -->
+  <g transform="translate(100, 180)">
+    <rect x="-30" y="-40" width="60" height="80" fill="#4a90d9" stroke="#2c5282" stroke-width="2" rx="5"/>
+    <text x="0" y="55" text-anchor="middle" font-size="14" fill="#333">左相机</text>
+    <line x1="30" y1="0" x2="80" y2="-60" stroke="#333" stroke-width="1" marker-end="url(#arrowhead)"/>
+    <line x1="30" y1="0" x2="80" y2="60" stroke="#333" stroke-width="1" marker-end="url(#arrowhead)"/>
+  </g>
+
+  <!-- Right Camera -->
+  <g transform="translate(500, 180)">
+    <rect x="-30" y="-40" width="60" height="80" fill="#4a90d9" stroke="#2c5282" stroke-width="2" rx="5"/>
+    <text x="0" y="55" text-anchor="middle" font-size="14" fill="#333">右相机</text>
+    <line x1="-30" y1="0" x2="-80" y2="-60" stroke="#333" stroke-width="1" marker-end="url(#arrowhead)"/>
+    <line x1="-30" y1="0" x2="-80" y2="60" stroke="#333" stroke-width="1" marker-end="url(#arrowhead)"/>
+  </g>
+
+  <!-- Baseline -->
+  <line x1="100" y1="180" x2="500" y2="180" stroke="#e53" stroke-width="3"/>
+  <text x="300" y="170" text-anchor="middle" font-size="14" fill="#c53">基线 b</text>
+
+  <!-- 3D Point -->
+  <circle cx="300" cy="80" r="8" fill="#2ecc71"/>
+  <text x="300" y="60" text-anchor="middle" font-size="14" fill="#27ae60">X</text>
+
+  <!-- Projection Lines to Left Camera -->
+  <line x1="300" y1="80" x2="100" y2="180" stroke="#666" stroke-width="1" stroke-dasharray="5,5"/>
+
+  <!-- Projection Lines to Right Camera -->
+  <line x1="300" y1="80" x2="500" y2="180" stroke="#666" stroke-width="1" stroke-dasharray="5,5"/>
+
+  <!-- Image Planes -->
+  <rect x="50" y="260" width="40" height="60" fill="#ddd" stroke="#666" stroke-width="1"/>
+  <rect x="510" y="260" width="40" height="60" fill="#ddd" stroke="#666" stroke-width="1"/>
+
+  <!-- Projected Points on Image Planes -->
+  <circle cx="70" cy="280" r="4" fill="#e53"/>
+  <circle cx="530" cy="290" r="4" fill="#e53"/>
+
+  <!-- Labels -->
+  <text x="70" y="340" text-anchor="middle" font-size="12" fill="#666">u_l</text>
+  <text x="530" y="340" text-anchor="middle" font-size="12" fill="#666">u_r</text>
+
+  <!-- Optical Centers -->
+  <circle cx="100" cy="180" r="4" fill="#333"/>
+  <circle cx="500" cy="180" r="4" fill="#333"/>
+  <text x="100" y="200" text-anchor="middle" font-size="11" fill="#333">O_l</text>
+  <text x="500" y="200" text-anchor="middle" font-size="11" fill="#333">O_r</text>
+</svg>

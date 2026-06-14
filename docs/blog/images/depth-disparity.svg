@@ -1,0 +1,56 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 550 300">
+  <rect width="550" height="300" fill="#f8f9fa"/>
+
+  <!-- Left Camera -->
+  <g transform="translate(60, 130)">
+    <rect x="-20" y="-30" width="40" height="60" fill="#4a90d9" stroke="#2c5282" stroke-width="2" rx="2"/>
+    <circle cx="0" cy="0" r="3" fill="#333"/>
+    <text x="0" y="45" text-anchor="middle" font-size="11" fill="#333">O_l</text>
+  </g>
+
+  <!-- Right Camera -->
+  <g transform="translate(490, 130)">
+    <rect x="-20" y="-30" width="40" height="60" fill="#4a90d9" stroke="#2c5282" stroke-width="2" rx="2"/>
+    <circle cx="0" cy="0" r="3" fill="#333"/>
+    <text x="0" y="45" text-anchor="middle" font-size="11" fill="#333">O_r</text>
+  </g>
+
+  <!-- Baseline -->
+  <line x1="60" y1="130" x2="490" y2="130" stroke="#e53" stroke-width="2"/>
+  <text x="275" y="120" text-anchor="middle" font-size="12" fill="#c53">b (基线)</text>
+
+  <!-- 3D Point -->
+  <circle cx="275" cy="50" r="5" fill="#2ecc71"/>
+
+  <!-- Left Ray -->
+  <line x1="275" y1="50" x2="60" y2="130" stroke="#333" stroke-width="1"/>
+  <line x1="60" y1="130" x2="15" y2="180" stroke="#4a90d9" stroke-width="1"/>
+
+  <!-- Right Ray -->
+  <line x1="275" y1="50" x2="490" y2="130" stroke="#333" stroke-width="1"/>
+  <line x1="490" y1="130" x2="535" y2="180" stroke="#4a90d9" stroke-width="1"/>
+
+  <!-- Image Planes -->
+  <rect x="5" y="170" width="12" height="50" fill="#ddd" stroke="#666"/>
+  <rect x="533" y="170" width="12" height="50" fill="#ddd" stroke="#666"/>
+
+  <!-- Projected Points -->
+  <circle cx="11" cy="180" r="3" fill="#e53"/>
+  <circle cx="539" cy="190" r="3" fill="#e53"/>
+
+  <!-- Disparity Arrow -->
+  <line x1="11" y1="200" x2="539" y2="200" stroke="#9c27b0" stroke-width="2"/>
+  <line x1="11" y1="195" x2="11" y2="205" stroke="#9c27b0" stroke-width="2"/>
+  <line x1="539" y1="195" x2="539" y2="205" stroke="#9c27b0" stroke-width="2"/>
+  <text x="275" y="220" text-anchor="middle" font-size="12" fill="#9c27b0">d = u_r - u_l (视差)</text>
+
+  <!-- Z distance -->
+  <line x1="275" y1="50" x2="275" y2="130" stroke="#666" stroke-width="1" stroke-dasharray="3,3"/>
+  <text x="290" y="95" font-size="11" fill="#666">Z</text>
+
+  <!-- Formula -->
+  <rect x="150" y="250" width="250" height="35" fill="#e3f2fd" stroke="#4a90d9" stroke-width="1" rx="5"/>
+  <text x="275" y="272" text-anchor="middle" font-size="14" fill="#1565c0">
+    Z = f × b / d
+  </text>
+</svg>

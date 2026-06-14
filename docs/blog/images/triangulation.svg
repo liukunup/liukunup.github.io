@@ -1,0 +1,59 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 500 300">
+  <rect width="500" height="300" fill="#f8f9fa"/>
+
+  <!-- Left Camera -->
+  <g transform="translate(60, 120)">
+    <rect x="-25" y="-35" width="50" height="70" fill="#4a90d9" stroke="#2c5282" stroke-width="2" rx="3"/>
+    <circle cx="0" cy="0" r="4" fill="#333"/>
+    <text x="0" y="50" text-anchor="middle" font-size="11" fill="#333">C_l</text>
+  </g>
+
+  <!-- Right Camera -->
+  <g transform="translate(440, 120)">
+    <rect x="-25" y="-35" width="50" height="70" fill="#4a90d9" stroke="#2c5282" stroke-width="2" rx="3"/>
+    <circle cx="0" cy="0" r="4" fill="#333"/>
+    <text x="0" y="50" text-anchor="middle" font-size="11" fill="#333">C_r</text>
+  </g>
+
+  <!-- Baseline -->
+  <line x1="60" y1="120" x2="440" y2="120" stroke="#e53" stroke-width="2"/>
+  <text x="250" y="110" text-anchor="middle" font-size="11" fill="#c53">b</text>
+
+  <!-- 3D Point to find -->
+  <circle cx="250" cy="50" r="6" fill="#2ecc71"/>
+  <text x="250" y="35" text-anchor="middle" font-size="12" fill="#27ae60">X</text>
+
+  <!-- Rays from cameras through projected points -->
+  <line x1="60" y1="120" x2="180" y2="180" stroke="#333" stroke-width="1.5"/>
+  <line x1="440" y1="120" x2="320" y2="180" stroke="#333" stroke-width="1.5"/>
+
+  <!-- Projected points on image planes -->
+  <rect x="170" y="170" width="15" height="50" fill="#ddd" stroke="#666"/>
+  <rect x="315" y="170" width="15" height="50" fill="#ddd" stroke="#666"/>
+
+  <circle cx="177" cy="190" r="4" fill="#e53"/>
+  <circle cx="323" cy="195" r="4" fill="#e53"/>
+
+  <text x="177" y="235" text-anchor="middle" font-size="10" fill="#c53">x_l</text>
+  <text x="323" y="235" text-anchor="middle" font-size="10" fill="#c53">x_r</text>
+
+  <!-- Projection rays extended to meet at X -->
+  <line x1="177" y1="190" x2="250" y2="50" stroke="#4a90d9" stroke-width="1" stroke-dasharray="4,4"/>
+  <line x1="323" y1="195" x2="250" y2="50" stroke="#4a90d9" stroke-width="1" stroke-dasharray="4,4"/>
+
+  <!-- Epipolar lines -->
+  <line x1="177" y1="170" x2="177" y2="220" stroke="#9c27b0" stroke-width="1" stroke-dasharray="3,3"/>
+  <line x1="323" y1="170" x2="323" y2="220" stroke="#9c27b0" stroke-width="1" stroke-dasharray="3,3"/>
+
+  <!-- Angle indicator for triangulation -->
+  <path d="M 100,120 A 40,40 0 0,0 140,120" fill="none" stroke="#4a90d9" stroke-width="1"/>
+  <text x="120" y="115" font-size="9" fill="#4a90d9">θ</text>
+
+  <!-- Description -->
+  <text x="250" y="270" text-anchor="middle" font-size="11" fill="#666">
+    通过两条投影射线的交点确定空间点位置
+  </text>
+  <text x="250" y="288" text-anchor="middle" font-size="11" fill="#666">
+    求解: min ||x_l - P_l X||² + ||x_r - P_r X||²
+  </text>
+</svg>
