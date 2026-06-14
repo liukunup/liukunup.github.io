@@ -35,4 +35,15 @@ permalink: /ai/model/
 - TTS [VoxCPM 2](VoxCPM2.md)
 - TTS [IndexTTS](IndexTTS.md)
 
+## Autonomous Driving
+
+- NVIDIA
+  - [Alpamayo-R1 (AR1)](Alpamayo-R1.md)
+- 斯坦福大学等
+  - [OpenVLA-7B](OpenVLA-7B.md)
+
+## Model Formats
+
+- [AI 模型格式与框架详解](AI-Model-Formats.md)
+
 ## Computer Vision
