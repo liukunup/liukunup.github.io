@@ -85,5 +85,6 @@ permalink: /homelab/deploy/
 - [Vaultwarden](vaultwarden.md) - 密码管理器
 - [SiYuan Note](siyuan.md) - 笔记与知识管理
 - [Obsidian LiveSync](obsidian-livesync.md) - 自托管笔记同步
+- [Superset](superset.md) - 数据可视化与商业智能平台
 - [Distribution](distribution.md) - Docker 私有镜像仓库
 - [OpenList](openlist.md) - 文件分享与管理平台
