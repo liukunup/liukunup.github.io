@@ -153,19 +153,8 @@ https://liukunup.github.io/notes/ai-coding/best-practices/
 # 方法一：安装脚本 (推荐)
 curl -fsSL https://opencode.ai/install | bash
 
-# 方法二：Homebrew (macOS/Linux)
-brew install anomalyco/tap/opencode
-
-# 方法三：NPM
+# 方法二：NPM
 npm install -g opencode-ai
-
-# 方法四：PNPM
-pnpm install -g opencode-ai
-
-# 方法五：Windows
-# - Chocolatey: choco install opencode
-# - Scoop: scoop install opencode
-# - NPM: npm install -g opencode-ai
 
 # 验证安装
 opencode --version
