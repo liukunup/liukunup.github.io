@@ -88,6 +88,11 @@ export default defineNavbarConfig([
         link: '/ai/mcp/'
       },
       {
+        text: 'Skill',
+        icon: 'carbon:border-full',
+        link: '/ai/skill/'
+      },
+      {
         text: 'Model',
         icon: 'carbon:model',
         link: '/ai/model/'
