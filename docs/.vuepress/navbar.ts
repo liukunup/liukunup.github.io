@@ -57,10 +57,11 @@ export default defineNavbarConfig([
       //   text: 'Kubernetes',
       //   link: '/notes/kubernetes/'
       // },
-      // {
-      //   text: '测试领域',
-      //   link: '/notes/testing/'
-      // },
+      {
+        text: 'Testing',
+        link: '/notes/testing/',
+        icon: 'openmoji:test-tube'
+      },
       // {
       //   text: '算法领域',
       //   link: '/notes/algorithm/'
