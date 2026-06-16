@@ -60,7 +60,7 @@ export default defineNavbarConfig([
       {
         text: 'Testing',
         link: '/notes/testing/',
-        icon: 'openmoji:test-tube'
+        icon: 'streamline-color:test-tube'
       },
       // {
       //   text: '算法领域',
