@@ -1,5 +1,5 @@
 ---
-title: Skill Creator — 如何创建自定义 Skill
+title: Skill Creator
 createTime: 2026/06/16 05:00:00
 permalink: /ai/skill/skill-creator/
 ---

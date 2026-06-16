@@ -1,5 +1,5 @@
 ---
-title: Oh My OpenCode / Oh My OpenAgent
+title: Oh My OpenCode
 createTime: 2026/06/16 05:00:00
 permalink: /ai/skill/oh-my-opencode/
 ---
