@@ -49,6 +49,7 @@ permalink: /ai/model/
 ## Video Generation
 
 - 阿里通义万相 [Wan2.2](Wan2.2.md)
+- 字节跳动 [Seedance 2.0](Seedance2.md)
 
 ## Model Formats
 
