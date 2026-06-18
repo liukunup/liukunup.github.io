@@ -46,6 +46,10 @@ permalink: /ai/model/
 - 斯坦福大学等
   - [OpenVLA-7B](OpenVLA-7B.md)
 
+## Video Generation
+
+- 阿里通义万相 [Wan2.2](Wan2.2.md)
+
 ## Model Formats
 
 - [AI 模型格式与框架详解](AI-Model-Formats.md)
