@@ -71,6 +71,10 @@ permalink: /ai/model/
 
 ## Computer Vision
 
+### Face Detection & Recognition
+
+- bubbliiiing [RetinaFace + CurricularFace](RetinaFace-CurricularFace.md)
+
 ### Face Swap
 
 - [DeepFaceLive](DeepFaceLive.md)
@@ -90,3 +94,14 @@ permalink: /ai/model/
 ### Image Editing
 
 - 阿里通义千问 [Qwen-Image-Edit](Qwen-Image-Edit.md)
+
+### Image Matting
+
+- 阿里达摩院 [UNet 通用抠图](UNet-Universal-Matting.md)
+- 阿里达摩院 [BSHM 人像抠图](UNet-Portrait-Matting.md)
+
+### 3D Generation
+
+- 腾讯 ARC [Pixal3D](Pixal3D.md)
+- 腾讯混元 [HY-World 2.0](HY-World-2.0.md)
+- 阿里达摩院 [HRN Text-to-Head](HRN-Text-to-Head.md)
