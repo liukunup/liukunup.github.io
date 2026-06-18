@@ -26,6 +26,9 @@ permalink: /ai/model/
 ## OCR
 
 - OpenDataLab [PDF-Extract-Kit 1.0](PDF-Extract-Kit.md)
+- 阿里达摩院 [读光-文字识别-手写](OCR-Damo-Handwritten.md)
+- 阿里达摩院 [读光-文字识别-通用](OCR-Damo-General.md)
+- xiaolv [验证码识别 2.0](OCR-Captcha2.md)
 
 ## NLP
 
