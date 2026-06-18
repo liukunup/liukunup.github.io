@@ -57,3 +57,8 @@ permalink: /ai/model/
 - [AI 模型格式与框架详解](AI-Model-Formats.md)
 
 ## Computer Vision
+
+### Face Swap
+
+- [DeepFaceLive](DeepFaceLive.md)
+- [Deep-Live-Cam](Deep-Live-Cam.md)
