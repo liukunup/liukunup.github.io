@@ -27,6 +27,14 @@ permalink: /ai/model/
 
 ## NLP
 
+### Zero-shot NLU
+
+- 阿里达摩院 [RexUniNLU](RexUniNLU.md)
+
+### Privacy
+
+- OpenAI [Privacy Filter](Privacy-Filter.md)
+
 ## Audio
 
 - ASR [OpenAI Whisper](Whisper.md)
