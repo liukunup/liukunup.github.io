@@ -62,3 +62,18 @@ permalink: /ai/model/
 
 - [DeepFaceLive](DeepFaceLive.md)
 - [Deep-Live-Cam](Deep-Live-Cam.md)
+
+### Face Restoration
+
+- 腾讯 ARC [GFPGAN](GFPGAN.md)
+- NTU S-Lab [CodeFormer](CodeFormer.md)
+
+### Image Super-Resolution & Restoration
+
+- 腾讯 ARC [Real-ESRGAN](Real-ESRGAN.md)
+- XPixel [HYPIR](HYPIR.md)
+- [waifu2x](waifu2x.md)
+
+### Image Editing
+
+- 阿里通义千问 [Qwen-Image-Edit](Qwen-Image-Edit.md)
