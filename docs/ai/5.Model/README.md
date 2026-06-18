@@ -29,6 +29,7 @@ permalink: /ai/model/
 
 ## Audio
 
+- ASR [OpenAI Whisper](Whisper.md)
 - [FunAudioLLM](FunAudioLLM.md)
   - ASR [SenseVoice](FunAudioLLM-SenseVoice.md)
   - TTS [CosyVoice](FunAudioLLM-CosyVoice.md)
