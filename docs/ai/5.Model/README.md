@@ -30,6 +30,7 @@ permalink: /ai/model/
 ## Audio
 
 - TTS [FunAudioLLM/CosyVoice](FunAudioLLM-CosyVoice.md)
+- VAD [FSMN-VAD](FSMN-VAD.md)
 - ASR [FunAudioLLM/SenseVoice](FunAudioLLM-SenseVoice.md)
 - ASR [Qwen3-ASR](Qwen3-ASR.md)
 - TTS [VoxCPM 2](VoxCPM2.md)
