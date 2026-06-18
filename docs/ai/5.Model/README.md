@@ -25,6 +25,8 @@ permalink: /ai/model/
 
 ## OCR
 
+- OpenDataLab [PDF-Extract-Kit 1.0](PDF-Extract-Kit.md)
+
 ## NLP
 
 ### Zero-shot NLU
