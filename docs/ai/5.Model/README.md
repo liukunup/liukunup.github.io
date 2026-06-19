@@ -105,3 +105,7 @@ permalink: /ai/model/
 - 腾讯 ARC [Pixal3D](Pixal3D.md)
 - 腾讯混元 [HY-World 2.0](HY-World-2.0.md)
 - 阿里达摩院 [HRN Text-to-Head](HRN-Text-to-Head.md)
+
+### Visual Grounding
+
+- NVIDIA [LocateAnything-3B](LocateAnything-3B.md)
