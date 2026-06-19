@@ -7,6 +7,96 @@ updateTime: 2026/06/19 00:00:00
 permalink: /homelab/deploy/memos/
 ---
 
+## 🚀 快速入门
+
+### 前提条件
+
+- Docker 已安装在运行 Memos 的机器上
+
+### 1. 启动本地实例
+
+```bash
+docker run -d \
+  --name memos \
+  -p 5230:5230 \
+  -v ~/.memos:/var/opt/memos \
+  neosmemo/memos:stable
+```
+
+### 2. 验证实例
+
+启动后打开 UI：
+
+- Docker 默认: `http://localhost:5230`
+- 二进制默认: `http://localhost:8081`
+
+终端验证：
+
+```bash
+docker logs memos
+```
+
+### 3. 创建第一个管理员账户
+
+第一个注册的用户自动成为管理员（Host），可配置注册、认证、存储等全局设置。
+
+**建议操作：**
+
+- ✅ 设置强密码
+- ✅ 确认实例 URL（如果通过反向代理访问）
+- ✅ 决定是否开放用户注册
+- ✅ 决定是否允许公开备忘录
+
+### 4. 创建第一个备忘录
+
+使用首页顶部的编辑器，尝试以下示例：
+
+```markdown
+# Welcome to Memos
+
+这是我的第一个备忘录。
+
+## 任务列表
+- [x] 安装 Memos
+- [ ] 写一条真正的笔记
+
+## 标签
+试试 #memos 和 #getting-started
+
+## 代码
+```ts
+console.log("hello from memos");
+```
+```
+
+**可以尝试的功能：**
+
+- 设置备忘录可见性：`PRIVATE`、`PROTECTED` 或 `PUBLIC`
+- 添加待办清单：`- [ ]`
+- 上传截图或文档
+- 内联创建标签：`#标签名`
+- 置顶重要备忘录
+
+### 5. 可见性级别
+
+每个备忘录有三种可见性级别：
+
+| 级别 | 说明 |
+|------|------|
+| `PRIVATE` | 仅自己可读 |
+| `PROTECTED` | 实例上已认证用户可读 |
+| `PUBLIC` | 知道 URL 的任何人都可读 |
+
+对于私人团队或个人实例，禁用公开备忘录通常是最安全的选择。
+
+### 6. 常见首发问题
+
+- 如果 `http://localhost:5230` 无法加载，检查 `docker logs memos`
+- 如果数据目录不可写，检查 `~/.memos` 权限
+- 如果通过反向代理运行，设置 `MEMOS_INSTANCE_URL` 为公开 URL
+
+---
+
 ## 🚀 部署指南
 
 ### Docker 快速启动
@@ -133,6 +223,174 @@ docker compose down       # 停止服务
 docker compose pull       # 拉取最新镜像
 docker compose up -d      # 重启服务
 ```
+
+### 二进制安装（Binary）
+
+不使用 Docker 时，可直接在宿主机运行 Memos 二进制文件。
+
+**支持平台：**
+
+- Linux: `amd64`, `arm64`, `armv7`
+- macOS: Intel 和 Apple Silicon
+- Windows: `amd64`
+
+**基础运行命令：**
+
+```bash
+./memos --port 5230 --data /var/lib/memos
+```
+
+> 默认端口为 `8081`，默认使用 SQLite 数据库。
+
+**连接外部数据库：**
+
+```bash
+# MySQL
+./memos \
+  --driver mysql \
+  --dsn "user:password@tcp(localhost:3306)/memos"
+
+# PostgreSQL
+./memos \
+  --driver postgres \
+  --dsn "postgres://user:password@localhost:5432/memos?sslmode=disable"
+```
+
+**服务管理：**
+
+| 系统 | 建议 |
+|------|------|
+| Linux | systemd |
+| macOS | launchd |
+| Windows | 服务包装器或 supervisor |
+
+### Kubernetes 部署
+
+适用于已有 Kubernetes 集群的环境。
+
+**核心资源：**
+
+- `Deployment` - Memos 容器
+- `Service` - 集群网络
+- `Ingress` 或网关 - 公共访问
+- `PersistentVolumeClaim` - 数据持久化
+- `Secret` - 敏感配置（如 DSN）
+
+**典型部署配置：**
+
+```yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: memos
+spec:
+  replicas: 1  # SQLite 只能单副本
+  template:
+    spec:
+      enableServiceLinks: false  # 避免 K8s 注入 MEMOS_PORT 环境变量
+      containers:
+        - name: memos
+          image: neosmemo/memos:stable
+          env:
+            - name: MEMOS_PORT
+              value: "5230"
+            - name: MEMOS_INSTANCE_URL
+              value: "https://memos.example.com"
+          volumeMounts:
+            - name: memos-data
+              mountPath: /var/opt/memos
+          resources:
+            requests:
+              memory: "256Mi"
+              cpu: "250m"
+            limits:
+              memory: "512Mi"
+              cpu: "500m"
+      volumes:
+        - name: memos-data
+          persistentVolumeClaim:
+            claimName: memos-data
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: memos-data
+spec:
+  accessModes: ["ReadWriteOnce"]
+  resources:
+    requests:
+      storage: 5Gi
+```
+
+**注意事项：**
+
+- 使用 SQLite 时只能单副本运行
+- `MEMOS_PORT` 环境变量可能与 K8s Service 注入冲突，需设置 `enableServiceLinks: false`
+- 推荐使用外部 MySQL/PostgreSQL 以支持多副本
+- 通过 Ingress 配置 TLS 终端
+
+### 源码构建（Build From Source）
+
+适用于需要自定义或使用 fork 的场景。
+
+**构建步骤：**
+
+```bash
+git clone https://github.com/usememos/memos.git
+cd memos
+git checkout v0.29.1  # 锁定版本
+
+# 安装依赖
+pnpm install
+
+# 构建
+pnpm build:release
+```
+
+**运行构建产物：**
+
+```bash
+./memos --port 5230 --data /var/lib/memos
+```
+
+**生产环境检查清单：**
+
+- ✅ 设置 `MEMOS_INSTANCE_URL` 和数据库环境变量
+- ✅ 部署前进行冒烟测试
+- ✅ 备份数据目录
+
+### 反向代理配置
+
+生产环境建议通过反向代理提供 HTTPS 访问。
+
+**推荐配置：**
+
+```nginx
+# Nginx 配置示例
+server {
+    listen 443 ssl;
+    server_name memos.example.com;
+
+    ssl_certificate /path/to/cert.pem;
+    ssl_certificate_key /path/to/key.pem;
+
+    client_max_body_size 100M;
+
+    location / {
+        proxy_pass http://localhost:5230;
+        proxy_set_header Host $host;
+        proxy_set_header X-Forwarded-Proto $scheme;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+    }
+}
+```
+
+**关键检查项：**
+
+- `MEMOS_INSTANCE_URL` 必须设置为公开访问的 URL
+- 转发标准代理头：`Host`, `X-Forwarded-Proto`, `X-Forwarded-For`
+- 公开链接和 Cookie 必须使用正确的域名
+- 上传的资产通过公开路由仍然可访问
 
 ## 📝 配置说明
 
