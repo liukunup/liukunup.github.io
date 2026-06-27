@@ -874,3 +874,4 @@ redis-cli -h <redis-host> -a tradingagents123 SAVE
 - 原版: [TauricResearch/TradingAgents](https://github.com/TauricResearch/TradingAgents)
 - 论文: *TradingAgents: Multi-Agents LLM Financial Trading Framework*
 - 公众号: 微信搜索 `TradingAgents-CN`
+- 关联项目: [AI-Trader](/notes/quant/ai-trader/) · [Vibe-Trading](/notes/quant/vibe-trading/) · [QuantDinger](/notes/quant/quantdinger/)
