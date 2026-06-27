@@ -66,6 +66,11 @@ export default defineNavbarConfig([
       //   text: '算法领域',
       //   link: '/notes/algorithm/'
       // },
+      {
+        text: 'Quant',
+        link: '/notes/quant/',
+        icon: 'emojione-v1:stock-chart'
+      },
     ]
   },
   {

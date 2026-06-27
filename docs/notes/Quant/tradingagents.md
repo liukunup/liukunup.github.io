@@ -1,7 +1,7 @@
 ---
 title: TradingAgents 部署指南：多智能体 LLM 金融交易框架
 createTime: 2026/06/27 22:00:00
-permalink: /notes/quant/tradingagents-deploy/
+permalink: /notes/quant/tradingagents/
 tags:
   - TradingAgents
   - AI Agent
