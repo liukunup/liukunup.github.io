@@ -1,7 +1,7 @@
 ---
 title: 金策智算 · 智能投研决策系统
 createTime: 2026/04/25 22:32:52
-permalink: /blog/jin-ce-zhi-suan/
+permalink: /ai/agent/jin-ce-zhi-suan/
 tags:
   - 量化交易
   - 投资研究

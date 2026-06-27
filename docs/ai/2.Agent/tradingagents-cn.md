@@ -1,7 +1,7 @@
 ---
 title: TradingAgents-CN 中文增强版部署与使用指南
 createTime: 2026/06/26 22:00:00
-permalink: /blog/tradingagents-cn/
+permalink: /ai/agent/tradingagents-cn/
 tags:
   - AI
   - LLM
