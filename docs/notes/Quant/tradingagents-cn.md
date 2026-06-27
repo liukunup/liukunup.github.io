@@ -1,6 +1,6 @@
 ---
-title: TradingAgents-CN 中文增强版部署与使用指南
-createTime: 2026/06/26 22:00:00
+title: TradingAgents-CN Linux 源码部署指南
+createTime: 2026/06/28 22:00:00
 permalink: /notes/quant/tradingagents-cn/
 tags:
   - AI
@@ -8,9 +8,9 @@ tags:
   - 多智能体
   - 金融
   - 股票分析
-  - Docker
+  - Linux
   - TradingAgents
-description: 基于多智能体 LLM 的中文金融交易框架 TradingAgents-CN 的部署与使用详解，包括 Docker 部署、源码部署、配置、首次使用与常见问题。
+description: 基于多智能体 LLM 的中文金融交易框架 TradingAgents-CN 在 Linux 下的源码部署与使用详解，配合现有 MongoDB 与 Redis 实例，纯 Python 启动。
 ---
 
 ## 引言
@@ -34,7 +34,6 @@ description: 基于多智能体 LLM 的中文金融交易框架 TradingAgents-CN
 - **动态供应商管理** - Web 界面可视化添加/管理 LLM 供应商与模型
 - **模型选择持久化** - 用户偏好跨会话保存，快速切换不同模型
 - **专业报告导出** - 支持 Markdown、Word、PDF 多格式输出
-- **Docker 多架构** - 一键部署，支持 amd64 / arm64（Apple Silicon、树莓派）
 - **智能新闻分析** - 多层次新闻过滤与质量评估
 - **完整中文界面** - 前后端全中文，符合国内用户使用习惯
 
@@ -53,15 +52,14 @@ description: 基于多智能体 LLM 的中文金融交易框架 TradingAgents-CN
 
 ## 技术架构
 
-`v1.0.1` 版本完成了从 Streamlit 单体应用到现代前后端分离架构的全面升级：
+`v1.0.0-preview` 起采用前后端分离架构：
 
 | 组件 | 技术栈 |
 |------|--------|
 | **后端** | FastAPI + Uvicorn + Python 3.10+ |
 | **前端** | Vue 3 + Vite + Element Plus |
-| **数据库** | MongoDB 4.4+ + Redis 7+ |
+| **数据库** | MongoDB 4.4+ + Redis 6.0+ |
 | **API 架构** | RESTful API + WebSocket |
-| **部署** | Docker Compose 多架构支持 |
 | **LLM 抽象** | 统一 `llm_clients` 接口，支持多家厂商 |
 
 ```
@@ -84,97 +82,249 @@ description: 基于多智能体 LLM 的中文金融交易框架 TradingAgents-CN
         └──────────┘    └──────────┘    └──────────────┘
 ```
 
-## 三种部署方式
+## 部署方式
 
-项目提供 **绿色版**（仅 Windows）、**Docker 版**、**源码版** 三种部署方式，下面重点介绍后两种通用方案。
+项目提供 **两种部署方式**，可根据实际环境选择其一，章节之间相互独立：
 
-### 方式一：Docker 部署（推荐）
+| 方式 | 适用场景 | 数据库来源 | 启动入口 |
+|------|---------|-----------|----------|
+| **方式一：Linux 源码部署** | 已有外部 MongoDB/Redis，需要深度定制或复用现有组件 | 外部现成服务 | `python -m app` |
+| **方式二：Docker Compose 部署** | 一键拉起完整隔离环境，适合快速体验或独立部署 | 容器内置 | `docker compose up -d` |
 
-Docker 部署是最稳定、最通用的方案，支持 macOS、Linux、Windows 上的所有平台。
+> 💡 **选择建议**：
+> - 服务器上 **已经运行 MongoDB/Redis**、希望复用 → 选 **方式一**
+> - 服务器 **无现成数据库**，或希望与现有服务完全隔离 → 选 **方式二**
+> - 两种方式共享同一份代码与 `.env` 配置项，迁移成本极低
 
-#### 1. 环境准备
+---
 
-确保已安装 [Docker](https://www.docker.com/) 与 Docker Compose：
+## 方式一：Linux 源码部署
 
-```bash
-docker --version
-docker compose version
+本节面向 **Linux 服务器** 环境，假设 **MongoDB 与 Redis 已由运维提供**，我们只需部署应用本体并正确连接即可。
+
+### 系统要求
+
+| 项目 | 最低版本 | 推荐 |
+|------|---------|------|
+| Python | 3.10+ | 3.10 或 3.11（兼容性最佳） |
+| Node.js | 18+ | 20 LTS |
+| MongoDB | 4.4+ | 5.0+（外部提供） |
+| Redis | 6.0+ | 7+（外部提供） |
+| Git | 任意 | 最新版 |
+| CPU | 2 核 | 4 核以上 |
+| 内存 | 4GB | 8GB 以上 |
+| 存储 | 20GB | 50GB |
+
+### 项目结构
+
+```
+TradingAgentsCN/
+├── app/                   # 后端源码目录
+│   ├── main.py            # FastAPI 主应用
+│   ├── api/               # API 路由
+│   ├── core/              # 核心配置
+│   ├── models/            # 数据模型
+│   └── services/          # 业务逻辑
+├── frontend/              # 前端源码目录
+│   ├── package.json       # Node.js 依赖
+│   ├── src/               # Vue 3 源码
+│   └── vite.config.js     # Vite 配置
+├── requirements.txt       # Python 依赖
+├── .env.example           # 环境变量模板
+└── scripts/               # 初始化脚本
 ```
 
-#### 2. 创建部署目录
+### 1. 克隆项目
 
 ```bash
-mkdir -p ~/tradingagents-cn && cd ~/tradingagents-cn
+git clone https://github.com/hsliuping/TradingAgents-CN.git
+cd TradingAgents-CN
 ```
 
-#### 3. 下载配置文件
+### 2. 确认外部服务可用
+
+假设 MongoDB 和 Redis 已经在内网或本机运行，请先确认连通性：
 
 ```bash
-curl -O https://raw.githubusercontent.com/hsliuping/TradingAgents-CN/main/docker-compose.yml
-curl -O https://raw.githubusercontent.com/hsliuping/TradingAgents-CN/main/.env.example
-mv .env.example .env
+# 测试 MongoDB 连通性（请替换为实际地址）
+mongosh "mongodb://admin:tradingagents123@<mongo-host>:27017/admin"
+
+# 测试 Redis 连通性
+redis-cli -h <redis-host> -p 6379 -a tradingagents123 ping
 ```
 
-#### 4. 编辑 `.env` 配置
+> 💡 后续配置中的 `<mongo-host>` / `<redis-host>` 请替换为运维实际分配的地址。若数据库为本地运行，可使用 `127.0.0.1` 或 `localhost`。
 
-至少配置 **数据库连接** 与 **一个 LLM 厂商的 API Key**：
+### 3. 配置后端环境
+
+#### 3.1 创建 Python 虚拟环境
+
+```bash
+# 创建虚拟环境（确保 Python 版本在 3.10-3.12 之间）
+python3 -m venv venv
+source venv/bin/activate
+
+# 验证 Python 版本
+python --version
+```
+
+#### 3.2 安装 Python 依赖
+
+```bash
+# 配置清华镜像加速
+pip config set global.index-url https://pypi.tuna.tsinghua.edu.cn/simple
+pip config list
+
+# 安装依赖
+pip install -r requirements.txt
+```
+
+#### 3.3 配置环境变量
+
+```bash
+cp .env.example .env
+nano .env
+```
+
+在 `.env` 中重点配置以下内容：
 
 ```env
-# ========== 必需：MongoDB ==========
-MONGODB_HOST=mongodb
-MONGODB_PORT=27017
-MONGODB_USERNAME=admin
-MONGODB_PASSWORD=tradingagents123
-MONGODB_DATABASE=tradingagents
-MONGODB_AUTH_SOURCE=admin
+# ========== MongoDB（外部实例）==========
+MONGODB_URL=mongodb://admin:tradingagents123@<mongo-host>:27017/tradingagents?authSource=admin
 
-# ========== 必需：Redis ==========
-REDIS_HOST=redis
-REDIS_PORT=6379
-REDIS_PASSWORD=tradingagents123
+# ========== Redis（外部实例）==========
+REDIS_URL=redis://:tradingagents123@<redis-host>:6379/0
 
-# ========== 必需：安全密钥 ==========
-# 生产环境务必修改为随机字符串
-JWT_SECRET=$(python -c "import secrets; print(secrets.token_urlsafe(32))")
-CSRF_SECRET=$(python -c "import secrets; print(secrets.token_urlsafe(32))")
+# ========== API 配置 ==========
+API_BASE_URL=http://localhost:8000
+CORS_ORIGINS=["http://localhost:3000"]
 
-# ========== 至少配置一个 LLM 提供商 ==========
+# ========== LLM 提供商（按需启用）==========
 # DeepSeek（推荐，性价比高）
 DEEPSEEK_API_KEY=sk-xxxxxxxxxxxxxxxxxxxxxxxx
 DEEPSEEK_BASE_URL=https://api.deepseek.com
 DEEPSEEK_ENABLED=true
 
-# 阿里百炼（国产稳定）
+# 阿里百炼
 DASHSCOPE_API_KEY=sk-xxxxxxxxxxxxxxxxxxxxxxxx
+DASHSCOPE_ENABLED=false
+
+# OpenAI
+OPENAI_API_KEY=sk-xxxxxxxxxxxxxxxxxxxxxxxx
+OPENAI_ENABLED=false
+
+# 硅基流动
+SILICONFLOW_API_KEY=sk-xxxxxxxxxxxxxxxxxxxxxxxx
+SILICONFLOW_ENABLED=false
 
 # ========== 股票数据源 ==========
 DEFAULT_CHINA_DATA_SOURCE=akshare
 
-# Tushare（专业 A 股数据，可选）
+# Tushare（可选）
 TUSHARE_TOKEN=your_tushare_token
 TUSHARE_ENABLED=false
+
+# ========== 安全配置（生产环境务必修改）==========
+SECRET_KEY=please-change-me-in-production
+ALGORITHM=HS256
+ACCESS_TOKEN_EXPIRE_MINUTES=480
+REFRESH_TOKEN_EXPIRE_DAYS=30
+CSRF_SECRET=please-change-me-in-production
+BCRYPT_ROUNDS=12
+
+# ========== 调试与日志 ==========
+DEBUG=false
+LOG_LEVEL=INFO
 ```
 
-#### 5. 启动服务
+**连接串格式说明**：
+
+- **MongoDB**：`mongodb://<user>:<password>@<host>:<port>/<database>?authSource=admin`，其中 `authSource=admin` 表示在 admin 数据库中完成认证。
+- **Redis**：`redis://:<password>@<host>:<port>/<db>`，空用户名 + 密码的写法。
+
+> ⚠️ **重要提示**：生产环境务必修改 `SECRET_KEY` 和 `CSRF_SECRET`，并使用强密码。
+
+### 4. 配置前端环境
 
 ```bash
-docker compose up -d
+cd frontend
+# 推荐使用 yarn
+yarn install
+# 或使用 npm
+# npm install
+cd ..
 ```
 
-第一次启动会拉取镜像并构建，可能需要 5~10 分钟。查看日志：
+### 5. 初始化数据库
+
+> 🔴 **关键步骤**：首次部署必须执行数据库初始化，否则登录会提示「系统配置缺失」或 API 返回 404。
 
 ```bash
-docker compose logs -f backend
+# 激活虚拟环境（如果未激活）
+source venv/bin/activate
+
+# 导入配置 + 创建默认管理员用户（admin / admin123）
+python scripts/import_config_and_create_user.py --host
 ```
 
-#### 6. 访问服务
+该脚本会完成：
 
-| 服务 | 地址 | 说明 |
-|------|------|------|
-| **前端界面** | http://localhost:3000 | 主应用入口 |
-| **后端 API** | http://localhost:8000 | RESTful API |
-| **API 文档** | http://localhost:8000/docs | Swagger UI |
-| **健康检查** | http://localhost:8000/api/health | 服务状态 |
+- 导入系统配置数据（LLM 提供商、市场分类、基础参数等）到 MongoDB
+- 创建默认管理员用户（用户名 `admin`，密码 `admin123`）
+- 初始化基础集合与索引
+
+如果配置文件不存在，可仅创建用户：
+
+```bash
+python scripts/import_config_and_create_user.py --create-user-only --host
+```
+
+执行成功后可通过 MongoDB 校验：
+
+```bash
+mongosh "mongodb://admin:tradingagents123@<mongo-host>:27017/tradingagents?authSource=admin"
+> show collections
+> db.users.find({ username: "admin" })
+```
+
+### 6. 启动应用
+
+#### 6.1 启动后端
+
+```bash
+# 激活虚拟环境
+source venv/bin/activate
+
+# 启动 FastAPI（监听 0.0.0.0:8000）
+python -m app
+```
+
+后端启动后默认监听 `http://localhost:8000`，可通过 `/health` 与 `/api/health` 检查状态。
+
+#### 6.2 启动前端
+
+```bash
+cd frontend
+yarn dev
+# 或 npm run dev
+```
+
+前端开发服务默认监听 `http://localhost:3000`（或 `5173`，视 Vite 配置而定）。
+
+### 7. 验证安装
+
+```bash
+# 后端健康检查
+curl http://localhost:8000/api/health
+# 预期：{"status":"healthy","timestamp":"..."}
+
+# 检查系统配置（确认数据库初始化成功）
+curl http://localhost:8000/api/system/config
+
+# 浏览器访问
+# API 文档：  http://localhost:8000/docs
+# 前端界面：  http://localhost:3000
+```
 
 **默认管理员账号**：
 
@@ -183,80 +333,257 @@ docker compose logs -f backend
 
 > ⚠️ **首次登录后请立即修改默认密码！**
 
-#### 7. 常用运维命令
+---
+
+## 方式二：Docker Compose 部署
+
+> 📌 **本章节与方式一完全独立**，无需在 Linux 上安装 Python 虚拟环境、MongoDB、Redis，所有依赖都通过容器编排拉起。如果已阅读方式一，可直接跳到本节。
+
+### 部署架构
+
+`docker-compose.hub.nginx.yml` 编排了 **5 个容器**（Nginx + 前端 + 后端 + MongoDB + Redis），通过 Nginx 统一对外暴露 `80` 端口：
+
+```
+┌─────────────────────────────────────────────────────────────┐
+│                   Nginx (宿主机 :80)                         │
+│  ┌────────────────────────────────────────────────────┐     │
+│  │  前端静态资源 (/)                                    │     │
+│  │  API 反向代理  (/api → backend:8000)                │     │
+│  └────────────────────────────────────────────────────┘     │
+└─────────────────────────────────────────────────────────────┘
+                  │                            │
+                  ▼                            ▼
+        ┌──────────────────┐         ┌──────────────────┐
+        │  frontend        │         │  backend         │
+        │  Vue 3 + Nginx   │         │  FastAPI         │
+        │  容器 :80        │         │  容器 :8000      │
+        └──────────────────┘         └──────────────────┘
+                                            │
+                          ┌─────────────────┴─────────────────┐
+                          ▼                                   ▼
+                  ┌──────────────────┐                ┌──────────────────┐
+                  │  mongodb         │                │  redis           │
+                  │  mongo:4.4       │                │  redis:7-alpine  │
+                  │  :27017          │                │  :6379           │
+                  │  数据持久化       │                │  缓存加速         │
+                  └──────────────────┘                └──────────────────┘
+```
+
+用户只需访问 `http://服务器IP` 即可使用完整系统。
+
+### 1. 系统要求
+
+| 项目 | 最低 | 推荐 |
+|------|------|------|
+| CPU | 2 核 | 4 核+ |
+| 内存 | 4 GB | 8 GB+ |
+| 磁盘 | 20 GB | 50 GB+ |
+| 网络 | 10 Mbps | 100 Mbps+ |
+| Docker | 20.10+ | 最新稳定版 |
+| Docker Compose | 2.0+ | V2 插件版 |
+
+### 2. 安装 Docker（Linux）
+
+```bash
+# Ubuntu / Debian
+sudo apt-get update
+sudo apt-get install -y ca-certificates curl gnupg lsb-release
+sudo mkdir -p /etc/apt/keyrings
+curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo gpg --dearmor -o /etc/apt/keyrings/docker.gpg
+echo "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/docker.gpg] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable" \
+  | sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
+sudo apt-get update
+sudo apt-get install -y docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin
+
+# 启动并设开机自启
+sudo systemctl start docker
+sudo systemctl enable docker
+
+# 将当前用户加入 docker 组（避免每次使用 sudo）
+sudo usermod -aG docker $USER
+newgrp docker
+
+# 验证
+docker --version
+docker compose version
+```
+
+> 镜像拉取慢可参考 [Docker 镜像加速](/blog/mirror_docker_image/)。
+
+### 3. 准备部署目录
+
+```bash
+mkdir -p ~/tradingagents-demo && cd ~/tradingagents-demo
+```
+
+### 4. 下载部署文件
+
+```bash
+# 主 Docker Compose 编排（含 Nginx 反向代理 + 全部服务）
+curl -O https://raw.githubusercontent.com/hsliuping/TradingAgents-CN/main/docker-compose.hub.nginx.yml
+
+# 环境变量模板
+curl -O https://raw.githubusercontent.com/hsliuping/TradingAgents-CN/main/.env.docker
+mv .env.docker .env
+
+# Nginx 反向代理配置
+mkdir -p nginx
+curl -o nginx/nginx.conf https://raw.githubusercontent.com/hsliuping/TradingAgents-CN/main/nginx/nginx.conf
+```
+
+最终目录结构：
+
+```
+~/tradingagents-demo/
+├── docker-compose.hub.nginx.yml   # Compose 编排
+├── .env                           # 环境变量
+└── nginx/
+    └── nginx.conf                 # 反向代理配置
+```
+
+### 5. 编辑 `.env` 配置
+
+`nano .env`，至少配置 **一个 LLM 厂商的 API Key**：
+
+```env
+# ========== 必需：至少一个 LLM 提供商 ==========
+# DeepSeek（推荐，性价比高）
+DEEPSEEK_API_KEY=sk-xxxxxxxxxxxxxxxxxxxxxxxx
+DEEPSEEK_BASE_URL=https://api.deepseek.com
+DEEPSEEK_ENABLED=true
+
+# 阿里百炼（国产稳定）
+DASHSCOPE_API_KEY=sk-xxxxxxxxxxxxxxxxxxxxxxxx
+DASHSCOPE_ENABLED=false
+
+# ========== 股票数据源 ==========
+DEFAULT_CHINA_DATA_SOURCE=akshare
+
+# Tushare（可选，专业 A 股数据）
+TUSHARE_TOKEN=your_tushare_token
+TUSHARE_ENABLED=false
+```
+
+> Compose 中 MongoDB / Redis 已被编排进 `tradingagents-network`，**无需手动配置** `MONGODB_HOST` / `REDIS_HOST`，容器之间使用服务名直连。
+
+### 6. 启动服务
+
+```bash
+# 拉取镜像（首次约 2~5 分钟）
+docker compose -f docker-compose.hub.nginx.yml pull
+
+# 后台启动
+docker compose -f docker-compose.hub.nginx.yml up -d
+
+# 查看服务状态（等待所有服务变为 healthy）
+docker compose -f docker-compose.hub.nginx.yml ps
+```
+
+预期输出：
+
+```
+NAME                       STATUS
+tradingagents-backend       Up (healthy)
+tradingagents-frontend      Up (healthy)
+tradingagents-mongodb       Up (healthy)
+tradingagents-nginx          Up
+tradingagents-redis         Up (healthy)
+```
+
+### 7. 初始化数据
+
+> 🔴 **关键步骤**：首次部署必须执行，否则登录会提示「系统配置缺失」。
+
+```bash
+docker exec -it tradingagents-backend python scripts/import_config_and_create_user.py
+```
+
+脚本会完成：
+
+- 导入系统配置（LLM 厂商、市场分类等）到 MongoDB
+- 创建默认管理员用户（`admin` / `admin123`）
+- 初始化基础集合与索引
+
+### 8. 访问系统
+
+| 服务 | 地址 | 说明 |
+|------|------|------|
+| **主入口** | `http://localhost` 或 `http://<服务器IP>` | Nginx 统一入口 |
+| **后端 API（直连）** | `http://localhost:8000` | RESTful API |
+| **API 文档** | `http://localhost:8000/docs` | Swagger UI |
+
+**默认管理员账号**：
+
+- 用户名：`admin`
+- 密码：`admin123`
+
+> ⚠️ **首次登录后请立即修改默认密码！**
+
+### 9. 常用运维命令
 
 ```bash
 # 查看所有容器状态
-docker compose ps
+docker compose -f docker-compose.hub.nginx.yml ps
 
-# 查看后端日志
-docker compose logs -f backend
+# 实时查看后端日志
+docker logs -f tradingagents-backend
 
 # 重启服务
-docker compose restart
+docker compose -f docker-compose.hub.nginx.yml restart
 
-# 停止服务
-docker compose down
+# 停止服务（保留数据）
+docker compose -f docker-compose.hub.nginx.yml down
 
-# 停止并清理数据卷（慎用）
-docker compose down -v
+# 停止并清理数据卷（⚠️ 慎用，会删除所有数据）
+docker compose -f docker-compose.hub.nginx.yml down -v
 
 # 进入后端容器调试
-docker compose exec backend bash
+docker exec -it tradingagents-backend bash
+
+# 进入 MongoDB
+docker exec -it tradingagents-mongodb mongosh -u admin -p tradingagents123 --authenticationDatabase admin
 ```
 
-### 方式二：源码部署
+### 10. 端口冲突处理
 
-适合需要深度定制的开发者。
+如果宿主机 `80` 端口被占用（如 Apache、Nginx、IIS），修改 `docker-compose.hub.nginx.yml`：
 
-#### 1. 安装基础依赖
+```yaml
+services:
+  nginx:
+    ports:
+      - "8080:80"   # 改为 8080
+```
 
-- Python 3.10+
-- MongoDB 4.4+
-- Redis 6.2+
-- Node.js 18+（前端构建）
+然后访问 `http://localhost:8080`。
 
-#### 2. 克隆代码
+### 11. 数据备份
 
 ```bash
-git clone https://github.com/hsliuping/TradingAgents-CN.git
-cd TradingAgents-CN
+# 备份 MongoDB 数据卷
+docker run --rm \
+  -v tradingagents_mongodb_data:/data \
+  -v $(pwd):/backup \
+  alpine tar czf /backup/mongodb_$(date +%Y%m%d).tar.gz /data
+
+# 备份 Redis 数据卷
+docker run --rm \
+  -v tradingagents_redis_data:/data \
+  -v $(pwd):/backup \
+  alpine tar czf /backup/redis_$(date +%Y%m%d).tar.gz /data
 ```
 
-#### 3. 后端启动
+### 12. 更新升级
 
 ```bash
-# 创建虚拟环境
-python -m venv env
-source env/bin/activate  # Windows: env\Scripts\activate
+# 拉取最新镜像
+docker compose -f docker-compose.hub.nginx.yml pull
 
-# 安装依赖
-pip install -r requirements.txt
-
-# 复制并编辑环境配置
-cp .env.example .env
-nano .env
-
-# 初始化数据库
-python scripts/import_config_and_create_user.py
-
-# 启动 FastAPI 后端
-python -m app
+# 重启服务
+docker compose -f docker-compose.hub.nginx.yml up -d
 ```
 
-后端默认监听 `http://localhost:8000`，API 文档位于 `/docs`。
-
-#### 4. 前端启动
-
-```bash
-cd frontend
-pnpm install  # 或 npm install
-pnpm dev      # 开发模式
-# 或
-pnpm build    # 生产构建
-```
-
-开发模式默认监听 `http://localhost:5173`。
+---
 
 ## 关键配置详解
 
@@ -292,7 +619,21 @@ pnpm build    # 生产构建
 NO_PROXY=localhost,127.0.0.1,eastmoney.com,push2.eastmoney.com,gtimg.cn,sinaimg.cn,api.tushare.pro,baostock.com
 ```
 
-> Windows 不支持通配符 `*`，必须使用完整域名。
+### 后端常用环境变量
+
+```env
+# 缓存
+CACHE_TTL=3600
+CACHE_MAX_SIZE=1000
+
+# 日志
+LOG_LEVEL=INFO
+LOG_FILE=logs/app.log
+
+# 数据库连接池
+MONGODB_MAX_POOL_SIZE=100
+REDIS_MAX_CONNECTIONS=50
+```
 
 ## 快速上手使用
 
@@ -336,35 +677,97 @@ NO_PROXY=localhost,127.0.0.1,eastmoney.com,push2.eastmoney.com,gtimg.cn,sinaimg.
 
 ## 常见问题
 
-### 启动失败 / 端口被占用
+### 后端启动失败：端口被占用
 
-修改 `docker-compose.yml` 中的端口映射：
+```bash
+# 查找占用 8000 端口的进程
+lsof -i :8000
 
-```yaml
-services:
-  backend:
-    ports:
-      - "8001:8000"  # 改为 8001
-  frontend:
-    ports:
-      - "3001:80"    # 改为 3001
+# 终止进程
+kill -9 <pid>
+```
+
+修改启动端口（启动时指定）：
+
+```bash
+uvicorn app.main:app --host 0.0.0.0 --port 8001
+```
+
+### Python 依赖安装失败
+
+```bash
+# 升级 pip
+pip install --upgrade pip
+
+# 清理缓存后重试
+pip cache purge
+pip install -r requirements.txt --force-reinstall
 ```
 
 ### MongoDB 连接失败
 
 ```bash
-# Docker 环境
-docker compose logs mongodb
+# 测试连通性
+mongosh "mongodb://admin:tradingagents123@<mongo-host>:27017/tradingagents?authSource=admin"
 
-# 确认 mongodb 健康状态
-docker compose ps
+# 检查防火墙
+sudo ufw status
+sudo iptables -L -n | grep 27017
+
+# 确认 .env 中连接串格式正确（注意 authSource 参数）
 ```
+
+### Redis 连接失败
+
+```bash
+# 测试连通性
+redis-cli -h <redis-host> -p 6379 -a tradingagents123 ping
+
+# 确认 .env 中连接串格式（空用户名 + 密码）
+# redis://:tradingagents123@<host>:6379/0
+```
+
+### 登录时报「系统配置缺失」或 API 404
+
+**根因**：未执行数据库初始化脚本。
+
+```bash
+source venv/bin/activate
+python scripts/import_config_and_create_user.py --host
+```
+
+如果脚本找不到配置文件，使用：
+
+```bash
+python scripts/import_config_and_create_user.py --create-user-only --host
+```
+
+验证：
+
+```bash
+curl http://localhost:8000/api/system/config
+# 应返回 JSON 配置信息，而非 404
+```
+
+### 默认用户 admin/admin123 无法登录
+
+1. 确认初始化脚本已执行：`python scripts/import_config_and_create_user.py --host`
+2. 检查用户是否存在：
+   ```bash
+   mongosh "mongodb://admin:tradingagents123@<mongo-host>:27017/tradingagents?authSource=admin"
+   > use tradingagents
+   > db.users.find({ username: "admin" })
+   ```
+3. 不存在则重建：
+   ```bash
+   python scripts/import_config_and_create_user.py --create-user-only --host
+   ```
 
 ### API Key 无效
 
 1. 检查复制是否有空格或换行
 2. 确认账户有足够余额
-3. 部分厂商需要在 `provider` 配置页面启用（`XXX_ENABLED=true`）
+3. 部分厂商需要在 `.env` 中显式启用（`XXX_ENABLED=true`）
 
 ### 分析速度慢
 
@@ -372,12 +775,77 @@ docker compose ps
 - 降低研究深度（浅度 / 轻度）
 - 关闭不需要的分析师（只保留 1~2 个）
 
-### 镜像拉取慢
+### 前端构建失败
 
-参考之前的 [Docker 镜像加速](/blog/mirror_docker_image/) 配置镜像加速器，或在 `.env` 中加入：
+```bash
+# 检查 Node.js 版本
+node --version
 
-```env
-DOCKER_REGISTRY_MIRROR=https://your-mirror.com
+# 内存不足时增加 Node.js 内存限制
+export NODE_OPTIONS="--max-old-space-size=4096"
+yarn dev
+```
+
+## 生产部署建议
+
+### 以 systemd 托管后端
+
+创建 `/etc/systemd/system/tradingagents.service`：
+
+```ini
+[Unit]
+Description=TradingAgents-CN Backend
+After=network.target
+
+[Service]
+Type=simple
+User=trading
+WorkingDirectory=/opt/TradingAgents-CN
+Environment="PATH=/opt/TradingAgents-CN/venv/bin"
+ExecStart=/opt/TradingAgents-CN/venv/bin/python -m app
+Restart=always
+RestartSec=5
+
+[Install]
+WantedBy=multi-user.target
+```
+
+启用：
+
+```bash
+sudo systemctl daemon-reload
+sudo systemctl enable --now tradingagents
+sudo systemctl status tradingagents
+```
+
+### Nginx 反向代理（可选）
+
+```nginx
+server {
+    listen 80;
+    server_name your-domain.com;
+
+    location /api/ {
+        proxy_pass http://127.0.0.1:8000/api/;
+        proxy_set_header Host $host;
+        proxy_set_header X-Real-IP $remote_addr;
+    }
+
+    location / {
+        proxy_pass http://127.0.0.1:3000;
+    }
+}
+```
+
+### 数据备份
+
+```bash
+# 备份 MongoDB
+mongodump --uri "mongodb://admin:tradingagents123@<mongo-host>:27017/tradingagents?authSource=admin" \
+          --out ./backup/$(date +%Y%m%d)
+
+# 备份 Redis
+redis-cli -h <redis-host> -a tradingagents123 SAVE
 ```
 
 ## 注意事项
@@ -390,7 +858,11 @@ DOCKER_REGISTRY_MIRROR=https://your-mirror.com
 
 ## 总结
 
-TradingAgents-CN 是在原版 TradingAgents 基础上，针对中文用户精心打磨的多智能体金融分析平台。它解决了原版在国内使用的数据源、模型、界面三大痛点，同时通过 Docker 多架构、动态供应商管理、专业报告导出等特性，提供了生产可用的完整体验。
+本文档针对 Linux 服务器 + 现成 MongoDB/Redis 的部署场景，给出了从克隆、配置、初始化到 systemd 托管的完整流程。核心要点：
+
+1. 始终使用 `python scripts/import_config_and_create_user.py --host` 完成数据库初始化
+2. `.env` 中连接外部 MongoDB/Redis 时，注意认证参数（`authSource`、空用户名写法）
+3. 生产环境务必修改默认密码与 `SECRET_KEY`
 
 无论是想学习多智能体 LLM 应用的架构设计，还是希望搭建自己的股票分析研究环境，TradingAgents-CN 都是一个值得尝试的开源项目。
 
