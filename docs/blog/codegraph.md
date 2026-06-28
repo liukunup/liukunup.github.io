@@ -261,3 +261,44 @@ agent writes src/Widget.ts
 任何时候可通过 `codegraph status` 验证同步状态——若存在待同步文件，会显示 `### Pending sync:` 段落并列出文件名与编辑时长。
 
 少数需要手动 `codegraph sync` 的情形：监听被禁用（沙箱环境或 `CODEGRAPH_NO_DAEMON=1`）、或在代理会话之外以脚本方式访问索引需要在脚本开头做一次预同步。
+
+## 库嵌入 API
+
+CodeGraph 可作为 npm 包直接嵌入到其他 Node.js 应用（如 Electron 工具链），不限于 MCP / CLI 场景：
+
+```js
+import CodeGraph from '@colbymchenry/codegraph';
+// CommonJS 也可用：
+//   const { CodeGraph } = require('@colbymchenry/codegraph');
+
+const cg = await CodeGraph.init('/path/to/project');
+// 或：const cg = await CodeGraph.open('/path/to/project');
+
+await cg.indexAll({
+  onProgress: (p) => console.log(`${p.phase}: ${p.current}/${p.total}`)
+});
+
+const results = cg.searchNodes('UserService');
+const callers = cg.getCallers(results[0].node.id);
+const context = await cg.buildContext('fix login bug', { maxNodes: 20, includeCode: true, format: 'markdown' });
+const impact = cg.getImpactRadius(results[0].node.id, 2);
+
+cg.watch();   // 文件变更时自动同步
+cg.unwatch(); // 停止监听
+cg.close();
+```
+
+**底层构建块**也从同一入口导出，可用于更精细的集成：
+
+- `DatabaseConnection`
+- `QueryBuilder`
+- `getDatabasePath`
+- `initGrammars` / `loadGrammarsForLanguages`
+- `FileLock`
+
+**嵌入要求**
+
+- 从 npm 安装（`npm i @colbymchenry/codegraph`）以拉取匹配的 per-platform 包
+- API 需要 **Node 22.5+** 以使用内置 `node:sqlite`（Electron 当其捆绑 Node ≥ 22.5 时亦可用）
+- CLI 与 MCP 服务器不受此限制——它们跑在自包含的 bundled runtime 上
+- TypeScript 类型随包发布；建议保持 `@types/node` 可用并设置 `skipLibCheck: true`
