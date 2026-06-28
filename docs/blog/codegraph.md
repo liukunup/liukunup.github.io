@@ -347,3 +347,30 @@ CodeGraph **默认零配置**。项目根目录可选的 `codegraph.json` 仅在
 | `DO_NOT_TRACK` | 设为 `1` 时禁用遥测（与 `CODEGRAPH_TELEMETRY=0` 等价） | 关闭 |
 | `CODEGRAPH_MCP_TOOLS` | 重新启用被隐藏的 MCP 工具，逗号分隔（如 `explore,node,search,callers`） | 仅 `explore` |
 | `CODEGRAPH_DIR` | 自定义 `.codegraph` 目录名（如 `.codegraph-win` 用于 Windows / WSL 共享 checkout） | `.codegraph` |
+
+## 遥测与隐私
+
+CodeGraph 收集**匿名使用统计**——哪些工具和命令被使用、哪些语言被索引，用于指导开发优先级。
+
+**绝不收集**：代码、路径、文件或符号名、查询、IP 地址。
+
+**聚合方式**：使用情况在本地聚合成每日总数后再发送。
+
+**Ingest 端点**：[仓库内公开代码 `telemetry-worker/`](https://github.com/colbymchenry/codegraph/blob/main/telemetry-worker)，强制执行文档化的字段清单。
+
+**三种关闭方式**（任选其一）：
+
+```bash
+codegraph telemetry off    # 切换开关
+CODEGRAPH_TELEMETRY=0      # 环境变量
+DO_NOT_TRACK=1             # 通用退出信号
+```
+
+**隐私保证**
+
+- 100% 本地：数据不离开机器
+- 无 API Key
+- 无外部服务
+- 纯 SQLite 数据库
+
+**许可证**：MIT
