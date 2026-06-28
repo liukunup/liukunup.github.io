@@ -105,18 +105,75 @@ codegraph init
 ## CLI 命令
 
 ```bash
-codegraph init [path]           # 初始化项目
-codegraph index [path]          # 完整索引
-codegraph sync [path]           # 增量更新
-codegraph status [path]         # 显示状态
-codegraph query <search>        # 搜索符号
-codegraph explore <query>       # 探索代码
-codegraph node <symbol|file>     # 查看符号详情
-codegraph callers <symbol>       # 查找调用者
-codegraph callees <symbol>      # 查找被调用者
-codegraph impact <symbol>       # 分析影响范围
-codegraph affected [files...]   # 查找受影响的测试文件
-codegraph upgrade [version]     # 升级版本
+codegraph                         # 运行交互式安装器
+codegraph install                 # 运行安装器（显式）
+codegraph uninstall               # 从代理中卸载 CodeGraph
+codegraph init [path]             # 初始化项目 + 构建图谱
+codegraph uninit [path]           # 从项目中移除（--force 跳过确认）
+codegraph index [path]            # 完整索引（--force 重建，--quiet 精简输出）
+codegraph sync [path]             # 增量更新
+codegraph status [path]           # 显示统计信息
+codegraph unlock [path]           # 移除阻塞索引的过期锁文件
+codegraph query <search>          # 搜索符号（--kind, --limit, --json）
+codegraph explore <query>         # 一次返回相关符号的源码 + 调用路径
+codegraph node <symbol|file>      # 单个符号的源码 + 调用者，或带行号读文件
+codegraph files [path]            # 显示文件结构（--format, --filter, --max-depth, --json）
+codegraph callers <symbol>        # 查找调用者（--limit, --json）
+codegraph callees <symbol>        # 查找被调用者（--limit, --json）
+codegraph impact <symbol>         # 分析影响范围（--depth, --json）
+codegraph affected [files...]     # 查找受影响的测试文件（见下文）
+codegraph daemon                  # 管理后台守护进程（别名：daemons）
+codegraph telemetry [on|off]      # 显示或切换匿名使用遥测
+codegraph upgrade [version]       # 升级（--check 检查更新，--force 强制）
+codegraph version                 # 打印已安装版本（同 -v / --version）
+codegraph help [command]          # 显示帮助，可指定具体命令
+```
+
+### `codegraph install` 选项
+
+| Flag | 取值 | 默认 |
+|------|------|------|
+| `--target` | `auto` / `all` / `none` / csv（如 `claude,cursor,...`） | 提示 |
+| `--location` | `global` / `local` | 提示 |
+| `--yes` | boolean | 每步提示 |
+| `--no-permissions` | boolean，跳过 Claude 自动允许列表 | 启用权限 |
+| `--print-config <id>` | 仅打印某个代理的配置片段，不写文件 | — |
+
+非交互式示例：
+
+```bash
+codegraph install --yes                              # 自动检测代理，全局安装
+codegraph install --target=cursor,claude --yes       # 显式目标列表
+codegraph install --target=auto --location=local     # 检测到的代理，项目本地
+codegraph install --print-config codex               # 打印 codex 片段
+```
+
+### `codegraph affected` + CI 集成
+
+沿 import 依赖传递追踪，找出改动源文件影响到的测试文件：
+
+```bash
+codegraph affected src/utils.ts src/api.ts         # 显式传入文件
+git diff --name-only | codegraph affected --stdin  # 从 git diff 管道输入
+codegraph affected src/auth.ts --filter "e2e/*"    # 自定义测试文件 glob
+```
+
+| 选项 | 描述 | 默认 |
+|------|------|------|
+| `--stdin` | 从 stdin 读取文件列表 | `false` |
+| `-d, --depth <n>` | 最大依赖遍历深度 | `5` |
+| `-f, --filter <glob>` | 自定义测试文件匹配 glob | 自动检测 |
+| `-j, --json` | 输出 JSON | `false` |
+| `-q, --quiet` | 仅输出文件路径 | `false` |
+
+CI / 钩子示例：
+
+```bash
+#!/usr/bin/env bash
+AFFECTED=$(git diff --name-only HEAD | codegraph affected --stdin --quiet)
+if [ -n "$AFFECTED" ]; then
+  npx vitest run $AFFECTED
+fi
 ```
 
 ## MCP 工具
