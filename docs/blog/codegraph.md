@@ -241,3 +241,23 @@ CODEGRAPH_MCP_TOOLS=explore,node,search,callers
 - **Fewer Tool Calls** — 实测在 7 个真实代码库中平均减少 58% 工具调用
 - **Faster Answers** — 同一组测试中平均快 22%，文件读取近乎为零
 - **100% Local** — 数据不离开机器，无需 API Key，纯 SQLite 数据库
+
+## 始终新鲜：Auto-Sync 三层机制
+
+当你或代理改动代码时，CodeGraph 通过三层机制保证索引永不过期——即便代理在防抖窗口内发起查询，也不会给出静默的错误答案：
+
+1. **文件监听 + 防抖同步** — 原生 `FSEvents` / `inotify` / `ReadDirectoryChangesW` 监听源码变更，防抖窗口（默认 `2000ms`，可通过 `CODEGRAPH_WATCH_DEBOUNCE_MS` 调节，clamp `[100ms, 60s]`）内批量编辑会折叠为一次同步。
+2. **逐文件陈旧横幅** — 防抖窗口内，若 MCP 工具响应引用了尚未同步完成的文件，会在响应顶部插入 `⚠️` 横幅并指引代理 `Read` 该文件。未被引用但仍在等待的待同步文件以小型页脚呈现。无论哪种，代理都会得到明确信号——已在 Claude Code 上验证代理会读横幅后说「Reading the file directly for the live content」。
+3. **连入时追赶** — MCP 服务器每次（重）连时，先用 `(size, mtime)` + content-hash 对账工作树，再回答首次查询——确保代理空闲期间通过 `git pull`、其他编辑器或上一次会话造成的编辑在下次会话首调用时即被吸收。
+
+```
+agent writes src/Widget.ts
+  → watcher fires (<100ms)
+  → debounce (default 2s)
+  → sync; Widget.ts is in the index
+  → next agent query sees it
+```
+
+任何时候可通过 `codegraph status` 验证同步状态——若存在待同步文件，会显示 `### Pending sync:` 段落并列出文件名与编辑时长。
+
+少数需要手动 `codegraph sync` 的情形：监听被禁用（沙箱环境或 `CODEGRAPH_NO_DAEMON=1`）、或在代理会话之外以脚本方式访问索引需要在脚本开头做一次预同步。
