@@ -1,7 +1,7 @@
 ---
-title: CLI-Anything：让所有软件成为 Agent 的原生工具
+title: CLI-Anything
 createTime: 2026/06/28 00:00:00
-permalink: /ai/agent/cli-anything/
+permalink: /ai/cli/cli-anything/
 tags:
   - CLI-Anything
   - HKUDS
