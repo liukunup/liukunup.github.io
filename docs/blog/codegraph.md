@@ -178,12 +178,26 @@ fi
 
 ## MCP 工具
 
+CodeGraph 作为 MCP 服务器运行时，按设计**只暴露一个工具**——`codegraph_explore`。行为测量表明单一强工具比一组窄工具更能引导代理，减少误选并节省每轮会话的上下文。其余工具**功能完整但默认隐藏**，因其返回值已内联在 `codegraph_explore` 的爆炸半径、关系图、符号源码中。
+
 | 工具 | 用途 |
 |------|------|
-| `codegraph_explore` | **主要工具**。一次调用回答几乎任何问题，返回相关符号的源代码及关系图 |
-| `codegraph_node` | 查看单个符号的完整源代码及调用者/被调用者链 |
-| `codegraph_search` | 按名称搜索符号 |
-| `codegraph_callers` | 查找函数的所有调用点 |
+| `codegraph_explore` | **主要工具**。一次调用回答几乎任何问题——「X 怎么工作」、流程（「X 如何到达 Y」）、区域调研——返回相关符号的完整源码按文件分组，附带调用路径与爆炸半径。能呈现 grep 无法跟随的动态分派跳跃（callback、React re-render、interface→impl）。在 query 中指名文件或符号即可读到当前带行号的源码。 |
+| `codegraph_node` | 单个符号的源码 + 调用者，或带行号读取文件 |
+| `codegraph_search` | 按名称在整个代码库搜索符号 |
+| `codegraph_callers` | 查找调用函数/方法的所有点 |
+| `codegraph_callees` | 查找函数/方法调用的所有内容 |
+| `codegraph_impact` | 分析改变某符号会影响哪些代码 |
+| `codegraph_files` | 显示项目文件结构 |
+| `codegraph_status` | 显示项目统计信息 |
+
+通过 `CODEGRAPH_MCP_TOOLS` 环境变量可重新启用隐藏工具，例如：
+
+```bash
+CODEGRAPH_MCP_TOOLS=explore,node,search,callers
+```
+
+即使服务器所在根目录没有 `.codegraph/` 索引，工具仍然可用：通过 `projectPath` 参数查询任何已建立索引的项目。
 
 ## 基准测试
 
