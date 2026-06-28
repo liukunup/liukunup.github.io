@@ -403,3 +403,48 @@ DO_NOT_TRACK=1             # 通用退出信号
 | Lua | `.lua` | 完整支持（function、带 receiver 的 method、local 变量、`require` import、call edge） |
 | Luau | `.luau` | 完整支持（Lua 全部 + `type`/`export type` alias、typed signature、Roblox instance-path `require`） |
 | R | `.R`, `.r` | 完整支持（任意赋值形式的 function、S4/R5/R6 class with method、`library`/`require` import、`source()` 文件引用、call edge） |
+
+## 框架感知路由
+
+CodeGraph 识别 Web 框架的路由文件，并发出 `route` 节点通过 `references` 边链接到 handler class 或 function。查询某个 view/controller 的调用者时，会同时呈现绑定它的 URL pattern。
+
+| 框架 | 识别形状 |
+|------|----------|
+| Django | `urls.py` 中的 `path()`、`re_path()`、`url()`、`include()`（CBV `.as_view()`、dotted path） |
+| Flask | `@app.route('/path', methods=[...])`、blueprint route |
+| FastAPI | `@app.get(...)`、`@router.post(...)` 等所有标准方法 |
+| Express | `app.get(...)`、`router.post(...)` 含 middleware chain |
+| NestJS | `@Controller` + `@Get/@Post/...`，GraphQL `@Resolver` + `@Query/@Mutation`，`@MessagePattern`/`@EventPattern`，`@SubscribeMessage` |
+| Laravel | `Route::get()`、`Route::resource()`、`Controller@action`、tuple 语法 |
+| Drupal | `*.routing.yml` route（`_controller`、`_form`、entity handler）；`.module`/`.theme`/`.install`/`.inc` 中的 `hook_*` 实现 |
+| Rails | `get '/x', to: 'users#index'`、hash-rocket `=>` 语法 |
+| Spring | method 上的 `@GetMapping`、`@PostMapping`、`@RequestMapping` |
+| Play | `conf/routes` 中的 `GET`/`POST`/… verb route → `Controller.method` action（Scala + Java） |
+| Gin / chi / gorilla / mux | `r.GET(...)`、`router.HandleFunc(...)` |
+| Axum / actix / Rocket | `.route("/x", get(handler))` |
+| ASP.NET | action method 上的 `[HttpGet("/x")]` attribute |
+| Vapor | `app.get("x", use: handler)` |
+| React Router / SvelteKit | route component 节点 |
+| Vue Router / Nuxt | `pages/` file-based route、`server/api/` endpoint、route middleware |
+| Astro | `src/pages/` file-based route（`.astro` page + `.ts` endpoint，`[param]`/`[...rest]` 语法） |
+
+**框架路由实测覆盖率**（每个框架的 canonical app）：
+
+| 框架 | 覆盖率 |
+|------|--------|
+| Express | 100% |
+| FastAPI | 98% |
+| Flask | 100% |
+| NestJS | 96.8% |
+| Gin | 96.5% |
+| Axum | 100% |
+| Rocket | 93.8% |
+| Vapor | 100% |
+| Laravel | 92% |
+| Rails | 89.6% |
+| React Router | 100% |
+| ASP.NET | 83.9% |
+| Spring | 83.3% |
+| Drupal | 78.9% |
+| Play | 76.3% |
+| Django | 74.1% |
