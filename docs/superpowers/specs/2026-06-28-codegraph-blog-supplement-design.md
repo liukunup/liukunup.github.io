@@ -1,7 +1,7 @@
 # CodeGraph 博客增量补充设计
 
 - **日期**：2026-06-28
-- **目标**：将 `docs/blog/codegraph.md` 从约 157 行的精简版扩充为覆盖官方 GitHub README 全量新内容的版本。保留现有 7 处章节，改写 3 处章节（CLI 命令、MCP 工具、基准测试），追加 13 个新章节，新增 front matter tags。
+- **目标**：将 `docs/blog/codegraph.md` 从约 157 行的精简版扩充为覆盖官方 GitHub README 全量新内容的版本。保留现有 7 处章节，改写 3 处章节（CLI 命令、MCP 工具、基准测试），追加 10 个新章节，新增 front matter tags。
 - **范围**：仅修改 `docs/blog/codegraph.md` 一个文件。
 - **内容来源**：GitHub `colbymchenry/codegraph` 仓库 README（已通过 webfetch 抓取并完整解析），不做任何功能、命令、指标的自编。
 
@@ -70,15 +70,15 @@ tags:
 | 工作原理 | 保留 | 不动 |
 | 安装 | 保留 | 不动 |
 | 使用 | 保留 | 不动 |
-| CLI 命令 | **改写** | 12 行简化表 → 21 行完整表 + `install` flags 表 + `affected` 子章节 + CI 钩子示例 |
-| MCP 工具 | **改写** | 4 行表 → 8 行表 + 默认暴露设计理由 + `CODEGRAPH_MCP_TOOLS` 重新启用说明 |
+| CLI 命令 | **改写** | 12 行简化表 → 21 行完整表 + `install` flags 表 + `affected` 子章节（含 CI 钩子示例） |
+| MCP 工具 | **改写** | 4 行表 → 8 行表（含默认隐藏 7 个工具）+ `codegraph_explore` 默认唯一暴露的设计理由 + `CODEGRAPH_MCP_TOOLS` 重新启用说明 |
 | 基准测试 | **改写** | 聚合均数 + 7 仓库简表 → 7 仓库 6 列明细 + 普适收益总结 + 成本规模性注解 + benchmark query 表 + methodology 说明 |
 | 支持的平台 | 保留 | 不动 |
 | 资源链接 | 保留 | 不动 |
 
-### 新增章节：13 节（追加在「资源链接」之后）
+### 新增章节：10 节（追加在「资源链接」之后）
 
-按以下顺序追加：
+按以下顺序追加（CLI/MCP/affected 三项已合并到 §「现有章节改写」的「CLI 命令」与「MCP 工具」内，不在此处重复）：
 
 1. **新增特性（v1.0）**
    - v1.0 已发布；`codegraph upgrade` 一键升级
@@ -90,31 +90,14 @@ tags:
    - 第三层：连入时对账（`(size, mtime)` + content-hash reconciliation）
    - ASCII 流程图：`agent writes → watcher fires → debounce → sync → next query sees it`
 
-3. **完整 CLI 命令**
-   - 21 条命令完整列表（保留现有 12 条 + 新增 9 条）
-   - 新增命令：`install` flags / `uninstall` / `uninit` / `unlock` / `files` / `daemon` / `telemetry` / `version` / `help`
-   - `codegraph install` flag 表：`--target` / `--location` / `--yes` / `--no-permissions` / `--print-config`
-
-4. **`codegraph affected` + CI 集成**
-   - 三个用法示例（参数列表 / `--stdin` 管道 / 自定义 `--filter`）
-   - 5 个选项表（`--stdin` / `-d,--depth` / `-f,--filter` / `-j,--json` / `-q,--quiet`）
-   - CI/钩子 bash 脚本完整示例（git diff → affected → vitest run）
-
-5. **完整 MCP 工具**
-   - 8 条工具表（含 `codegraph_explore` 是唯一默认暴露的设计理由）
-   - `codegraph_explore`：核心工具，一次调用返回源代码 + 调用路径 + 爆炸半径
-   - 默认隐藏工具：`codegraph_node` / `codegraph_search` / `codegraph_callers` / `codegraph_callees` / `codegraph_impact` / `codegraph_files` / `codegraph_status`
-   - 重新启用方法：`CODEGRAPH_MCP_TOOLS=explore,node,search,callers`
-   - 跨项目查询：`projectPath` 参数
-
-6. **库嵌入 API**
+3. **库嵌入 API**
    - npm 包导入示例：`import CodeGraph from '@colbymchenry/codegraph'`
    - 完整 API 演示：`init` / `indexAll` / `searchNodes` / `getCallers` / `buildContext` / `getImpactRadius` / `watch` / `unwatch` / `close`
    - 底层构建块：`DatabaseConnection` / `QueryBuilder` / `getDatabasePath` / `initGrammars` / `loadGrammarsForLanguages` / `FileLock`
    - 嵌入要求：Node 22.5+（Electron 内嵌 Node 需达标）；CLI 与 MCP 不受影响
    - TypeScript 类型与 `skipLibCheck: true` 提示
 
-7. **配置文件 codegraph.json**
+4. **配置文件 codegraph.json**
    - 零配置为默认；可选文件仅用于自定义
    - `exclude` 示例：`{"exclude": ["static/", "**/vendor/**"]}`
    - `extensions` 示例：`{"extensions": {".dota_lua": "lua", ".tpl": "php"}}`
@@ -122,11 +105,11 @@ tags:
    - 文件大小限制：> 1 MB 自动跳过
    - 添加后需 `codegraph index` 重建索引
 
-8. **环境变量**
+5. **环境变量**
    - 6 个变量表：`CODEGRAPH_WATCH_DEBOUNCE_MS` / `CODEGRAPH_NO_DAEMON` / `CODEGRAPH_TELEMETRY` / `DO_NOT_TRACK` / `CODEGRAPH_MCP_TOOLS` / `CODEGRAPH_DIR`
    - 每个变量的用途 + 默认值 + 使用场景
 
-9. **遥测与隐私**
+6. **遥测与隐私**
    - 收集项：匿名统计（哪些工具/命令/语言被用）
    - 绝不收集：代码、路径、文件/符号名、查询、IP
    - 本地聚合：每日总数后才发送
@@ -134,20 +117,20 @@ tags:
    - 隐私保证：100% 本地、SQLite、无 API Key、无外部服务
    - 许可证：MIT
 
-10. **支持的语言（22 种详细表）**
-    - 表格列：语言 / 扩展名 / 状态（Full / Partial）
-    - 覆盖：TypeScript / JS / Python / Go / Rust / Java / C# / PHP / Ruby / C / C++ / Objective-C（Partial） / Swift / Kotlin / Scala / Dart / Svelte / Vue / Astro / Liquid / Pascal-Delphi / Lua / Luau / R
+7. **支持的语言（22 种详细表）**
+   - 表格列：语言 / 扩展名 / 状态（Full / Partial）
+   - 覆盖：TypeScript / JS / Python / Go / Rust / Java / C# / PHP / Ruby / C / C++ / Objective-C（Partial） / Swift / Kotlin / Scala / Dart / Svelte / Vue / Astro / Liquid / Pascal-Delphi / Lua / Luau / R
 
-11. **框架感知路由（17 框架）**
-    - 17 框架的路由识别形状表（Django path() / Flask @app.route / FastAPI @router.get / Express app.get / NestJS @Controller / Laravel Route::get / Drupal *.routing.yml / Rails get 'x', to: / Spring @GetMapping / Play conf.routes / Gin r.GET / Axum .route / ASP.NET [HttpGet] / Vapor app.get / React Router + SvelteKit / Vue Router + Nuxt / Astro src/pages/）
-    - 框架路由覆盖率子表（16 框架实测覆盖百分比）
+8. **框架感知路由（17 框架）**
+   - 17 框架的路由识别形状表（Django path() / Flask @app.route / FastAPI @router.get / Express app.get / NestJS @Controller / Laravel Route::get / Drupal *.routing.yml / Rails get 'x', to: / Spring @GetMapping / Play conf.routes / Gin r.GET / Axum .route / ASP.NET [HttpGet] / Vapor app.get / React Router + SvelteKit / Vue Router + Nuxt / Astro src.pages/）
+   - 框架路由覆盖率子表（16 框架实测覆盖百分比）
 
-12. **跨语言桥接（iOS / RN / Expo）**
-    - 10 边界桥接方式表：Swift→ObjC / ObjC→Swift / RN legacy bridge / RN TurboModules / RN native→JS events / Expo Modules / Fabric view components / Legacy Paper view managers
-    - 每行说明 JS/Swift 侧调用 → 原生侧实现 + 桥接手段
-    - 桥接验证仓库表（小/中/大各一）
+9. **跨语言桥接（iOS / RN / Expo）**
+   - 10 边界桥接方式表：Swift→ObjC / ObjC→Swift / RN legacy bridge / RN TurboModules / RN native→JS events / Expo Modules / Fabric view components / Legacy Paper view managers
+   - 每行说明 JS/Swift 侧调用 → 原生侧实现 + 桥接手段
+   - 桥接验证仓库表（小/中/大各一）
 
-13. **故障排查 FAQ**
+10. **故障排查 FAQ**
     - 7 条常见问题：
       1. "CodeGraph not initialized" → 先 `codegraph init`
       2. 索引慢 → 排除 `node_modules` 等
@@ -163,7 +146,7 @@ tags:
 2. front matter 含 `tags` 数组（5 项），`createTime` 为 `2026/06/28`。
 3. 现有 7 处保留章节的文字内容完全未变（标题、段落、列表、表格内容均一致）。
 4. 「CLI 命令」「MCP 工具」「基准测试」三章按改写方案更新；改写后包含原章节的所有信息（不丢失现有信息）。
-5. 「资源链接」之后追加 13 个新章节，按设计顺序排列。
+5. 「资源链接」之后追加 10 个新章节，按设计顺序排列。
 6. 所有新增内容可溯源至 GitHub README，不存在自编的功能/命令/指标。
 7. 所有 Markdown 表格 `|---|` 分隔符对齐；所有代码块围栏闭合。
 8. 所有外链 URL 准确（GitHub / 文档站 / npm / 官方文档）。
