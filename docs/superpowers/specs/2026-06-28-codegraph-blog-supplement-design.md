@@ -24,7 +24,7 @@
 
 - v1.0 发布说明与升级命令
 - Auto-Sync 三层机制（watcher + per-file banner + connect-time catch-up）
-- 完整 21 条 CLI 命令（缺 `install` flags / `uninstall` / `uninit` / `unlock` / `daemon` / `telemetry` / `files` / `version` / `help`）
+- 完整 22 条 CLI 命令（缺 `install` flags / `uninstall` / `uninit` / `unlock` / `files` / `daemon` / `telemetry` / `version` / `help`）
 - 完整 8 条 MCP 工具 + 默认隐藏的 7 个 + `CODEGRAPH_MCP_TOOLS` 环境变量 + 单工具 vs 多工具的设计理由
 - `codegraph install` flags 表与 `--print-config` 用法
 - `codegraph affected` + CI 钩子集成示例
@@ -32,9 +32,9 @@
 - `codegraph.json` 配置（exclude + extensions）+ 默认排除清单
 - 6 个环境变量
 - 遥测透明度（收集项、不收集项、3 种关闭方式）
-- 22 种语言的详细状态表
+- 24 种语言的详细状态表
 - 17 个 Web 框架的路由覆盖百分比
-- 10 个跨语言边界桥接（Swift ↔ ObjC / RN bridge / RN TurboModules / RN events / Expo Modules / Fabric / Paper）
+- 8 个跨语言边界桥接（Swift ↔ ObjC / ObjC → Swift / RN legacy bridge / RN TurboModules / RN native→JS events / Expo Modules / Fabric / Paper）
 - 7 条故障排查 FAQ
 - 跨文件覆盖率（22 种语言的实测覆盖率）
 
@@ -70,7 +70,7 @@ tags:
 | 工作原理 | 保留 | 不动 |
 | 安装 | 保留 | 不动 |
 | 使用 | 保留 | 不动 |
-| CLI 命令 | **改写** | 12 行简化表 → 21 行完整表 + `install` flags 表 + `affected` 子章节（含 CI 钩子示例） |
+| CLI 命令 | **改写** | 12 行简化表 → 22 行完整表 + `install` flags 表 + `affected` 子章节（含 CI 钩子示例） |
 | MCP 工具 | **改写** | 4 行表 → 8 行表（含默认隐藏 7 个工具）+ `codegraph_explore` 默认唯一暴露的设计理由 + `CODEGRAPH_MCP_TOOLS` 重新启用说明 |
 | 基准测试 | **改写** | 聚合均数 + 7 仓库简表 → 7 仓库 6 列明细 + 普适收益总结 + 成本规模性注解 + benchmark query 表 + methodology 说明 |
 | 支持的平台 | 保留 | 不动 |
@@ -126,7 +126,7 @@ tags:
    - 框架路由覆盖率子表（16 框架实测覆盖百分比）
 
 9. **跨语言桥接（iOS / RN / Expo）**
-   - 10 边界桥接方式表：Swift→ObjC / ObjC→Swift / RN legacy bridge / RN TurboModules / RN native→JS events / Expo Modules / Fabric view components / Legacy Paper view managers
+   - 8 边界桥接方式表：Swift→ObjC / ObjC→Swift / RN legacy bridge / RN TurboModules / RN native→JS events / Expo Modules / Fabric view components / Legacy Paper view managers
    - 每行说明 JS/Swift 侧调用 → 原生侧实现 + 桥接手段
    - 桥接验证仓库表（小/中/大各一）
 
