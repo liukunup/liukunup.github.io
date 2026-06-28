@@ -448,3 +448,30 @@ CodeGraph 识别 Web 框架的路由文件，并发出 `route` 节点通过 `ref
 | Drupal | 78.9% |
 | Play | 76.3% |
 | Django | 74.1% |
+
+## 跨语言桥接（iOS / RN / Expo）
+
+真实的 iOS 与 React Native 代码库跨越多种语言——Swift 调用方触发 Objective-C selector（已自动桥接），JS 文件通过 RN bridge 调用原生模块，JSX 组件委托给原生 view manager。静态 tree-sitter 抽取会在每种语言边界停止。CodeGraph 桥接这些边界，使 `codegraph_explore` 端到端连通整个流程——调用路径与爆炸半径跨过边界而非止于边界。
+
+| 边界 | JS / Swift 侧 | 原生侧 | 桥接方式 |
+|------|---------------|--------|----------|
+| Swift → ObjC | Swift `obj.foo(bar:)` | ObjC selector `-fooWithBar:` | `@objc` 自动桥接规则（含 init/property/protocol 形式）+ Cocoa 前缀（`With`/`For`/`By`/`In`/`On`/`At`/…） |
+| ObjC → Swift | ObjC `[obj fooWithBar:]` | Swift `@objc func foo(bar:)` | 反向桥接候选名；从源码验证 `@objc` 暴露 |
+| React Native legacy bridge | JS `NativeModules.X.fn(...)` | ObjC `RCT_EXPORT_METHOD` / `RCT_REMAP_METHOD` · Java/Kotlin `@ReactMethod` | 解析宏/注解声明构建 JS-name → 原生-method 映射 |
+| React Native TurboModules | JS `import M from './NativeM'; M.fn(...)` | 匹配 Codegen spec 的原生实现 | 将 `Native<X>.ts` spec interface 视为 ground truth |
+| RN native → JS events | JS `new NativeEventEmitter(...).addListener('e', cb)` | ObjC `[self sendEventWithName:@"e" body:...]` · Swift `sendEvent(withName: "e", ...)` · Java/Kotlin `.emit("e", ...)` | 按字面 event name 合成的跨语言 event channel |
+| Expo Modules | JS `requireNativeModule('X').fn(...)` | Swift / Kotlin `Module { Name("X"); AsyncFunction("fn") { ... } }` | 解析 Expo DSL 字面量；合成 method 节点通过现有 name-match 解析 |
+| Fabric view components | JSX `<MyView prop={v}/>` | TS Codegen spec + 原生实现类 | Spec → `component` 节点；约定俗成的 name+suffix 查找（`View`/`ComponentView`/`Manager`/`ViewManager`）桥接到原生 |
+| Legacy Paper view managers | JSX `<MyView prop={v}/>` | ObjC `RCT_EXPORT_VIEW_PROPERTY` · Java/Kotlin `@ReactProp` | 同 Fabric——Paper 时期声明同样产出 `component` + `property` 节点 |
+
+**桥接验证仓库**（每个桥接覆盖小/中/大三种规模）：
+
+| 桥接 | 小 | 中 | 大 |
+|------|----|----|----|
+| Swift ↔ ObjC | [Charts](https://github.com/danielgindi/Charts) | [realm-swift](https://github.com/realm/realm-swift) | [Wikipedia-iOS](https://github.com/wikimedia/wikipedia-ios) |
+| RN legacy bridge | [AsyncStorage](https://github.com/react-native-async-storage/async-storage) | [react-native-svg](https://github.com/software-mansion/react-native-svg) | [react-native-firebase](https://github.com/invertase/react-native-firebase) |
+| RN native → JS events | [RNGeolocation](https://github.com/Agontuk/react-native-geolocation-service) | — | react-native-firebase |
+| Expo Modules | expo-haptics | expo-camera | expo SDK sweep (7 packages) |
+| Fabric / Paper views | [react-native-segmented-control](https://github.com/react-native-segmented-control/segmented-control) | [react-native-screens](https://github.com/software-mansion/react-native-screens) | [react-native-skia](https://github.com/Shopify/react-native-skia) |
+
+每条桥接产出的边标记 `provenance:'heuristic'` 且 `metadata.synthesizedBy:` 设为稳定的 channel 名（如 `swift-objc-bridge`、`rn-event-channel`、`fabric-native-impl`、`expo-module-extract`），代理据此一眼看出某个跳跃是如何进入图的。
