@@ -302,3 +302,37 @@ cg.close();
 - API 需要 **Node 22.5+** 以使用内置 `node:sqlite`（Electron 当其捆绑 Node ≥ 22.5 时亦可用）
 - CLI 与 MCP 服务器不受此限制——它们跑在自包含的 bundled runtime 上
 - TypeScript 类型随包发布；建议保持 `@types/node` 可用并设置 `skipLibCheck: true`
+
+## 配置文件 codegraph.json
+
+CodeGraph **默认零配置**。项目根目录可选的 `codegraph.json` 仅在需要自定义时使用。
+
+**默认排除清单**（无需配置即生效）：
+
+- 依赖、构建、缓存目录：`node_modules` / `vendor` / `dist` / `build` / `target` / `.venv` / `Pods` / `.next`
+- 你的 `.gitignore` 内容（git 仓库中通过 git 读取；非 git 项目直接读 `.gitignore`）
+- 大于 1 MB 的文件（生成产物、压缩 JS、vendored blob）
+
+**排除已提交目录**（例如 vendored 主题位于 `static/` 下）：
+
+```json
+{
+  "exclude": ["static/", "**/vendor/**"]
+}
+```
+
+**自定义文件扩展名**：
+
+```json
+{
+  "extensions": {
+    ".dota_lua": "lua",
+    ".tpl": "php"
+  }
+}
+```
+
+- 每个 value 是受支持的语言 ID
+- 映射合并在built-in默认值之上，冲突时自定义优先
+- 语言 ID 拼错或文件畸形会被警告并跳过——不会破坏索引
+- 添加或修改映射后需要 `codegraph index` 重建索引
