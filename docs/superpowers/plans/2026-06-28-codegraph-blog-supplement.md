@@ -1,0 +1,921 @@
+# CodeGraph Blog Supplement Implementation Plan
+
+> **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development (recommended) or superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [ ]`) syntax for tracking.
+
+**Goal:** Supplement `docs/blog/codegraph.md` from 157 lines to ~500-600 lines by rewriting 3 existing sections (CLI 命令、MCP 工具、基准测试) in place, preserving 7 other sections verbatim, and appending 10 new sections covering the full content of the upstream `colbymchenry/codegraph` README.
+
+**Architecture:** Single-file Markdown edit. No code changes. Content is sourced exclusively from the upstream GitHub README (already fetched). Each task is a self-contained, independently committable section edit.
+
+**Tech Stack:** Markdown / VuePress Plume theme front matter. No code.
+
+## Global Constraints
+
+- **Single file**: Only `docs/blog/codegraph.md` is modified. Do not touch `docs/.vuepress/collections.ts`, `docs/.vuepress/navbar.ts`, or `docs/.vuepress/config.ts`.
+- **Source of truth**: All new content must trace to the `colbymchenry/codegraph` GitHub README. Do not invent commands, flags, percentages, or features.
+- **YAML front matter**: Tags must use 2-space indentation under `tags:`. Permalink stays `/blog/codegraph/`.
+- **Section headings**: Use `##` for top-level sections, `###` for sub-sections within a rewritten section (e.g. `### codegraph install` flags).
+- **Markdown tables**: All columns separated by `|`, with `|---|` header-divider row. Inline code uses single backticks.
+- **Commit messages**: Follow the repo's existing `docs:` prefix style (e.g. `docs: 补充 CodeGraph XXX 章节`).
+- **Verification at end**: Run `pnpm docs:dev` and visually confirm all new sections render. Then stop the dev server.
+- **No new tests**: This task has no code changes. No test files are created or modified.
+- **Self-containment**: Each task's commit is independently revertible.
+
+---
+
+## File Structure
+
+| File | Action | Responsibility |
+|------|--------|----------------|
+| `docs/blog/codegraph.md` | Modify | Single source for the entire blog post. Front matter + 10 existing sections + 10 new sections. |
+
+No new files. No file moves. No file deletes. The entire change set lives in one file.
+
+---
+
+## Task Index
+
+- Task 1: Update front matter (createTime + tags)
+- Task 2: Rewrite 「基准测试」 section
+- Task 3: Rewrite 「CLI 命令」 section
+- Task 4: Rewrite 「MCP 工具」 section
+- Task 5: Add 「新增特性（v1.0）」 section
+- Task 6: Add 「始终新鲜：Auto-Sync 三层机制」 section
+- Task 7: Add 「库嵌入 API」 section
+- Task 8: Add 「配置文件 codegraph.json」 section
+- Task 9: Add 「环境变量」 section
+- Task 10: Add 「遥测与隐私」 section
+- Task 11: Add 「支持的语言（22 种详细表）」 section
+- Task 12: Add 「框架感知路由（17 框架）」 section
+- Task 13: Add 「跨语言桥接（iOS / RN / Expo）」 section
+- Task 14: Add 「故障排查 FAQ」 section
+- Task 15: Final verification (render check + commit)
+
+---
+
+## Task 1: Update Front Matter
+
+**Files:**
+- Modify: `docs/blog/codegraph.md:1-5`
+
+**Interfaces:**
+- Consumes: existing front matter from current file
+- Produces: updated front matter with new `tags` array and updated `createTime`
+
+- [ ] **Step 1: Replace the front matter block**
+
+Replace lines 1-5 of `docs/blog/codegraph.md` with:
+
+```yaml
+---
+title: CodeGraph - AI 代码智能助手
+createTime: 2026/06/28 00:00:00
+permalink: /blog/codegraph/
+tags:
+  - AI
+  - 代码知识图谱
+  - MCP
+  - 开源工具
+  - AI 编程助手
+---
+```
+
+- [ ] **Step 2: Verify by reading lines 1-11**
+
+Run: `sed -n '1,11p' docs/blog/codegraph.md`
+Expected: The new front matter followed by the blank line and `## 概述` heading.
+
+- [ ] **Step 3: Commit**
+
+```bash
+git add docs/blog/codegraph.md
+git commit -m "docs(codegraph): update front matter with tags and createTime"
+```
+
+---
+
+## Task 2: Rewrite 「基准测试」 Section
+
+**Files:**
+- Modify: `docs/blog/codegraph.md` — replace the existing `## 基准测试` block (currently lines 125-145) with the new content below
+
+**Interfaces:**
+- Consumes: existing `## 基准测试` heading + introductory paragraph + 7-row aggregate-mean table + 7-row per-repo breakdown table
+- Produces: new `## 基准测试` with universal-wins summary + 6-column per-repo median-of-4 table + cost-scaling note
+
+- [ ] **Step 1: Locate the section**
+
+Run: `grep -n "## 基准测试\|## 支持的平台" docs/blog/codegraph.md`
+Expected: Two line numbers — the start of `## 基准测试` and the start of the next section `## 支持的平台`. Everything between (exclusive of `## 基准测试` line and `## 支持的平台` line) is to be replaced.
+
+- [ ] **Step 2: Replace the section body**
+
+Delete the existing lines between `## 基准测试` (inclusive of its body) and `## 支持的平台` (exclusive), then insert the following content directly after the `## 基准测试` heading:
+
+```markdown
+在 7 个真实开源代码库上测试（Claude Opus 4.8，2026-06-02 复验，每个场景中位数 4 次）：
+
+**普适收益（每个仓库都成立）：58% 更少工具调用 · 22% 更快 · 文件读取归零**
+
+| 代码库     | 语言           | 工具调用 Δ    | 时间 Δ       | 文件读取 | Token Δ    | 成本 Δ         |
+|------------|----------------|---------------|--------------|----------|------------|----------------|
+| VS Code    | TypeScript ~10k | 4 → 21 (81%↓) | 1m59s→2m13s  | 0 vs 9   | 640k→1.79M | $0.68→$0.83 (18%↓) |
+| Excalidraw | TypeScript ~640 | 9 → 15 (40%↓) | 1m32s→2m06s  | 0 vs 7   | 1.27M→1.69M | $0.78→$0.78 (持平) |
+| Django     | Python ~3k      | 3 → 13 (77%↓) | 1m43s→1m58s  | 0 vs 9   | 559k→1.41M | $0.57→$0.62 (8%↓)  |
+| Tokio      | Rust ~790       | 6 → 14 (57%↓) | 1m55s→2m20s  | 0 vs 8   | 1.08M→1.73M | $0.82→$0.82 (持平) |
+| OkHttp     | Java ~645       | 5 → 10 (50%↓) | 1m01s→1m29s  | 0 vs 4   | 502k→1.10M | $0.41→$0.55 (25%↓) |
+| Gin        | Go ~110         | 5 → 9 (44%↓)  | 1m14s→1m37s  | 1 vs 6   | 651k→847k  | $0.46→$0.57 (19%↓) |
+| Alamofire  | Swift ~110      | 5 → 12 (58%↓) | 1m35s→2m21s  | 0 vs 9   | 766k→2.10M | $0.57→$0.95 (40%↓) |
+
+> **关于成本**：CodeGraph 在每个代码库上的稳定收益是**精度与速度**——更少工具调用、更快响应。Token 和成本节省是真实存在的，但**随规模变化**——小型代码库上数值较小且噪声大，仅当代码库变大变复杂、团队全员每日高频使用代理时，成本节省才会累积成显著条目。在 500 文件的项目上，使用 CodeGraph 是为了**速度**；成本节省在代码库与团队规模化后才显现。
+```
+
+- [ ] **Step 3: Verify the section structure**
+
+Run: `grep -n "^## \|^### " docs/blog/codegraph.md | head -20`
+Expected: Output includes `## 基准测试` followed by content; `## 支持的平台` still appears next. No accidental duplicate headings.
+
+- [ ] **Step 4: Commit**
+
+```bash
+git add docs/blog/codegraph.md
+git commit -m "docs(codegraph): rewrite benchmark section with median-of-4 data"
+```
+
+---
+
+## Task 3: Rewrite 「CLI 命令」 Section
+
+**Files:**
+- Modify: `docs/blog/codegraph.md` — replace the existing `## CLI 命令` block (currently lines 99-114) with the new content below
+
+**Interfaces:**
+- Consumes: existing 12-command bash block under `## CLI 命令`
+- Produces: new `## CLI 命令` containing a 21-command reference table, a `### codegraph install` flags sub-section, and a `### codegraph affected` + CI hook sub-section
+
+- [ ] **Step 1: Locate the section boundaries**
+
+Run: `grep -n "^## CLI 命令\|^## MCP 工具" docs/blog/codegraph.md`
+Expected: Two line numbers. The block between them (exclusive of `## MCP 工具` line) is the section body.
+
+- [ ] **Step 2: Replace the section body**
+
+Delete the existing lines between `## CLI 命令` and `## MCP 工具` (exclusive of `## MCP 工具`), then insert the following content directly after `## CLI 命令`:
+
+````markdown
+```bash
+codegraph                         # 运行交互式安装器
+codegraph install                 # 运行安装器（显式）
+codegraph uninstall               # 从代理中卸载 CodeGraph
+codegraph init [path]             # 初始化项目 + 构建图谱
+codegraph uninit [path]           # 从项目中移除（--force 跳过确认）
+codegraph index [path]            # 完整索引（--force 重建，--quiet 精简输出）
+codegraph sync [path]             # 增量更新
+codegraph status [path]           # 显示统计信息
+codegraph unlock [path]           # 移除阻塞索引的过期锁文件
+codegraph query <search>          # 搜索符号（--kind, --limit, --json）
+codegraph explore <query>         # 一次返回相关符号的源码 + 调用路径
+codegraph node <symbol|file>      # 单个符号的源码 + 调用者，或带行号读文件
+codegraph files [path]            # 显示文件结构（--format, --filter, --max-depth, --json）
+codegraph callers <symbol>        # 查找调用者（--limit, --json）
+codegraph callees <symbol>        # 查找被调用者（--limit, --json）
+codegraph impact <symbol>         # 分析影响范围（--depth, --json）
+codegraph affected [files...]     # 查找受影响的测试文件（见下文）
+codegraph daemon                  # 管理后台守护进程（别名：daemons）
+codegraph telemetry [on|off]      # 显示或切换匿名使用遥测
+codegraph upgrade [version]       # 升级（--check 检查更新，--force 强制）
+codegraph version                 # 打印已安装版本（同 -v / --version）
+codegraph help [command]          # 显示帮助，可指定具体命令
+```
+
+### `codegraph install` 选项
+
+| Flag | 取值 | 默认 |
+|------|------|------|
+| `--target` | `auto` / `all` / `none` / csv（如 `claude,cursor,...`） | 提示 |
+| `--location` | `global` / `local` | 提示 |
+| `--yes` | boolean | 每步提示 |
+| `--no-permissions` | boolean，跳过 Claude 自动允许列表 | 启用权限 |
+| `--print-config <id>` | 仅打印某个代理的配置片段，不写文件 | — |
+
+非交互式示例：
+
+```bash
+codegraph install --yes                              # 自动检测代理，全局安装
+codegraph install --target=cursor,claude --yes       # 显式目标列表
+codegraph install --target=auto --location=local     # 检测到的代理，项目本地
+codegraph install --print-config codex               # 打印 codex 片段
+```
+
+### `codegraph affected` + CI 集成
+
+沿 import 依赖传递追踪，找出改动源文件影响到的测试文件：
+
+```bash
+codegraph affected src/utils.ts src/api.ts         # 显式传入文件
+git diff --name-only | codegraph affected --stdin  # 从 git diff 管道输入
+codegraph affected src/auth.ts --filter "e2e/*"    # 自定义测试文件 glob
+```
+
+| 选项 | 描述 | 默认 |
+|------|------|------|
+| `--stdin` | 从 stdin 读取文件列表 | `false` |
+| `-d, --depth <n>` | 最大依赖遍历深度 | `5` |
+| `-f, --filter <glob>` | 自定义测试文件匹配 glob | 自动检测 |
+| `-j, --json` | 输出 JSON | `false` |
+| `-q, --quiet` | 仅输出文件路径 | `false` |
+
+CI / 钩子示例：
+
+```bash
+#!/usr/bin/env bash
+AFFECTED=$(git diff --name-only HEAD | codegraph affected --stdin --quiet)
+if [ -n "$AFFECTED" ]; then
+  npx vitest run $AFFECTED
+fi
+```
+````
+
+- [ ] **Step 3: Verify code fence closure**
+
+Run: `awk '/^```/{count++} END{print "fences:", count}' docs/blog/codegraph.md`
+Expected: An even number of fences (each `bash` or unlabeled block opens and closes). If odd, a code block is unclosed.
+
+- [ ] **Step 4: Verify section structure**
+
+Run: `grep -n "^## CLI 命令\|^### .codegraph \|^## MCP 工具" docs/blog/codegraph.md`
+Expected: Three line numbers — `## CLI 命令`, the two `### codegraph install` / `### codegraph affected` sub-headings, then `## MCP 工具`.
+
+- [ ] **Step 5: Commit**
+
+```bash
+git add docs/blog/codegraph.md
+git commit -m "docs(codegraph): rewrite CLI section with 21 commands, install flags, affected+CI"
+```
+
+---
+
+## Task 4: Rewrite 「MCP 工具」 Section
+
+**Files:**
+- Modify: `docs/blog/codegraph.md` — replace the existing `## MCP 工具` block (currently lines 116-124) with the new content below
+
+**Interfaces:**
+- Consumes: existing 4-row MCP tool table
+- Produces: new `## MCP 工具` containing 8-row tool table, default-only exposure design rationale, and `CODEGRAPH_MCP_TOOLS` re-enable instructions
+
+- [ ] **Step 1: Locate section boundaries**
+
+Run: `grep -n "^## MCP 工具\|^## 基准测试" docs/blog/codegraph.md`
+Expected: Two line numbers. The block between them (exclusive of `## 基准测试` line) is to be replaced.
+
+- [ ] **Step 2: Replace the section body**
+
+Delete the existing lines between `## MCP 工具` and `## 基准测试` (exclusive of `## 基准测试`), then insert the following content directly after `## MCP 工具`:
+
+```markdown
+CodeGraph 作为 MCP 服务器运行时，按设计**只暴露一个工具**——`codegraph_explore`。行为测量表明单一强工具比一组窄工具更能引导代理，减少误选并节省每轮会话的上下文。其余工具**功能完整但默认隐藏**，因其返回值已内联在 `codegraph_explore` 的爆炸半径、关系图、符号源码中。
+
+| 工具 | 用途 |
+|------|------|
+| `codegraph_explore` | **主要工具**。一次调用回答几乎任何问题——「X 怎么工作」、流程（「X 如何到达 Y」）、区域调研——返回相关符号的完整源码按文件分组，附带调用路径与爆炸半径。能呈现 grep 无法跟随的动态分派跳跃（callback、React re-render、interface→impl）。在 query 中指名文件或符号即可读到当前带行号的源码。 |
+| `codegraph_node` | 单个符号的源码 + 调用者，或带行号读取文件 |
+| `codegraph_search` | 按名称在整个代码库搜索符号 |
+| `codegraph_callers` | 查找调用函数/方法的所有点 |
+| `codegraph_callees` | 查找函数/方法调用的所有内容 |
+| `codegraph_impact` | 分析改变某符号会影响哪些代码 |
+| `codegraph_files` | 显示项目文件结构 |
+| `codegraph_status` | 显示项目统计信息 |
+
+通过 `CODEGRAPH_MCP_TOOLS` 环境变量可重新启用隐藏工具，例如：
+
+```bash
+CODEGRAPH_MCP_TOOLS=explore,node,search,callers
+```
+
+即使服务器所在根目录没有 `.codegraph/` 索引，工具仍然可用：通过 `projectPath` 参数查询任何已建立索引的项目。
+```
+
+- [ ] **Step 3: Verify section structure**
+
+Run: `grep -n "^## MCP 工具\|^## 基准测试" docs/blog/codegraph.md`
+Expected: Two line numbers in order, with substantial content between them.
+
+- [ ] **Step 4: Commit**
+
+```bash
+git add docs/blog/codegraph.md
+git commit -m "docs(codegraph): rewrite MCP tools section with 8 tools and design rationale"
+```
+
+---
+
+## Task 5: Add 「新增特性（v1.0）」 Section
+
+**Files:**
+- Modify: `docs/blog/codegraph.md` — append new section at the end of the file
+
+**Interfaces:**
+- Consumes: current end of file (currently the last line is `https://www.npmjs.com/package/@colbymchenry/codegraph` under `## 资源链接`)
+- Produces: appended `## 新增特性（v1.0）` section
+
+- [ ] **Step 1: Append the new section**
+
+Append the following content to the end of `docs/blog/codegraph.md`:
+
+```markdown
+
+## 新增特性（v1.0）
+
+**1.0 已正式发布。** 已安装的用户可通过 `codegraph upgrade` 一键升级到最新版本；安装器会自动检测安装方式（bundle / npm / npx）并原地更新。`codegraph upgrade --check` 仅检查是否有更新；`codegraph upgrade <version>` 锁定到指定版本。
+
+**核心价值回顾**
+
+- **Surgical Context** — 一次工具调用返回入口点、相关符号和代码片段，无需昂贵的文件逐个探索
+- **Fewer Tool Calls** — 实测在 7 个真实代码库中平均减少 58% 工具调用
+- **Faster Answers** — 同一组测试中平均快 22%，文件读取近乎为零
+- **100% Local** — 数据不离开机器，无需 API Key，纯 SQLite 数据库
+```
+
+- [ ] **Step 2: Verify append**
+
+Run: `tail -15 docs/blog/codegraph.md`
+Expected: Output ends with the new section's last bullet (`100% Local` line).
+
+- [ ] **Step 3: Commit**
+
+```bash
+git add docs/blog/codegraph.md
+git commit -m "docs(codegraph): add v1.0 release section"
+```
+
+---
+
+## Task 6: Add 「始终新鲜：Auto-Sync 三层机制」 Section
+
+**Files:**
+- Modify: `docs/blog/codegraph.md` — append at end of file
+
+- [ ] **Step 1: Append the new section**
+
+Append:
+
+```markdown
+
+## 始终新鲜：Auto-Sync 三层机制
+
+当你或代理改动代码时，CodeGraph 通过三层机制保证索引永不过期——即便代理在防抖窗口内发起查询，也不会给出静默的错误答案：
+
+1. **文件监听 + 防抖同步** — 原生 `FSEvents` / `inotify` / `ReadDirectoryChangesW` 监听源码变更，防抖窗口（默认 `2000ms`，可通过 `CODEGRAPH_WATCH_DEBOUNCE_MS` 调节，clamp `[100ms, 60s]`）内批量编辑会折叠为一次同步。
+2. **逐文件陈旧横幅** — 防抖窗口内，若 MCP 工具响应引用了尚未同步完成的文件，会在响应顶部插入 `⚠️` 横幅并指引代理 `Read` 该文件。未被引用但仍在等待的待同步文件以小型页脚呈现。无论哪种，代理都会得到明确信号——已在 Claude Code 上验证代理会读横幅后说「Reading the file directly for the live content」。
+3. **连入时追赶** — MCP 服务器每次（重）连时，先用 `(size, mtime)` + content-hash 对账工作树，再回答首次查询——确保代理空闲期间通过 `git pull`、其他编辑器或上一次会话造成的编辑在下次会话首调用时即被吸收。
+
+```
+agent writes src/Widget.ts
+  → watcher fires (<100ms)
+  → debounce (default 2s)
+  → sync; Widget.ts is in the index
+  → next agent query sees it
+```
+
+任何时候可通过 `codegraph status` 验证同步状态——若存在待同步文件，会显示 `### Pending sync:` 段落并列出文件名与编辑时长。
+
+少数需要手动 `codegraph sync` 的情形：监听被禁用（沙箱环境或 `CODEGRAPH_NO_DAEMON=1`）、或在代理会话之外以脚本方式访问索引需要在脚本开头做一次预同步。
+```
+
+- [ ] **Step 2: Verify the section exists**
+
+Run: `grep -n "^## 始终新鲜" docs/blog/codegraph.md`
+Expected: One line number.
+
+- [ ] **Step 3: Verify code fence closure (the ASCII diagram)**
+
+Run: `awk '/^```/{count++} END{print "fences:", count}' docs/blog/codegraph.md`
+Expected: Even number (incremented by 2 from previous tasks).
+
+- [ ] **Step 4: Commit**
+
+```bash
+git add docs/blog/codegraph.md
+git commit -m "docs(codegraph): add Auto-Sync three-layer mechanism section"
+```
+
+---
+
+## Task 7: Add 「库嵌入 API」 Section
+
+**Files:**
+- Modify: `docs/blog/codegraph.md` — append at end of file
+
+- [ ] **Step 1: Append the new section**
+
+Append:
+
+```markdown
+
+## 库嵌入 API
+
+CodeGraph 可作为 npm 包直接嵌入到其他 Node.js 应用（如 Electron 工具链），不限于 MCP / CLI 场景：
+
+```js
+import CodeGraph from '@colbymchenry/codegraph';
+// CommonJS 也可用：
+//   const { CodeGraph } = require('@colbymchenry/codegraph');
+
+const cg = await CodeGraph.init('/path/to/project');
+// 或：const cg = await CodeGraph.open('/path/to/project');
+
+await cg.indexAll({
+  onProgress: (p) => console.log(`${p.phase}: ${p.current}/${p.total}`)
+});
+
+const results = cg.searchNodes('UserService');
+const callers = cg.getCallers(results[0].node.id);
+const context = await cg.buildContext('fix login bug', { maxNodes: 20, includeCode: true, format: 'markdown' });
+const impact = cg.getImpactRadius(results[0].node.id, 2);
+
+cg.watch();   // 文件变更时自动同步
+cg.unwatch(); // 停止监听
+cg.close();
+```
+
+**底层构建块**也从同一入口导出，可用于更精细的集成：
+
+- `DatabaseConnection`
+- `QueryBuilder`
+- `getDatabasePath`
+- `initGrammars` / `loadGrammarsForLanguages`
+- `FileLock`
+
+**嵌入要求**
+
+- 从 npm 安装（`npm i @colbymchenry/codegraph`）以拉取匹配的 per-platform 包
+- API 需要 **Node 22.5+** 以使用内置 `node:sqlite`（Electron 当其捆绑 Node ≥ 22.5 时亦可用）
+- CLI 与 MCP 服务器不受此限制——它们跑在自包含的 bundled runtime 上
+- TypeScript 类型随包发布；建议保持 `@types/node` 可用并设置 `skipLibCheck: true`
+```
+
+- [ ] **Step 2: Verify code fence closure**
+
+Run: `awk '/^```/{count++} END{print "fences:", count}' docs/blog/codegraph.md`
+Expected: Even number.
+
+- [ ] **Step 3: Commit**
+
+```bash
+git add docs/blog/codegraph.md
+git commit -m "docs(codegraph): add library embedding API section"
+```
+
+---
+
+## Task 8: Add 「配置文件 codegraph.json」 Section
+
+**Files:**
+- Modify: `docs/blog/codegraph.md` — append at end of file
+
+- [ ] **Step 1: Append the new section**
+
+Append:
+
+```markdown
+
+## 配置文件 codegraph.json
+
+CodeGraph **默认零配置**。项目根目录可选的 `codegraph.json` 仅在需要自定义时使用。
+
+**默认排除清单**（无需配置即生效）：
+
+- 依赖、构建、缓存目录：`node_modules` / `vendor` / `dist` / `build` / `target` / `.venv` / `Pods` / `.next`
+- 你的 `.gitignore` 内容（git 仓库中通过 git 读取；非 git 项目直接读 `.gitignore`）
+- 大于 1 MB 的文件（生成产物、压缩 JS、vendored blob）
+
+**排除已提交目录**（例如 vendored 主题位于 `static/` 下）：
+
+```json
+{
+  "exclude": ["static/", "**/vendor/**"]
+}
+```
+
+**自定义文件扩展名**：
+
+```json
+{
+  "extensions": {
+    ".dota_lua": "lua",
+    ".tpl": "php"
+  }
+}
+```
+
+- 每个 value 是受支持的语言 ID
+- 映射合并在built-in默认值之上，冲突时自定义优先
+- 语言 ID 拼错或文件畸形会被警告并跳过——不会破坏索引
+- 添加或修改映射后需要 `codegraph index` 重建索引
+```
+
+- [ ] **Step 2: Verify the section exists**
+
+Run: `grep -n "^## 配置文件" docs/blog/codegraph.md`
+Expected: One line number.
+
+- [ ] **Step 3: Commit**
+
+```bash
+git add docs/blog/codegraph.md
+git commit -m "docs(codegraph): add codegraph.json configuration section"
+```
+
+---
+
+## Task 9: Add 「环境变量」 Section
+
+**Files:**
+- Modify: `docs/blog/codegraph.md` — append at end of file
+
+- [ ] **Step 1: Append the new section**
+
+Append:
+
+```markdown
+
+## 环境变量
+
+| 变量 | 用途 | 默认 |
+|------|------|------|
+| `CODEGRAPH_WATCH_DEBOUNCE_MS` | 调节文件监听防抖窗口，clamp `[100ms, 60s]` | `2000` |
+| `CODEGRAPH_NO_DAEMON` | 设为 `1` 时跳过共享服务器，每个会话独立进程；WSL2 + Windows 盘符下排错用 | 关闭 |
+| `CODEGRAPH_TELEMETRY` | 设为 `0` 时禁用遥测 | 启用 |
+| `DO_NOT_TRACK` | 设为 `1` 时禁用遥测（与 `CODEGRAPH_TELEMETRY=0` 等价） | 关闭 |
+| `CODEGRAPH_MCP_TOOLS` | 重新启用被隐藏的 MCP 工具，逗号分隔（如 `explore,node,search,callers`） | 仅 `explore` |
+| `CODEGRAPH_DIR` | 自定义 `.codegraph` 目录名（如 `.codegraph-win` 用于 Windows / WSL 共享 checkout） | `.codegraph` |
+```
+
+- [ ] **Step 2: Verify the table**
+
+Run: `grep -n "^## 环境变量\|^\`CODEGRAPH_" docs/blog/codegraph.md | head -10`
+Expected: One `## 环境变量` heading followed by 6 `CODEGRAPH_*` / `DO_NOT_TRACK` rows.
+
+- [ ] **Step 3: Commit**
+
+```bash
+git add docs/blog/codegraph.md
+git commit -m "docs(codegraph): add environment variables section"
+```
+
+---
+
+## Task 10: Add 「遥测与隐私」 Section
+
+**Files:**
+- Modify: `docs/blog/codegraph.md` — append at end of file
+
+- [ ] **Step 1: Append the new section**
+
+Append:
+
+```markdown
+
+## 遥测与隐私
+
+CodeGraph 收集**匿名使用统计**——哪些工具和命令被使用、哪些语言被索引，用于指导开发优先级。
+
+**绝不收集**：代码、路径、文件或符号名、查询、IP 地址。
+
+**聚合方式**：使用情况在本地聚合成每日总数后再发送。
+
+**Ingest 端点**：[仓库内公开代码 `telemetry-worker/`](https://github.com/colbymchenry/codegraph/blob/main/telemetry-worker)，强制执行文档化的字段清单。
+
+**三种关闭方式**（任选其一）：
+
+```bash
+codegraph telemetry off    # 切换开关
+CODEGRAPH_TELEMETRY=0      # 环境变量
+DO_NOT_TRACK=1             # 通用退出信号
+```
+
+**隐私保证**
+
+- 100% 本地：数据不离开机器
+- 无 API Key
+- 无外部服务
+- 纯 SQLite 数据库
+
+**许可证**：MIT
+```
+
+- [ ] **Step 2: Verify the section**
+
+Run: `grep -n "^## 遥测与隐私" docs/blog/codegraph.md`
+Expected: One line number.
+
+- [ ] **Step 3: Commit**
+
+```bash
+git add docs/blog/codegraph.md
+git commit -m "docs(codegraph): add telemetry and privacy section"
+```
+
+---
+
+## Task 11: Add 「支持的语言」 Section
+
+**Files:**
+- Modify: `docs/blog/codegraph.md` — append at end of file
+
+- [ ] **Step 1: Append the new section**
+
+Append:
+
+```markdown
+
+## 支持的语言
+
+| 语言 | 扩展名 | 状态 |
+|------|--------|------|
+| TypeScript | `.ts`, `.tsx` | 完整支持 |
+| JavaScript | `.js`, `.jsx`, `.mjs` | 完整支持 |
+| Python | `.py` | 完整支持 |
+| Go | `.go` | 完整支持 |
+| Rust | `.rs` | 完整支持 |
+| Java | `.java` | 完整支持 |
+| C# | `.cs` | 完整支持 |
+| PHP | `.php` | 完整支持 |
+| Ruby | `.rb` | 完整支持 |
+| C | `.c`, `.h` | 完整支持 |
+| C++ | `.cpp`, `.hpp`, `.cc` | 完整支持 |
+| Objective-C | `.m`, `.mm`, `.h` | 部分支持（class、protocol、method、`@property`、`#import`、message send；`.mm` ObjC++ 可能解析不全） |
+| Swift | `.swift` | 完整支持 |
+| Kotlin | `.kt`, `.kts` | 完整支持 |
+| Scala | `.scala`, `.sc` | 完整支持（class、trait、method、type alias、Scala 3 enum） |
+| Dart | `.dart` | 完整支持 |
+| Svelte | `.svelte` | 完整支持（script 抽取、Svelte 5 runes、SvelteKit 路由） |
+| Vue | `.vue` | 完整支持（script + script-setup 抽取、Nuxt page/API/middleware 路由） |
+| Astro | `.astro` | 完整支持（frontmatter + script 抽取、模板组件/调用引用、`src/pages/` 路由） |
+| Liquid | `.liquid` | 完整支持 |
+| Pascal / Delphi | `.pas`, `.dpr`, `.dpk`, `.lpr` | 完整支持（class、record、interface、enum、DFM/FMX 表单文件） |
+| Lua | `.lua` | 完整支持（function、带 receiver 的 method、local 变量、`require` import、call edge） |
+| Luau | `.luau` | 完整支持（Lua 全部 + `type`/`export type` alias、typed signature、Roblox instance-path `require`） |
+| R | `.R`, `.r` | 完整支持（任意赋值形式的 function、S4/R5/R6 class with method、`library`/`require` import、`source()` 文件引用、call edge） |
+```
+
+- [ ] **Step 2: Verify the table is closed**
+
+Run: `awk '/^## 支持的语言/{found=1} found && /^$/{next} found && /^## /{exit} found' docs/blog/codegraph.md | tail -5`
+Expected: The last row `R | .R, .r | 完整支持...` followed by a blank line.
+
+- [ ] **Step 3: Commit**
+
+```bash
+git add docs/blog/codegraph.md
+git commit -m "docs(codegraph): add supported languages (22) detail table"
+```
+
+---
+
+## Task 12: Add 「框架感知路由」 Section
+
+**Files:**
+- Modify: `docs/blog/codegraph.md` — append at end of file
+
+- [ ] **Step 1: Append the new section**
+
+Append:
+
+```markdown
+
+## 框架感知路由
+
+CodeGraph 识别 Web 框架的路由文件，并发出 `route` 节点通过 `references` 边链接到 handler class 或 function。查询某个 view/controller 的调用者时，会同时呈现绑定它的 URL pattern。
+
+| 框架 | 识别形状 |
+|------|----------|
+| Django | `urls.py` 中的 `path()`、`re_path()`、`url()`、`include()`（CBV `.as_view()`、dotted path） |
+| Flask | `@app.route('/path', methods=[...])`、blueprint route |
+| FastAPI | `@app.get(...)`、`@router.post(...)` 等所有标准方法 |
+| Express | `app.get(...)`、`router.post(...)` 含 middleware chain |
+| NestJS | `@Controller` + `@Get/@Post/...`，GraphQL `@Resolver` + `@Query/@Mutation`，`@MessagePattern`/`@EventPattern`，`@SubscribeMessage` |
+| Laravel | `Route::get()`、`Route::resource()`、`Controller@action`、tuple 语法 |
+| Drupal | `*.routing.yml` route（`_controller`、`_form`、entity handler）；`.module`/`.theme`/`.install`/`.inc` 中的 `hook_*` 实现 |
+| Rails | `get '/x', to: 'users#index'`、hash-rocket `=>` 语法 |
+| Spring | method 上的 `@GetMapping`、`@PostMapping`、`@RequestMapping` |
+| Play | `conf/routes` 中的 `GET`/`POST`/… verb route → `Controller.method` action（Scala + Java） |
+| Gin / chi / gorilla / mux | `r.GET(...)`、`router.HandleFunc(...)` |
+| Axum / actix / Rocket | `.route("/x", get(handler))` |
+| ASP.NET | action method 上的 `[HttpGet("/x")]` attribute |
+| Vapor | `app.get("x", use: handler)` |
+| React Router / SvelteKit | route component 节点 |
+| Vue Router / Nuxt | `pages/` file-based route、`server/api/` endpoint、route middleware |
+| Astro | `src/pages/` file-based route（`.astro` page + `.ts` endpoint，`[param]`/`[...rest]` 语法） |
+
+**框架路由实测覆盖率**（每个框架的 canonical app）：
+
+| 框架 | 覆盖率 |
+|------|--------|
+| Express | 100% |
+| FastAPI | 98% |
+| Flask | 100% |
+| NestJS | 96.8% |
+| Gin | 96.5% |
+| Axum | 100% |
+| Rocket | 93.8% |
+| Vapor | 100% |
+| Laravel | 92% |
+| Rails | 89.6% |
+| React Router | 100% |
+| ASP.NET | 83.9% |
+| Spring | 83.3% |
+| Drupal | 78.9% |
+| Play | 76.3% |
+| Django | 74.1% |
+```
+
+- [ ] **Step 2: Verify the section**
+
+Run: `grep -n "^## 框架感知路由" docs/blog/codegraph.md`
+Expected: One line number.
+
+- [ ] **Step 3: Commit**
+
+```bash
+git add docs/blog/codegraph.md
+git commit -m "docs(codegraph): add framework-aware routing section (17 frameworks)"
+```
+
+---
+
+## Task 13: Add 「跨语言桥接」 Section
+
+**Files:**
+- Modify: `docs/blog/codegraph.md` — append at end of file
+
+- [ ] **Step 1: Append the new section**
+
+Append:
+
+```markdown
+
+## 跨语言桥接（iOS / RN / Expo）
+
+真实的 iOS 与 React Native 代码库跨越多种语言——Swift 调用方触发 Objective-C selector（已自动桥接），JS 文件通过 RN bridge 调用原生模块，JSX 组件委托给原生 view manager。静态 tree-sitter 抽取会在每种语言边界停止。CodeGraph 桥接这些边界，使 `codegraph_explore` 端到端连通整个流程——调用路径与爆炸半径跨过边界而非止于边界。
+
+| 边界 | JS / Swift 侧 | 原生侧 | 桥接方式 |
+|------|---------------|--------|----------|
+| Swift → ObjC | Swift `obj.foo(bar:)` | ObjC selector `-fooWithBar:` | `@objc` 自动桥接规则（含 init/property/protocol 形式）+ Cocoa 前缀（`With`/`For`/`By`/`In`/`On`/`At`/…） |
+| ObjC → Swift | ObjC `[obj fooWithBar:]` | Swift `@objc func foo(bar:)` | 反向桥接候选名；从源码验证 `@objc` 暴露 |
+| React Native legacy bridge | JS `NativeModules.X.fn(...)` | ObjC `RCT_EXPORT_METHOD` / `RCT_REMAP_METHOD` · Java/Kotlin `@ReactMethod` | 解析宏/注解声明构建 JS-name → 原生-method 映射 |
+| React Native TurboModules | JS `import M from './NativeM'; M.fn(...)` | 匹配 Codegen spec 的原生实现 | 将 `Native<X>.ts` spec interface 视为 ground truth |
+| RN native → JS events | JS `new NativeEventEmitter(...).addListener('e', cb)` | ObjC `[self sendEventWithName:@"e" body:...]` · Swift `sendEvent(withName: "e", ...)` · Java/Kotlin `.emit("e", ...)` | 按字面 event name 合成的跨语言 event channel |
+| Expo Modules | JS `requireNativeModule('X').fn(...)` | Swift / Kotlin `Module { Name("X"); AsyncFunction("fn") { ... } }` | 解析 Expo DSL 字面量；合成 method 节点通过现有 name-match 解析 |
+| Fabric view components | JSX `<MyView prop={v}/>` | TS Codegen spec + 原生实现类 | Spec → `component` 节点；约定俗成的 name+suffix 查找（`View`/`ComponentView`/`Manager`/`ViewManager`）桥接到原生 |
+| Legacy Paper view managers | JSX `<MyView prop={v}/>` | ObjC `RCT_EXPORT_VIEW_PROPERTY` · Java/Kotlin `@ReactProp` | 同 Fabric——Paper 时期声明同样产出 `component` + `property` 节点 |
+
+**桥接验证仓库**（每个桥接覆盖小/中/大三种规模）：
+
+| 桥接 | 小 | 中 | 大 |
+|------|----|----|----|
+| Swift ↔ ObjC | [Charts](https://github.com/danielgindi/Charts) | [realm-swift](https://github.com/realm/realm-swift) | [Wikipedia-iOS](https://github.com/wikimedia/wikipedia-ios) |
+| RN legacy bridge | [AsyncStorage](https://github.com/react-native-async-storage/async-storage) | [react-native-svg](https://github.com/software-mansion/react-native-svg) | [react-native-firebase](https://github.com/invertase/react-native-firebase) |
+| RN native → JS events | [RNGeolocation](https://github.com/Agontuk/react-native-geolocation-service) | — | react-native-firebase |
+| Expo Modules | expo-haptics | expo-camera | expo SDK sweep (7 packages) |
+| Fabric / Paper views | [react-native-segmented-control](https://github.com/react-native-segmented-control/segmented-control) | [react-native-screens](https://github.com/software-mansion/react-native-screens) | [react-native-skia](https://github.com/Shopify/react-native-skia) |
+
+每条桥接产出的边标记 `provenance:'heuristic'` 且 `metadata.synthesizedBy:` 设为稳定的 channel 名（如 `swift-objc-bridge`、`rn-event-channel`、`fabric-native-impl`、`expo-module-extract`），代理据此一眼看出某个跳跃是如何进入图的。
+```
+
+- [ ] **Step 2: Verify the section**
+
+Run: `grep -n "^## 跨语言桥接" docs/blog/codegraph.md`
+Expected: One line number.
+
+- [ ] **Step 3: Commit**
+
+```bash
+git add docs/blog/codegraph.md
+git commit -m "docs(codegraph): add cross-language bridging section (iOS / RN / Expo)"
+```
+
+---
+
+## Task 14: Add 「故障排查 FAQ」 Section
+
+**Files:**
+- Modify: `docs/blog/codegraph.md` — append at end of file
+
+- [ ] **Step 1: Append the new section**
+
+Append:
+
+```markdown
+
+## 故障排查 FAQ
+
+**"CodeGraph not initialized"** — 在项目目录先运行 `codegraph init`。
+
+**索引慢** — 确认 `node_modules` 等大目录已被排除。使用 `--quiet` 减少输出开销。
+
+**MCP 报 `database is locked`** — 当前构建不应出现此问题：CodeGraph 捆绑自己的 Node runtime 并使用 Node 内置 `node:sqlite`（WAL 模式），并发读不会阻塞写。若仍出现：
+- 可能是旧版（< 0.9）安装——重新安装以获取 bundled runtime
+- `codegraph status` 显示 `Journal:` 不是 `wal`——WAL 在该文件系统无法启用（常见于网络共享与 WSL2 `/mnt`），读会被写阻塞；将项目移至本地磁盘
+
+**MCP server 连不上** — 你的代理自行启动服务器，无需手动启动。确认项目已初始化并已索引（`codegraph status`），且 MCP config 中的路径正确。若仍连不上，重跑 `codegraph install` 重写配置。
+
+**MCP 调用报 `Transport closed`，但 `codegraph status`/`sync` 健康** — 几乎总是 WSL2 + 项目位于 Windows 盘符（`/mnt/c` 或 `/mnt/d`）下。CodeGraph 现已 fallback 到在进程内服务当前 session 而非断开连接；若仍遇到，在 MCP server 的 environment 中设 `CODEGRAPH_NO_DAEMON=1` 跳过共享服务器。把项目移至 Linux-native 文件系统（如 `~/` 下而非 `/mnt/`）即可恢复共享服务器。
+
+**符号缺失** — MCP server 在保存时自动同步（等几秒）。需要时手动 `codegraph sync`。确认文件语言受支持，且不在 `.gitignore` 或默认排除目录（如 `node_modules`、`dist`）中。
+
+**Windows 与 WSL 共享同一 checkout** — 不要让两端共用同一 `.codegraph/`：后台服务器锁与 SQLite 索引与写出它们的 OS 绑定。在同一棵树中给每端一个独立索引，例如 Windows 设 `CODEGRAPH_DIR=.codegraph-win`，WSL 保留默认 `.codegraph`。CodeGraph 在索引与监听时会跳过任何 sibling 的 `.codegraph-*` 目录。
+```
+
+- [ ] **Step 2: Verify the section ends the file**
+
+Run: `tail -10 docs/blog/codegraph.md`
+Expected: The last paragraph ends with "...CodeGraph 在索引与监听时会跳过任何 sibling 的 `.codegraph-*` 目录。" followed by a single newline at EOF.
+
+- [ ] **Step 3: Commit**
+
+```bash
+git add docs/blog/codegraph.md
+git commit -m "docs(codegraph): add troubleshooting FAQ section (7 entries)"
+```
+
+---
+
+## Task 15: Final Verification
+
+**Files:**
+- Modify: `docs/blog/codegraph.md` (no changes expected; verify only)
+
+- [ ] **Step 1: Verify file line count**
+
+Run: `wc -l docs/blog/codegraph.md`
+Expected: Approximately 500-600 lines (was 157). If far outside this range, audit for content loss or duplication.
+
+- [ ] **Step 2: Verify all sections are present**
+
+Run: `grep -n "^## " docs/blog/codegraph.md`
+Expected: 17 section headings in this order:
+1. 概述
+2. 核心特性
+3. 工作原理
+4. 安装
+5. 使用
+6. CLI 命令
+7. MCP 工具
+8. 基准测试
+9. 支持的平台
+10. 资源链接
+11. 新增特性（v1.0）
+12. 始终新鲜：Auto-Sync 三层机制
+13. 库嵌入 API
+14. 配置文件 codegraph.json
+15. 环境变量
+16. 遥测与隐私
+17. 支持的语言
+18. 框架感知路由
+19. 跨语言桥接（iOS / RN / Expo）
+20. 故障排查 FAQ
+
+Wait — that's 20 headings (10 preserved/rewritten + 10 new). Re-check the count: 7 preserved + 3 rewritten + 10 new = 20 headings total.
+
+- [ ] **Step 3: Verify all code fences are closed**
+
+Run: `awk '/^```/{count++} END{print "fences:", count}' docs/blog/codegraph.md`
+Expected: Even number (each opening ` ``` ` has a matching closing ` ``` `).
+
+- [ ] **Step 4: Verify all tables are well-formed**
+
+Run: `awk 'BEGIN{inc=0} /^[^|]*\|/{if(!inc){print NR": "$0; inc=1}} /^\|---/{print NR": "$0; inc=0}' docs/blog/codegraph.md | head -30`
+Expected: For every table, the first row and the `|---|` divider appear on consecutive (or near-consecutive) lines.
+
+- [ ] **Step 5: Render preview**
+
+Run: `pnpm docs:dev` in one terminal; wait for "Local: http://localhost:8080/".
+Then open `http://localhost:8080/blog/codegraph/` in a browser.
+Expected: All 20 sections render without 404, layout errors, or broken Markdown.
+After confirming, kill the dev server with `Ctrl+C`.
+
+- [ ] **Step 6: Verify git state**
+
+Run: `git status`
+Expected: Working tree clean (all 14 commits already in place). No uncommitted changes.
+
+- [ ] **Step 7: Print commit summary**
+
+Run: `git log --oneline -16`
+Expected: 1 spec commit + 14 task commits (tasks 1-14) all with `docs(codegraph):` prefix.
+
+---
+
+## Done Criteria
+
+All of the following must hold:
+
+- [ ] File `docs/blog/codegraph.md` exists, ~500-600 lines
+- [ ] front matter has `tags` array of 5 items and `createTime: 2026/06/28`
+- [ ] 20 `## ` section headings present in correct order
+- [ ] All code fences closed (even count)
+- [ ] All Markdown tables have `|---|` divider
+- [ ] All external URLs are present and correctly formatted
+- [ ] 14 task commits + 1 final verification commit all in git log
+- [ ] `pnpm docs:dev` shows the page without render errors
