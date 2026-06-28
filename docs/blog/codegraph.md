@@ -1,7 +1,13 @@
 ---
 title: CodeGraph - AI 代码智能助手
-createTime: 2026/06/14 00:00:00
+createTime: 2026/06/28 00:00:00
 permalink: /blog/codegraph/
+tags:
+  - AI
+  - 代码知识图谱
+  - MCP
+  - 开源工具
+  - AI 编程助手
 ---
 
 ## 概述
