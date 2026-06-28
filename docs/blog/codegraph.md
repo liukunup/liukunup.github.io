@@ -475,3 +475,21 @@ CodeGraph 识别 Web 框架的路由文件，并发出 `route` 节点通过 `ref
 | Fabric / Paper views | [react-native-segmented-control](https://github.com/react-native-segmented-control/segmented-control) | [react-native-screens](https://github.com/software-mansion/react-native-screens) | [react-native-skia](https://github.com/Shopify/react-native-skia) |
 
 每条桥接产出的边标记 `provenance:'heuristic'` 且 `metadata.synthesizedBy:` 设为稳定的 channel 名（如 `swift-objc-bridge`、`rn-event-channel`、`fabric-native-impl`、`expo-module-extract`），代理据此一眼看出某个跳跃是如何进入图的。
+
+## 故障排查 FAQ
+
+**"CodeGraph not initialized"** — 在项目目录先运行 `codegraph init`。
+
+**索引慢** — 确认 `node_modules` 等大目录已被排除。使用 `--quiet` 减少输出开销。
+
+**MCP 报 `database is locked`** — 当前构建不应出现此问题：CodeGraph 捆绑自己的 Node runtime 并使用 Node 内置 `node:sqlite`（WAL 模式），并发读不会阻塞写。若仍出现：
+- 可能是旧版（< 0.9）安装——重新安装以获取 bundled runtime
+- `codegraph status` 显示 `Journal:` 不是 `wal`——WAL 在该文件系统无法启用（常见于网络共享与 WSL2 `/mnt`），读会被写阻塞；将项目移至本地磁盘
+
+**MCP server 连不上** — 你的代理自行启动服务器，无需手动启动。确认项目已初始化并已索引（`codegraph status`），且 MCP config 中的路径正确。若仍连不上，重跑 `codegraph install` 重写配置。
+
+**MCP 调用报 `Transport closed`，但 `codegraph status`/`sync` 健康** — 几乎总是 WSL2 + 项目位于 Windows 盘符（`/mnt/c` 或 `/mnt/d`）下。CodeGraph 现已 fallback 到在进程内服务当前 session 而非断开连接；若仍遇到，在 MCP server 的 environment 中设 `CODEGRAPH_NO_DAEMON=1` 跳过共享服务器。把项目移至 Linux-native 文件系统（如 `~/` 下而非 `/mnt/`）即可恢复共享服务器。
+
+**符号缺失** — MCP server 在保存时自动同步（等几秒）。需要时手动 `codegraph sync`。确认文件语言受支持，且不在 `.gitignore` 或默认排除目录（如 `node_modules`、`dist`）中。
+
+**Windows 与 WSL 共享同一 checkout** — 不要让两端共用同一 `.codegraph/`：后台服务器锁与 SQLite 索引与写出它们的 OS 绑定。在同一棵树中给每端一个独立索引，例如 Windows 设 `CODEGRAPH_DIR=.codegraph-win`，WSL 保留默认 `.codegraph`。CodeGraph 在索引与监听时会跳过任何 sibling 的 `.codegraph-*` 目录。
