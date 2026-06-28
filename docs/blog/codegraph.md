@@ -230,3 +230,14 @@ CODEGRAPH_MCP_TOOLS=explore,node,search,callers
 - GitHub：https://github.com/colbymchenry/codegraph
 - 文档：https://colbymchenry.github.io/codegraph/
 - npm：https://www.npmjs.com/package/@colbymchenry/codegraph
+
+## 新增特性（v1.0）
+
+**1.0 已正式发布。** 已安装的用户可通过 `codegraph upgrade` 一键升级到最新版本；安装器会自动检测安装方式（bundle / npm / npx）并原地更新。`codegraph upgrade --check` 仅检查是否有更新；`codegraph upgrade <version>` 锁定到指定版本。
+
+**核心价值回顾**
+
+- **Surgical Context** — 一次工具调用返回入口点、相关符号和代码片段，无需昂贵的文件逐个探索
+- **Fewer Tool Calls** — 实测在 7 个真实代码库中平均减少 58% 工具调用
+- **Faster Answers** — 同一组测试中平均快 22%，文件读取近乎为零
+- **100% Local** — 数据不离开机器，无需 API Key，纯 SQLite 数据库
