@@ -1,20 +1,20 @@
 # CodeGraph 博客增量补充设计
 
 - **日期**：2026-06-28
-- **目标**：将 `docs/blog/codegraph.md` 从约 158 行的精简版扩充为覆盖官方 GitHub README 全量新内容的版本。保留现有结构，新增 12 个章节，扩展 2 个章节（CLI 命令、MCP 工具），重写 1 个章节（基准测试），新增 front matter tags。
+- **目标**：将 `docs/blog/codegraph.md` 从约 157 行的精简版扩充为覆盖官方 GitHub README 全量新内容的版本。保留现有 7 处章节，改写 3 处章节（CLI 命令、MCP 工具、基准测试），追加 13 个新章节，新增 front matter tags。
 - **范围**：仅修改 `docs/blog/codegraph.md` 一个文件。
 - **内容来源**：GitHub `colbymchenry/codegraph` 仓库 README（已通过 webfetch 抓取并完整解析），不做任何功能、命令、指标的自编。
 
 ## 现状
 
-`docs/blog/codegraph.md`（158 行）当前已覆盖：
+`docs/blog/codegraph.md`（157 行）当前已覆盖：
 
 - 概述（带 README 链接）
 - 核心特性（9 条 bullet）
 - 工作原理（含 ASCII 架构图 + 4 步流程）
 - 安装（macOS/Linux curl、Windows irm、npm、升级）
 - 使用（install agent → init project → 重启）
-- CLI 命令（13 条简化版）
+- CLI 命令（12 条简化版）
 - MCP 工具（4 条表格）
 - 基准测试（聚合均数表 + 7 仓库简表）
 - 支持的平台（Win/macOS/Linux x64/arm64）
@@ -24,13 +24,13 @@
 
 - v1.0 发布说明与升级命令
 - Auto-Sync 三层机制（watcher + per-file banner + connect-time catch-up）
-- 完整 21 条 CLI 命令（缺 `uninstall` / `uninit` / `unlock` / `daemon` / `telemetry` / `files` / `affected` / `version` / `help`）
+- 完整 21 条 CLI 命令（缺 `install` flags / `uninstall` / `uninit` / `unlock` / `daemon` / `telemetry` / `files` / `version` / `help`）
 - 完整 8 条 MCP 工具 + 默认隐藏的 7 个 + `CODEGRAPH_MCP_TOOLS` 环境变量 + 单工具 vs 多工具的设计理由
 - `codegraph install` flags 表与 `--print-config` 用法
 - `codegraph affected` + CI 钩子集成示例
 - 库嵌入 API（npm 包嵌入示例 + 底层构建块 + Node 22.5+ 要求）
 - `codegraph.json` 配置（exclude + extensions）+ 默认排除清单
-- 7 个环境变量
+- 6 个环境变量
 - 遥测透明度（收集项、不收集项、3 种关闭方式）
 - 22 种语言的详细状态表
 - 17 个 Web 框架的路由覆盖百分比
@@ -70,13 +70,13 @@ tags:
 | 工作原理 | 保留 | 不动 |
 | 安装 | 保留 | 不动 |
 | 使用 | 保留 | 不动 |
-| CLI 命令 | **改写** | 13 行简化表 → 21 行完整表 + `install` flags 表 + `affected` 子章节 + CI 钩子示例 |
+| CLI 命令 | **改写** | 12 行简化表 → 21 行完整表 + `install` flags 表 + `affected` 子章节 + CI 钩子示例 |
 | MCP 工具 | **改写** | 4 行表 → 8 行表 + 默认暴露设计理由 + `CODEGRAPH_MCP_TOOLS` 重新启用说明 |
 | 基准测试 | **改写** | 聚合均数 + 7 仓库简表 → 7 仓库 6 列明细 + 普适收益总结 + 成本规模性注解 + benchmark query 表 + methodology 说明 |
 | 支持的平台 | 保留 | 不动 |
 | 资源链接 | 保留 | 不动 |
 
-### 新增章节：12 节（追加在「资源链接」之后）
+### 新增章节：13 节（追加在「资源链接」之后）
 
 按以下顺序追加：
 
@@ -91,8 +91,8 @@ tags:
    - ASCII 流程图：`agent writes → watcher fires → debounce → sync → next query sees it`
 
 3. **完整 CLI 命令**
-   - 21 条命令完整列表（保留现有 13 条 + 新增 8 条）
-   - 新增命令：`install` flags / `uninstall` / `init` / `uninit` / `index` / `sync` / `status` / `unlock` / `query` / `explore` / `node` / `files` / `callers` / `callees` / `impact` / `affected` / `daemon` / `telemetry` / `upgrade` / `version` / `help`
+   - 21 条命令完整列表（保留现有 12 条 + 新增 9 条）
+   - 新增命令：`install` flags / `uninstall` / `uninit` / `unlock` / `files` / `daemon` / `telemetry` / `version` / `help`
    - `codegraph install` flag 表：`--target` / `--location` / `--yes` / `--no-permissions` / `--print-config`
 
 4. **`codegraph affected` + CI 集成**
@@ -159,11 +159,11 @@ tags:
 
 ## 验收标准
 
-1. `docs/blog/codegraph.md` 文件存在，行数从 158 行增至约 450-550 行。
+1. `docs/blog/codegraph.md` 文件存在，行数从 157 行增至约 450-550 行。
 2. front matter 含 `tags` 数组（5 项），`createTime` 为 `2026/06/28`。
 3. 现有 7 处保留章节的文字内容完全未变（标题、段落、列表、表格内容均一致）。
 4. 「CLI 命令」「MCP 工具」「基准测试」三章按改写方案更新；改写后包含原章节的所有信息（不丢失现有信息）。
-5. 「资源链接」之后追加 12 个新章节，按设计顺序排列。
+5. 「资源链接」之后追加 13 个新章节，按设计顺序排列。
 6. 所有新增内容可溯源至 GitHub README，不存在自编的功能/命令/指标。
 7. 所有 Markdown 表格 `|---|` 分隔符对齐；所有代码块围栏闭合。
 8. 所有外链 URL 准确（GitHub / 文档站 / npm / 官方文档）。
