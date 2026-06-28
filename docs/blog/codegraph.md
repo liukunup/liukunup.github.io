@@ -374,3 +374,32 @@ DO_NOT_TRACK=1             # 通用退出信号
 - 纯 SQLite 数据库
 
 **许可证**：MIT
+
+## 支持的语言
+
+| 语言 | 扩展名 | 状态 |
+|------|--------|------|
+| TypeScript | `.ts`, `.tsx` | 完整支持 |
+| JavaScript | `.js`, `.jsx`, `.mjs` | 完整支持 |
+| Python | `.py` | 完整支持 |
+| Go | `.go` | 完整支持 |
+| Rust | `.rs` | 完整支持 |
+| Java | `.java` | 完整支持 |
+| C# | `.cs` | 完整支持 |
+| PHP | `.php` | 完整支持 |
+| Ruby | `.rb` | 完整支持 |
+| C | `.c`, `.h` | 完整支持 |
+| C++ | `.cpp`, `.hpp`, `.cc` | 完整支持 |
+| Objective-C | `.m`, `.mm`, `.h` | 部分支持（class、protocol、method、`@property`、`#import`、message send；`.mm` ObjC++ 可能解析不全） |
+| Swift | `.swift` | 完整支持 |
+| Kotlin | `.kt`, `.kts` | 完整支持 |
+| Scala | `.scala`, `.sc` | 完整支持（class、trait、method、type alias、Scala 3 enum） |
+| Dart | `.dart` | 完整支持 |
+| Svelte | `.svelte` | 完整支持（script 抽取、Svelte 5 runes、SvelteKit 路由） |
+| Vue | `.vue` | 完整支持（script + script-setup 抽取、Nuxt page/API/middleware 路由） |
+| Astro | `.astro` | 完整支持（frontmatter + script 抽取、模板组件/调用引用、`src/pages/` 路由） |
+| Liquid | `.liquid` | 完整支持 |
+| Pascal / Delphi | `.pas`, `.dpr`, `.dpk`, `.lpr` | 完整支持（class、record、interface、enum、DFM/FMX 表单文件） |
+| Lua | `.lua` | 完整支持（function、带 receiver 的 method、local 变量、`require` import、call edge） |
+| Luau | `.luau` | 完整支持（Lua 全部 + `type`/`export type` alias、typed signature、Roblox instance-path `require`） |
+| R | `.R`, `.r` | 完整支持（任意赋值形式的 function、S4/R5/R6 class with method、`library`/`require` import、`source()` 文件引用、call edge） |
