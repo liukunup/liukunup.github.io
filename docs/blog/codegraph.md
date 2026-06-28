@@ -336,3 +336,14 @@ CodeGraph **默认零配置**。项目根目录可选的 `codegraph.json` 仅在
 - 映射合并在built-in默认值之上，冲突时自定义优先
 - 语言 ID 拼错或文件畸形会被警告并跳过——不会破坏索引
 - 添加或修改映射后需要 `codegraph index` 重建索引
+
+## 环境变量
+
+| 变量 | 用途 | 默认 |
+|------|------|------|
+| `CODEGRAPH_WATCH_DEBOUNCE_MS` | 调节文件监听防抖窗口，clamp `[100ms, 60s]` | `2000` |
+| `CODEGRAPH_NO_DAEMON` | 设为 `1` 时跳过共享服务器，每个会话独立进程；WSL2 + Windows 盘符下排错用 | 关闭 |
+| `CODEGRAPH_TELEMETRY` | 设为 `0` 时禁用遥测 | 启用 |
+| `DO_NOT_TRACK` | 设为 `1` 时禁用遥测（与 `CODEGRAPH_TELEMETRY=0` 等价） | 关闭 |
+| `CODEGRAPH_MCP_TOOLS` | 重新启用被隐藏的 MCP 工具，逗号分隔（如 `explore,node,search,callers`） | 仅 `explore` |
+| `CODEGRAPH_DIR` | 自定义 `.codegraph` 目录名（如 `.codegraph-win` 用于 Windows / WSL 共享 checkout） | `.codegraph` |
