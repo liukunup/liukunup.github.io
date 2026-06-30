@@ -6,7 +6,7 @@ permalink: /blog/multi-frame-hdr-synthesis/
 
 ## 1. HDR 概述与多帧合成原理
 
-![HDR Pipeline 架构](./images/hdr-pipeline-overview.svg)
+![HDR Pipeline 架构](../images/hdr-pipeline-overview.svg)
 
 ### 1.1 什么是 HDR
 
@@ -31,7 +31,7 @@ HDR 的核心目标是：
 
 ### 1.3 应用场景
 
-![曝光包围](./images/exposure-bracketing.svg)
+![曝光包围](../images/exposure-bracketing.svg)
 
 | 场景 | 需求 |
 |------|------|
@@ -73,7 +73,7 @@ HDR 的核心目标是：
 
 ## 2. 相机响应函数与曝光模型
 
-![相机响应函数曲线](./images/crf-response-curve.svg)
+![相机响应函数曲线](../images/crf-response-curve.svg)
 
 ### 2.1 相机响应函数（CRF）
 
@@ -133,7 +133,7 @@ $$
 
 ### 3.2 特征对齐与曝光补偿
 
-![特征对齐](./images/feature-alignment.svg)
+![特征对齐](../images/feature-alignment.svg)
 
 **对齐策略**:
 - 特征点检测：ORB（Oriented FAST and Rotated BRIEF）
@@ -164,7 +164,7 @@ $$
 
 ### 3.4 色调映射（Tone Mapping）
 
-![色调映射算法对比](./images/tonemap-comparison.svg)
+![色调映射算法对比](../images/tonemap-comparison.svg)
 
 | 算法 | 特点 | 适用场景 |
 |------|------|----------|
@@ -183,7 +183,7 @@ $$
 
 ## 4. 嵌入式实现（ARM + OpenCL）
 
-![ARM OpenCL 架构](./images/arm-opencl-architecture.svg)
+![ARM OpenCL 架构](../images/arm-opencl-architecture.svg)
 
 ### 4.1 技术栈
 
@@ -273,7 +273,7 @@ NNCompilation compilation = model.compile<int8_t>({
 
 ## 5. 云端 WebGL/WASM 实现
 
-![WebGL 处理管线](./images/webgl-pipeline.svg)
+![WebGL 处理管线](../images/webgl-pipeline.svg)
 
 ### 5.1 技术栈
 

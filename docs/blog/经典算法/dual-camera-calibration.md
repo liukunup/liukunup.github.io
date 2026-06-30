@@ -8,13 +8,13 @@ permalink: /blog/dual-camera-calibration/
 
 双摄标定（Stereo Calibration）是计算机视觉中的基础问题，旨在建立两个摄像头之间的几何关系。本文从针孔模型出发，逐步推导双摄标定的核心公式。
 
-![双摄标定示意图](./images/stereo-calibration-overview.svg)
+![双摄标定示意图](../images/stereo-calibration-overview.svg)
 
 ## 1. 摄像头模型
 
 ### 1.1 针孔相机模型
 
-![针孔相机模型](./images/pinhole-camera-model.svg)
+![针孔相机模型](../images/pinhole-camera-model.svg)
 
 在理想针孔相机中，三维空间点 $\mathbf{X} = [X, Y, Z]^T$ 与其在图像平面上的投影 $\mathbf{x} = [u, v]^T$ 满足相似三角形关系：
 
@@ -44,7 +44,7 @@ $$
 
 ## 2. 外参与坐标系变换
 
-![坐标系变换](./images/coordinate-transformation.svg)
+![坐标系变换](../images/coordinate-transformation.svg)
 
 ### 2.1 世界坐标系到相机坐标系
 
@@ -72,7 +72,7 @@ $$
 
 ## 3. 双摄几何
 
-![极线几何](./images/epipolar-geometry.svg)
+![极线几何](../images/epipolar-geometry.svg)
 
 ### 3.1 立体视觉配置
 
@@ -223,7 +223,7 @@ $$
 
 ## 7. 双摄标定流程
 
-![张正友标定法流程](./images/calibration-flowchart.svg)
+![张正友标定法流程](../images/calibration-flowchart.svg)
 
 ### 7.1 张正友标定法
 
@@ -256,7 +256,7 @@ $$
 
 ## 8. 双目校正
 
-![双目校正前后对比](./images/stereo-rectification.svg)
+![双目校正前后对比](../images/stereo-rectification.svg)
 
 ### 8.1 极线校正目的
 
@@ -286,7 +286,7 @@ $$
 
 ### 9.1 三角测量
 
-![三角测量原理](./images/triangulation.svg)
+![三角测量原理](../images/triangulation.svg)
 
 已知对应点 $\mathbf{x}_l$ 和 $\mathbf{x}_r$，求空间点 $\mathbf{X}$：
 
@@ -296,7 +296,7 @@ $$
 
 ### 9.2 深度公式
 
-![深度与视差关系](./images/depth-disparity.svg)
+![深度与视差关系](../images/depth-disparity.svg)
 
 $$
 Z = \frac{f \cdot b}{d}
