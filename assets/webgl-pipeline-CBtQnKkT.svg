@@ -1,0 +1,113 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 350" width="600" height="350">
+  <rect width="600" height="350" fill="#f8f9fa" rx="8"/>
+
+  <defs>
+    <marker id="arrowDown" viewBox="0 0 10 10" refX="5" refY="9" markerWidth="8" markerHeight="8" orient="auto">
+      <path d="M 0 0 L 5 10 L 10 0 z" fill="#4a90d9"/>
+    </marker>
+    <marker id="arrowRight" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#4a90d9"/>
+    </marker>
+    <marker id="arrowDownSmall" viewBox="0 0 10 10" refX="5" refY="9" markerWidth="6" markerHeight="6" orient="auto">
+      <path d="M 0 0 L 5 10 L 10 0 z" fill="#888"/>
+    </marker>
+    <linearGradient id="webglHeader" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0%" stop-color="#4a90d9"/>
+      <stop offset="100%" stop-color="#357abd"/>
+    </linearGradient>
+  </defs>
+
+  <!-- Title -->
+  <text x="300" y="30" text-anchor="middle" font-family="sans-serif" font-size="16" font-weight="bold" fill="#333">WebGL HDR 处理管线</text>
+  <text x="300" y="46" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#888">WebGL Shader-Based HDR Pipeline</text>
+
+  <!-- Top: CPU / JS side -->
+  <g transform="translate(0, 55)">
+    <rect x="30" y="0" width="540" height="35" rx="6" fill="#eef2f7" stroke="#ddd" stroke-width="0.8"/>
+    <text x="50" y="22" font-family="sans-serif" font-size="11" font-weight="bold" fill="#555">CPU / JavaScript</text>
+    
+    <!-- JS operations -->
+    <rect x="160" y="5" width="90" height="25" rx="4" fill="#fff" stroke="#4a90d9" stroke-width="1"/>
+    <text x="205" y="21" text-anchor="middle" font-family="sans-serif" font-size="9" fill="#4a90d9">解码 RAW</text>
+
+    <rect x="265" y="5" width="90" height="25" rx="4" fill="#fff" stroke="#4a90d9" stroke-width="1"/>
+    <text x="310" y="21" text-anchor="middle" font-family="sans-serif" font-size="9" fill="#4a90d9">曝光解析</text>
+
+    <rect x="370" y="5" width="90" height="25" rx="4" fill="#fff" stroke="#4a90d9" stroke-width="1"/>
+    <text x="415" y="21" text-anchor="middle" font-family="sans-serif" font-size="9" fill="#4a90d9">缓冲区管理</text>
+  </g>
+
+  <!-- Arrow down -->
+  <line x1="300" y1="90" x2="300" y2="110" stroke="#4a90d9" stroke-width="2" marker-end="url(#arrowDown)"/>
+
+  <!-- WebGL Processing -->
+  <g transform="translate(0, 113)">
+    <rect x="30" y="0" width="540" height="165" rx="6" fill="#f0f4f8" stroke="#4a90d9" stroke-width="1.2"/>
+    <text x="50" y="20" font-family="sans-serif" font-size="11" font-weight="bold" fill="#4a90d9">WebGL / GPU (GLSL Shaders)</text>
+
+    <!-- Shader stages arranged as pipeline -->
+    <!-- Stage 1: Preprocessing -->
+    <g transform="translate(50, 30)">
+      <rect x="0" y="0" width="100" height="50" rx="5" fill="url(#webglHeader)" stroke="#357abd" stroke-width="1"/>
+      <text x="50" y="22" text-anchor="middle" font-family="sans-serif" font-size="10" fill="#fff" font-weight="bold">预处理</text>
+      <text x="50" y="38" text-anchor="middle" font-family="sans-serif" font-size="8" fill="#e0e8f0">Preprocess</text>
+      <!-- icon -->
+      <text x="15" y="22" font-family="sans-serif" font-size="10" fill="#fff">⚙</text>
+    </g>
+    <line x1="150" y1="55" x2="175" y2="55" stroke="#4a90d9" stroke-width="1.5" marker-end="url(#arrowRight)"/>
+
+    <!-- Stage 2: Feature Alignment -->
+    <g transform="translate(178, 30)">
+      <rect x="0" y="0" width="100" height="50" rx="5" fill="#fff" stroke="#4a90d9" stroke-width="1.2"/>
+      <text x="50" y="22" text-anchor="middle" font-family="sans-serif" font-size="10" fill="#333" font-weight="bold">特征对齐</text>
+      <text x="50" y="38" text-anchor="middle" font-family="sans-serif" font-size="8" fill="#888">Alignment</text>
+    </g>
+    <line x1="278" y1="55" x2="303" y2="55" stroke="#4a90d9" stroke-width="1.5" marker-end="url(#arrowRight)"/>
+
+    <!-- Stage 3: HDR Fusion -->
+    <g transform="translate(306, 30)">
+      <rect x="0" y="0" width="100" height="50" rx="5" fill="url(#webglHeader)" stroke="#357abd" stroke-width="1"/>
+      <text x="50" y="22" text-anchor="middle" font-family="sans-serif" font-size="10" fill="#fff" font-weight="bold">HDR 融合</text>
+      <text x="50" y="38" text-anchor="middle" font-family="sans-serif" font-size="8" fill="#e0e8f0">Fusion</text>
+    </g>
+    <line x1="406" y1="55" x2="431" y2="55" stroke="#4a90d9" stroke-width="1.5" marker-end="url(#arrowRight)"/>
+
+    <!-- Stage 4: Tone Mapping -->
+    <g transform="translate(434, 30)">
+      <rect x="0" y="0" width="100" height="50" rx="5" fill="#fff" stroke="#4a90d9" stroke-width="1.2"/>
+      <text x="50" y="22" text-anchor="middle" font-family="sans-serif" font-size="10" fill="#333" font-weight="bold">色调映射</text>
+      <text x="50" y="38" text-anchor="middle" font-family="sans-serif" font-size="8" fill="#888">Tone Map</text>
+    </g>
+
+    <!-- Shader details below -->
+    <g transform="translate(50, 95)">
+      <rect x="0" y="0" width="480" height="55" rx="4" fill="#fff" stroke="#e0e5ec" stroke-width="0.8"/>
+      <text x="15" y="18" font-family="sans-serif" font-size="9" font-weight="bold" fill="#555">Shader 处理详情:</text>
+      
+      <text x="15" y="34" font-family="monospace" font-size="8" fill="#4a90d9">// 每个阶段对应一个 Fragment Shader</text>
+      <text x="15" y="46" font-family="monospace" font-size="8" fill="#666">sampler → texImage2D → gl.drawArrays → FBO → 下一阶段</text>
+    </g>
+
+    <!-- FBO loop indicator -->
+    <g transform="translate(50, 155)">
+      <rect x="0" y="0" width="480" height="8" rx="3" fill="#4a90d9" opacity="0.15"/>
+      <text x="240" y="7" text-anchor="middle" font-family="sans-serif" font-size="7" fill="#4a90d9">FBO (Frame Buffer Object) 链式处理</text>
+    </g>
+  </g>
+
+  <!-- Arrow down -->
+  <line x1="300" y1="278" x2="300" y2="298" stroke="#4a90d9" stroke-width="2" marker-end="url(#arrowDown)"/>
+
+  <!-- Output -->
+  <g transform="translate(0, 300)">
+    <rect x="130" y="0" width="340" height="35" rx="6" fill="#2ecc71" stroke="#27ae60" stroke-width="1"/>
+    <text x="300" y="15" text-anchor="middle" font-family="sans-serif" font-size="12" font-weight="bold" fill="#fff">编码输出 (LDR / Display)</text>
+    <text x="300" y="28" text-anchor="middle" font-family="sans-serif" font-size="9" fill="#e0f7e0">Encode → canvas.toBlob() / MediaRecorder</text>
+  </g>
+
+  <!-- Data flow arrows on the side -->
+  <g transform="translate(0, 0)">
+    <rect x="5" y="100" width="20" height="18" rx="3" fill="#4a90d9" opacity="0.15"/>
+    <text x="15" y="113" text-anchor="middle" font-family="sans-serif" font-size="7" fill="#4a90d9">数据流</text>
+  </g>
+</svg>

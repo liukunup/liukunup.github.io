@@ -1,0 +1,98 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 350" width="600" height="350">
+  <rect width="600" height="350" fill="#f8f9fa" rx="8"/>
+  
+  <defs>
+    <marker id="arrowBlue" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#4a90d9"/>
+    </marker>
+    <linearGradient id="boxGrad" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#4a90d9"/>
+      <stop offset="100%" stop-color="#357abd"/>
+    </linearGradient>
+  </defs>
+
+  <!-- Title -->
+  <text x="300" y="35" text-anchor="middle" font-family="sans-serif" font-size="18" font-weight="bold" fill="#333">HDR Pipeline 整体架构</text>
+
+  <!-- Stage 1: Input -->
+  <rect x="15" y="100" width="80" height="60" rx="6" fill="url(#boxGrad)" stroke="#357abd" stroke-width="1.5"/>
+  <text x="55" y="125" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#fff" font-weight="bold">输入帧</text>
+  <text x="55" y="142" text-anchor="middle" font-family="sans-serif" font-size="9" fill="#e0e8f0">Input</text>
+  <!-- Icon: camera -->
+  <circle cx="55" cy="112" r="4" fill="none" stroke="#fff" stroke-width="1.5"/>
+  <rect x="49" y="108" width="12" height="9" rx="1" fill="none" stroke="#fff" stroke-width="1.2"/>
+
+  <!-- Arrow 1 -->
+  <line x1="95" y1="130" x2="123" y2="130" stroke="#4a90d9" stroke-width="2" marker-end="url(#arrowBlue)"/>
+
+  <!-- Stage 2: Feature Alignment -->
+  <rect x="125" y="100" width="80" height="60" rx="6" fill="#fff" stroke="#4a90d9" stroke-width="1.5"/>
+  <text x="165" y="125" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#333" font-weight="bold">特征对齐</text>
+  <text x="165" y="142" text-anchor="middle" font-family="sans-serif" font-size="9" fill="#888">Alignment</text>
+  <!-- Icon: dots + lines -->
+  <circle cx="155" cy="113" r="2" fill="#4a90d9"/>
+  <circle cx="165" cy="110" r="2" fill="#4a90d9"/>
+  <circle cx="175" cy="114" r="2" fill="#4a90d9"/>
+  <line x1="155" y1="113" x2="175" y2="114" stroke="#4a90d9" stroke-width="0.8"/>
+
+  <!-- Arrow 2 -->
+  <line x1="205" y1="130" x2="233" y2="130" stroke="#4a90d9" stroke-width="2" marker-end="url(#arrowBlue)"/>
+
+  <!-- Stage 3: Exposure Compensation -->
+  <rect x="235" y="100" width="80" height="60" rx="6" fill="#fff" stroke="#4a90d9" stroke-width="1.5"/>
+  <text x="275" y="125" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#333" font-weight="bold">曝光补偿</text>
+  <text x="275" y="142" text-anchor="middle" font-family="sans-serif" font-size="9" fill="#888">Compensation</text>
+  <!-- Icon: sun -->
+  <circle cx="275" cy="113" r="6" fill="none" stroke="#e5a000" stroke-width="1.5"/>
+  <line x1="275" y1="105" x2="275" y2="107" stroke="#e5a000" stroke-width="1.2"/>
+  <line x1="275" y1="119" x2="275" y2="121" stroke="#e5a000" stroke-width="1.2"/>
+  <line x1="267" y1="113" x2="269" y2="113" stroke="#e5a000" stroke-width="1.2"/>
+  <line x1="281" y1="113" x2="283" y2="113" stroke="#e5a000" stroke-width="1.2"/>
+
+  <!-- Arrow 3 -->
+  <line x1="315" y1="130" x2="343" y2="130" stroke="#4a90d9" stroke-width="2" marker-end="url(#arrowBlue)"/>
+
+  <!-- Stage 4: HDR Fusion -->
+  <rect x="345" y="100" width="80" height="60" rx="6" fill="url(#boxGrad)" stroke="#357abd" stroke-width="1.5"/>
+  <text x="385" y="125" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#fff" font-weight="bold">HDR 融合</text>
+  <text x="385" y="142" text-anchor="middle" font-family="sans-serif" font-size="9" fill="#e0e8f0">Fusion</text>
+  <!-- Icon: merge arrows -->
+  <path d="M 378 115 L 385 108 L 392 115" fill="none" stroke="#fff" stroke-width="1.2"/>
+  <path d="M 378 115 L 385 122 L 392 115" fill="none" stroke="#fff" stroke-width="1.2"/>
+
+  <!-- Arrow 4 -->
+  <line x1="425" y1="130" x2="453" y2="130" stroke="#4a90d9" stroke-width="2" marker-end="url(#arrowBlue)"/>
+
+  <!-- Stage 5: Tone Mapping -->
+  <rect x="455" y="100" width="80" height="60" rx="6" fill="#fff" stroke="#4a90d9" stroke-width="1.5"/>
+  <text x="495" y="125" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#333" font-weight="bold">色调映射</text>
+  <text x="495" y="142" text-anchor="middle" font-family="sans-serif" font-size="9" fill="#888">Tone Map</text>
+  <!-- Icon: gradient bar -->
+  <rect x="485" y="108" width="20" height="8" rx="2" fill="#2ecc71" opacity="0.6"/>
+  <rect x="485" y="108" width="10" height="8" rx="2" fill="#2ecc71"/>
+
+  <!-- Arrow 5 -->
+  <line x1="535" y1="130" x2="563" y2="130" stroke="#4a90d9" stroke-width="2" marker-end="url(#arrowBlue)"/>
+
+  <!-- Stage 6: Output -->
+  <rect x="565" y="100" width="25" height="60" rx="6" fill="#2ecc71" stroke="#27ae60" stroke-width="1.5"/>
+  <text x="577" y="142" text-anchor="middle" font-family="sans-serif" font-size="10" fill="#fff" font-weight="bold" writing-mode="tb">输出</text>
+
+  <!-- Bottom description boxes -->
+  <g transform="translate(0, 30)">
+    <!-- Data flow labels -->
+    <rect x="15" y="210" width="575" height="40" rx="4" fill="#eef2f7" stroke="#ddd" stroke-width="0.5"/>
+    <text x="300" y="225" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#666">输入: 多曝光 RAW 帧 → 对齐后帧 → 权重图 → HDR 合并结果 → 色调压缩 → LDR 输出</text>
+    <text x="300" y="240" text-anchor="middle" font-family="sans-serif" font-size="10" fill="#999">Multi-Exposure → Aligned → Weighted → Merged HDR → Tone Mapped → Display Ready</text>
+  </g>
+
+  <!-- Legend -->
+  <g transform="translate(20, 290)">
+    <rect x="0" y="0" width="20" height="12" rx="2" fill="url(#boxGrad)"/>
+    <text x="26" y="10" font-family="sans-serif" font-size="10" fill="#666">核心处理级</text>
+    <rect x="120" y="0" width="20" height="12" rx="2" fill="#fff" stroke="#4a90d9" stroke-width="1"/>
+    <text x="146" y="10" font-family="sans-serif" font-size="10" fill="#666">中间处理级</text>
+    <rect x="260" y="0" width="20" height="12" rx="2" fill="#2ecc71"/>
+    <text x="286" y="10" font-family="sans-serif" font-size="10" fill="#666">输出</text>
+  </g>
+</svg>
