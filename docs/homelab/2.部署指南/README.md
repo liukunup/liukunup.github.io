@@ -72,6 +72,7 @@ permalink: /homelab/deploy/
 
 - [Hermes Agent](hermes-agent.md) - 自改进 AI 代理
 - [OpenClaw](openclaw.md) - 多平台 AI 网关
+- [GoatFlow](goatflow.md) - 工作流自动化平台
 
 ## 开发工具
 
@@ -89,3 +90,4 @@ permalink: /homelab/deploy/
 - [Distribution](distribution.md) - Docker 私有镜像仓库
 - [Memos](memos.md) - 轻量自托管备忘录中心
 - [OpenList](openlist.md) - 文件分享与管理平台
+- [NocoBase](nocobase.md) - 开源无代码/低代码平台
