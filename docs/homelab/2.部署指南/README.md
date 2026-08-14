@@ -46,6 +46,7 @@ permalink: /homelab/deploy/
 - [Elasticsearch](elasticsearch.md) - 搜索与分析引擎
 - [Kibana](kibana.md) - 数据可视化界面
 - [Logstash](logstash.md) - 数据处理管道
+- [Vector](vector.md) - 可观测性数据管道
 - [Jaeger](jaeger.md) - 分布式追踪系统
 - [DeepFlow](deepflow.md) - 可观测性平台
 
