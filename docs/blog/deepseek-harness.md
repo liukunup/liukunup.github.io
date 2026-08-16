@@ -4,7 +4,7 @@ tags:
   - DeepSeek
   - AI Agent
   - Agent Harness
-createTime: 2026/06/20 00:00:00
+createTime: 2026/08/15 00:31:00
 permalink: /blog/deepseek-harness/
 ---
 

@@ -6,7 +6,7 @@ tags:
   - logs
   - metrics
   - tracing
-createTime: 2026/06/20 00:00:00
+createTime: 2026/08/15 00:29:00
 permalink: /homelab/deploy/vector/
 ---
 
