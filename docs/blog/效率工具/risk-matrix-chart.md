@@ -24,7 +24,7 @@ permalink: /blog/6xyenpiw/
 
 一个典型的风险矩阵看起来是这样的：
 
-![风险矩阵](images/risk-matrix-chart.jpg "风险可视化")
+![风险矩阵](../images/risk-matrix-chart.jpg "风险可视化")
 
 ## **二、为什么你需要风险矩阵？**
 

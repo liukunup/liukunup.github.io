@@ -19,7 +19,7 @@ permalink: /blog/d5833yoh/
 
 这三个要素必须同时存在，行为才会发生。就像电灯需要电源、完整的电路和开关操作才能亮起一样。
 
-![福格行为模型](images/fogg-behavior-model.jpg "福格行为模型")
+![福格行为模型](../images/fogg-behavior-model.jpg "福格行为模型")
 
 ## 深入理解三大要素
 
