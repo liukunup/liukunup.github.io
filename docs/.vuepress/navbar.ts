@@ -45,6 +45,11 @@ export default defineNavbarConfig([
         icon: 'devicon:ros',
         link: '/notes/ros/'
       },
+      {
+        text: 'Sim Racing',
+        icon: 'emojione:racing-car',
+        link: '/notes/sim-racing/'
+      },
       // {
       //   text: 'Linux',
       //   link: '/notes/linux/'
