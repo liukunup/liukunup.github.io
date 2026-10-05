@@ -1,0 +1,123 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 350" width="600" height="350">
+  <rect width="600" height="350" fill="#f8f9fa" rx="8"/>
+
+  <defs>
+    <linearGradient id="hdrGrad" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0%" stop-color="#0a0a1a"/>
+      <stop offset="25%" stop-color="#1a1a3e"/>
+      <stop offset="50%" stop-color="#555"/>
+      <stop offset="75%" stop-color="#ddd"/>
+      <stop offset="100%" stop-color="#fff"/>
+    </linearGradient>
+    <linearGradient id="tmReinhard" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0%" stop-color="#111"/>
+      <stop offset="30%" stop-color="#333"/>
+      <stop offset="60%" stop-color="#888"/>
+      <stop offset="100%" stop-color="#ddd"/>
+    </linearGradient>
+    <linearGradient id="tmFilmic" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0%" stop-color="#0d0d1a"/>
+      <stop offset="20%" stop-color="#2a2a4e"/>
+      <stop offset="45%" stop-color="#666"/>
+      <stop offset="70%" stop-color="#aaa"/>
+      <stop offset="100%" stop-color="#eee"/>
+    </linearGradient>
+    <linearGradient id="tmACES" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0%" stop-color="#0a0a0a"/>
+      <stop offset="15%" stop-color="#222"/>
+      <stop offset="35%" stop-color="#555"/>
+      <stop offset="55%" stop-color="#999"/>
+      <stop offset="75%" stop-color="#ccc"/>
+      <stop offset="100%" stop-color="#f5f5f5"/>
+    </linearGradient>
+  </defs>
+
+  <!-- Title -->
+  <text x="300" y="30" text-anchor="middle" font-family="sans-serif" font-size="16" font-weight="bold" fill="#333">色调映射算法对比</text>
+  <text x="300" y="46" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#888">Tone Mapping Operators Comparison</text>
+
+  <!-- HDR input bar -->
+  <g transform="translate(40, 58)">
+    <text x="260" y="12" text-anchor="middle" font-family="sans-serif" font-size="11" font-weight="bold" fill="#666">HDR 输入 (高动态范围)</text>
+    <rect x="40" y="18" width="440" height="22" rx="4" fill="url(#hdrGrad)" stroke="#ccc" stroke-width="0.5"/>
+    <text x="50" y="33" font-family="sans-serif" font-size="8" fill="#fff">暗部</text>
+    <text x="470" y="33" text-anchor="end" font-family="sans-serif" font-size="8" fill="#333">亮部</text>
+  </g>
+
+  <!-- Algorithm 1: Reinhard -->
+  <g transform="translate(20, 100)">
+    <rect x="20" y="0" width="560" height="65" rx="6" fill="#fff" stroke="#ddd" stroke-width="1"/>
+    
+    <rect x="30" y="10" width="80" height="22" rx="4" fill="#4a90d9" opacity="0.9"/>
+    <text x="70" y="25" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#fff" font-weight="bold">Reinhard</text>
+    
+    <!-- Reinhard tone curve -->
+    <g transform="translate(120, 5)">
+      <!-- curve preview -->
+      <rect x="0" y="0" width="55" height="55" rx="4" fill="#f0f4f8" stroke="#ddd" stroke-width="0.5"/>
+      <path d="M 5 48 C 15 48, 25 45, 35 30 C 45 15, 50 8, 52 5" fill="none" stroke="#4a90d9" stroke-width="1.5"/>
+    </g>
+
+    <!-- Result bar -->
+    <rect x="185" y="15" width="200" height="16" rx="3" fill="url(#tmReinhard)" stroke="#ddd" stroke-width="0.5"/>
+    <text x="185" y="42" font-family="sans-serif" font-size="9" fill="#888">LDR 输出: 全局色调压缩</text>
+    
+    <!-- Pros/Cons tags -->
+    <rect x="400" y="10" width="75" height="18" rx="3" fill="#2ecc71" opacity="0.8"/>
+    <text x="437" y="23" text-anchor="middle" font-family="sans-serif" font-size="9" fill="#fff">简单高效</text>
+    <rect x="400" y="33" width="75" height="18" rx="3" fill="#e5a000" opacity="0.8"/>
+    <text x="437" y="46" text-anchor="middle" font-family="sans-serif" font-size="9" fill="#fff">对比度损失</text>
+
+    <!-- Formula note -->
+    <text x="490" y="28" font-family="sans-serif" font-size="9" fill="#999" font-style="italic">Lₒut = L / (1+L)</text>
+  </g>
+
+  <!-- Algorithm 2: Filmic -->
+  <g transform="translate(20, 175)">
+    <rect x="20" y="0" width="560" height="65" rx="6" fill="#fff" stroke="#ddd" stroke-width="1"/>
+    
+    <rect x="30" y="10" width="80" height="22" rx="4" fill="#9c27b0" opacity="0.9"/>
+    <text x="70" y="25" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#fff" font-weight="bold">Filmic</text>
+    
+    <g transform="translate(120, 5)">
+      <rect x="0" y="0" width="55" height="55" rx="4" fill="#f8f0fc" stroke="#ddd" stroke-width="0.5"/>
+      <path d="M 5 48 C 10 48, 20 42, 30 28 C 38 18, 45 10, 48 7 L 52 2" fill="none" stroke="#9c27b0" stroke-width="1.5"/>
+    </g>
+
+    <rect x="185" y="15" width="200" height="16" rx="3" fill="url(#tmFilmic)" stroke="#ddd" stroke-width="0.5"/>
+    <text x="185" y="42" font-family="sans-serif" font-size="9" fill="#888">LDR 输出: 胶片感曲线</text>
+
+    <rect x="400" y="10" width="75" height="18" rx="3" fill="#2ecc71" opacity="0.8"/>
+    <text x="437" y="23" text-anchor="middle" font-family="sans-serif" font-size="9" fill="#fff">高光细节</text>
+    <rect x="400" y="33" width="75" height="18" rx="3" fill="#2ecc71" opacity="0.8"/>
+    <text x="437" y="46" text-anchor="middle" font-family="sans-serif" font-size="9" fill="#fff">自然对比度</text>
+
+    <text x="490" y="28" font-family="sans-serif" font-size="9" fill="#999" font-style="italic">ACES Filmic</text>
+  </g>
+
+  <!-- Algorithm 3: ACES -->
+  <g transform="translate(20, 250)">
+    <rect x="20" y="0" width="560" height="65" rx="6" fill="#fff" stroke="#4a90d9" stroke-width="1.5"/>
+    
+    <rect x="30" y="10" width="80" height="22" rx="4" fill="#e53" opacity="0.9"/>
+    <text x="70" y="25" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#fff" font-weight="bold">ACES</text>
+    
+    <g transform="translate(120, 5)">
+      <rect x="0" y="0" width="55" height="55" rx="4" fill="#fff5f5" stroke="#ddd" stroke-width="0.5"/>
+      <path d="M 5 48 C 8 48, 18 42, 28 30 C 35 22, 42 12, 45 8 L 52 2" fill="none" stroke="#e53" stroke-width="1.5"/>
+    </g>
+
+    <rect x="185" y="15" width="200" height="16" rx="3" fill="url(#tmACES)" stroke="#ddd" stroke-width="0.5"/>
+    <text x="185" y="42" font-family="sans-serif" font-size="9" fill="#888">LDR 输出: 电影级标准</text>
+
+    <rect x="400" y="10" width="75" height="18" rx="3" fill="#2ecc71" opacity="0.8"/>
+    <text x="437" y="23" text-anchor="middle" font-family="sans-serif" font-size="9" fill="#fff">业界标准</text>
+    <rect x="400" y="33" width="75" height="18" rx="3" fill="#2ecc71" opacity="0.8"/>
+    <text x="437" y="46" text-anchor="middle" font-family="sans-serif" font-size="9" fill="#fff">色彩准确</text>
+
+    <text x="490" y="28" font-family="sans-serif" font-size="9" fill="#999" font-style="italic">RRT+ODT</text>
+  </g>
+
+  <!-- Bottom note -->
+  <text x="300" y="335" text-anchor="middle" font-family="sans-serif" font-size="10" fill="#999">HDR → Tone Mapping → LDR (8-bit 输出)</text>
+</svg>
