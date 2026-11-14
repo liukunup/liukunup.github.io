@@ -75,8 +75,8 @@ feeeed 可以将任何网站的一部分转换为实时卡片，方便追踪特�
 
 | 订阅源 | 地址 | 说明 |
 |--------|------|------|
-| **AI HOT 精选** | `https://aihot.virxact.com/feed.xml` | 每日 AI 行业动态、模型发布、产品发布、行业事件 |
-| **AI HOT 全量** | `https://aihot.virxact.com/feed/all.xml` | AI HOT 全量资讯聚合 |
+| **AI HOT 精选** | `https://aihot.news/feed.xml` | 每日 AI 行业动态、模型发布、产品发布、行业事件 |
+| **AI HOT 全量** | `https://aihot.news/feed/all.xml` | AI HOT 全量资讯聚合 |
 
 ### 技术博客
 
